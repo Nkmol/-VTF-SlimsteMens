@@ -1,7 +1,7 @@
 package Models;
 
 public class Player {
-	/* MIJN EERSTE COMMIT */
+	
 	private String name;
 	private Role role;
 	
