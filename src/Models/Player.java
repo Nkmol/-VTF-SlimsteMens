@@ -1,7 +1,7 @@
 package Models;
 
 public class Player {
-
+	
 	private String name;
 	private Role role;
 	
