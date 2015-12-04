@@ -4,12 +4,11 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-public class LoginPanel extends JPanel {
+public class RegistreerPanel extends JPanel {
 	private final static String USERNAME 	 = "Username: ",
 						 	    PASSWORD 	 = "Password: ",
-						 	    BTN_LOGIN    = "Login",
 						 	    BTN_REGISTR  = "Registreer",
-						 	    HEADER		 = "- Login -";
+						 	    HEADER		 = "- Registreer -";
 	
 	private JTextField 	txtUsername,
 					   	txtPassword;
@@ -17,7 +16,7 @@ public class LoginPanel extends JPanel {
 						btnReg;
 	
 	
-	public LoginPanel() {
+	public RegistreerPanel() {
 		setLayout(new GridBagLayout());
 		setBorder(new EmptyBorder(10, 10, 10, 10)); //add padding
 		createLoginPanel();
@@ -33,31 +32,33 @@ public class LoginPanel extends JPanel {
 		c.weightx = 1;
 		c.gridwidth = 2;
 		c.ipady = 50;
-		JLabel lblHeader = new JLabel(LoginPanel.HEADER);
+		JLabel lblHeader = new JLabel(RegistreerPanel.HEADER);
 		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		lblHeader.setFont(new Font(Font.SANS_SERIF, 0, 28));
 		add(lblHeader, c);
 		
 		c.gridwidth = 1;
+		c.fill = GridBagConstraints.NONE;
 		c.ipady = 0;
-		c.anchor = GridBagConstraints.WEST;
 		c.gridy = 1;
-		c.insets = new  Insets(0, 0, 10, 20);
-		add(new JLabel(LoginPanel.USERNAME), c);
+		c.anchor = GridBagConstraints.WEST;
+		c.insets = new Insets(0, 0, 10, 20);
+		add(new JLabel(RegistreerPanel.USERNAME), c);
 		
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
 		c.weightx = 1;
-		c.insets = new  Insets(0, 0, 10, 0);
 		c.ipadx = 350;
+		c.insets = new Insets(0, 0, 10, 0);
 		txtUsername = new JTextField();
 		add(txtUsername, c);
 		
-		c.ipadx = 0;
 		c.gridx = 0;
 		c.gridy = 2;
 		c.weightx = 0;
-		c.insets = new  Insets(0, 0, 0, 0);
-		add(new JLabel(LoginPanel.PASSWORD), c);
+		c.ipadx = 0;
+		c.insets = new Insets(0, 0, 0, 0);
+		add(new JLabel(RegistreerPanel.PASSWORD), c);
 		
 		c.gridx = 1;
 		c.weightx = 1;
@@ -71,16 +72,10 @@ public class LoginPanel extends JPanel {
 		
 		c.gridx = 1;
 		c.gridy = 4;
-		c.gridwidth = 1;
-		c.insets = new  Insets(10, 0, 0, 0);
-		btnLogin = new JButton(LoginPanel.BTN_LOGIN);
-		add(btnLogin, c);
-		
-		c.gridx = 0;
 		c.weightx = 0;
 		c.gridwidth = 1;
-		c.insets = new  Insets(10, 0, 0, 10);
-		btnReg = new JButton(LoginPanel.BTN_REGISTR);
+		c.insets = new Insets(10, 0, 0, 0);
+		btnReg = new JButton(RegistreerPanel.BTN_REGISTR);
 		add(btnReg, c);
 	}
 }

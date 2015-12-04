@@ -15,8 +15,11 @@ public class MainController {
 					frame.setVisible(true);
 					frame.setResizable(false);
 					
-					LoginController login = new LoginController();
-					frame.add(login.getView());
+					/*LoginController login = new LoginController();
+					frame.add(login.getView());*/
+					
+					RegistreerController registreer = new RegistreerController();
+					frame.add(registreer.getView());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
