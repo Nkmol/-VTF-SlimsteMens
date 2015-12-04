@@ -61,8 +61,13 @@ public class LoginPanel extends JPanel {
 		txtPassword = new JPasswordField();
 		add(txtPassword, c);
 		
-		c.gridx = 1;
 		c.gridy = 3;
+		JLabel error = new JLabel("Een voorbeeld error");
+		error.setForeground(Color.RED);
+		add(error, c);
+		
+		c.gridx = 1;
+		c.gridy = 4;
 		c.gridwidth = 1;
 		c.insets = new  Insets(10, 0, 0, 0);
 		btnLogin = new JButton(LoginPanel.BTN_LOGIN);
