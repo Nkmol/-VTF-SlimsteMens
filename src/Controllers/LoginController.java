@@ -1,5 +1,15 @@
 package Controllers;
 
-public class LoginController {
+import View.LoginPanel;
 
+public class LoginController {
+	private LoginPanel view;
+	
+	public LoginController() {
+		view = new LoginPanel();
+	}
+	
+	public LoginPanel getView() {
+		return view;
+	}
 }
