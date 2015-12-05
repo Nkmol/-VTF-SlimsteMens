@@ -1,6 +1,5 @@
 package Managers;
 
-import java.awt.List;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -26,11 +25,6 @@ public class DataManager {
 		return instance;
 	}
 	
-	public void test() {
-		Connection c = DataManager.getInstance().getConnection();
-		System.err.println("test");
-	}
-	
 	public ArrayList<Player> getAllPlayers() {
 		Connection c = DataManager.getInstance().getConnection();
 		ArrayList<Player> players = null;
@@ -46,6 +40,21 @@ public class DataManager {
 		}
 		
 		return players;
+	}
+	
+	public boolean registerUser(String name, String password, Role role) {
+		Connection c = DataManager.getInstance().getConnection();
+		try {
+			Statement statement = c.createStatement();
+			String sql = "insert into account (naam, wachtwoord) values ('"+name+"','"+password+"')";
+			statement.executeUpdate(sql);
+			sql = "insert into accountrol (account_naam, rol_type) values ('"+name+"','"+role.getValue()+"')";
+			statement.executeUpdate(sql);
+			return true;
+		} catch (SQLException e) {
+			System.err.println("Error inserting a new player: " + e.getMessage());
+			return false;
+		}
 	}
 	
 	public Connection getConnection() {
