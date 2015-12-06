@@ -18,7 +18,7 @@ public class MainController {
 					/*LoginController login = new LoginController();
 					frame.add(login.getView());*/
 					
-					RegistreerController registreer = new RegistreerController();
+					RegistrateController registreer = new RegistrateController();
 					frame.add(registreer.getView());
 				} catch (Exception e) {
 					e.printStackTrace();

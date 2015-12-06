@@ -8,7 +8,7 @@ public class LoginPanel extends JPanel {
 	private final static String USERNAME 	 = "Username: ",
 						 	    PASSWORD 	 = "Password: ",
 						 	    BTN_LOGIN    = "Login",
-						 	    BTN_REGISTR  = "Registreer",
+						 	    BTN_REGISTR  = "Registrate",
 						 	    HEADER		 = "- Login -";
 	
 	private JTextField 	txtUsername,
