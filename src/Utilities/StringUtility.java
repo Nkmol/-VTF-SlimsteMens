@@ -53,4 +53,12 @@ public final class StringUtility {
 	    // the distance is the cost for transforming all letters in both strings
 	    return cost[len0 - 1];
 	}
+	
+	public static int CalculateMatchPercentage(String s0, String s1) {                       
+		
+		// Trim and remove duplicate spaces
+	    s0 = s0.trim().replaceAll("\\s+", " ");
+	    s1 = s1.trim().replaceAll("\\s+", " ");
+	    return (int) (100 - (float) CalculateLevenshteinDistance(s0, s1) * 100 / (float) Math.max(s0.length(), s1.length()));
+	}
 }
