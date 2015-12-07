@@ -4,7 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-public class RegistratePanel extends JPanel {
+public class RegisterPanel extends JPanel {
 	private final static String USERNAME 	 = "Username: ",
 						 	    PASSWORD 	 = "Password: ",
 						 	    BTN_REGISTR  = "Registrate",
@@ -16,7 +16,7 @@ public class RegistratePanel extends JPanel {
 						btnReg;
 	
 	
-	public RegistratePanel() {
+	public RegisterPanel() {
 		setLayout(new GridBagLayout());
 		setBorder(new EmptyBorder(10, 10, 10, 10)); //add padding
 		createLoginPanel();
@@ -32,7 +32,7 @@ public class RegistratePanel extends JPanel {
 		c.weightx = 1;
 		c.gridwidth = 2;
 		c.ipady = 50;
-		JLabel lblHeader = new JLabel(RegistratePanel.HEADER);
+		JLabel lblHeader = new JLabel(RegisterPanel.HEADER);
 		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		lblHeader.setFont(new Font(Font.SANS_SERIF, 0, 28));
 		add(lblHeader, c);
@@ -43,7 +43,7 @@ public class RegistratePanel extends JPanel {
 		c.gridy = 1;
 		c.anchor = GridBagConstraints.WEST;
 		c.insets = new Insets(0, 0, 10, 20);
-		add(new JLabel(RegistratePanel.USERNAME), c);
+		add(new JLabel(RegisterPanel.USERNAME), c);
 		
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
@@ -58,7 +58,7 @@ public class RegistratePanel extends JPanel {
 		c.weightx = 0;
 		c.ipadx = 0;
 		c.insets = new Insets(0, 0, 0, 0);
-		add(new JLabel(RegistratePanel.PASSWORD), c);
+		add(new JLabel(RegisterPanel.PASSWORD), c);
 		
 		c.gridx = 1;
 		c.weightx = 1;
@@ -75,7 +75,7 @@ public class RegistratePanel extends JPanel {
 		c.weightx = 0;
 		c.gridwidth = 1;
 		c.insets = new Insets(10, 0, 0, 0);
-		btnReg = new JButton(RegistratePanel.BTN_REGISTR);
+		btnReg = new JButton(RegisterPanel.BTN_REGISTR);
 		add(btnReg, c);
 	}
 }
