@@ -15,9 +15,9 @@ public class ReplayListItem extends JPanel {
 	
 	Border DefaultBorder;
     Border HoverBorder;
-	
-	public ReplayListItem(
-			int Number, 
+	int Id;
+	public ReplayListItem (
+			int Id, 
 			String Opponent, 
 			Boolean won, 
 			int PlayerScore, 
@@ -27,10 +27,9 @@ public class ReplayListItem extends JPanel {
 		
 		setBorder(DefaultBorder);
 		setLayout(new GridLayout(2, 2, 0, 0));
+		this.Id = Id;
 		
 		// TODO: Fix layout
-		JLabel lblNumber = new JLabel("" + Number);
-		add(lblNumber);
 		
 		JLabel lblOpponent = new JLabel("Tegen: " + Opponent);
 		add(lblOpponent);
@@ -44,7 +43,12 @@ public class ReplayListItem extends JPanel {
 		addMouseListener(new ReplayMouseAdapter());
 	}
 	
-	private class ReplayMouseAdapter extends MouseAdapter{
+	public int getGameId()
+	{
+		return Id;
+	}
+	
+	private class ReplayMouseAdapter extends MouseAdapter {
 		
 		public void mouseEntered(MouseEvent e){
 			setBorder(HoverBorder);
