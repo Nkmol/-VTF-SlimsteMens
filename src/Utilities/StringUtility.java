@@ -10,48 +10,48 @@ public final class StringUtility {
 	
 	public static int CalculateLevenshteinDistance(String string1, String string2) {
 	    
-	    int len0 = string1.length() + 1;
-	    int len1 = string2.length() + 1;  
+	    int length1 = string1.length() + 1;
+	    int length2 = string2.length() + 1;  
 	    // the array of distances
-	    int[] cost = new int[len0];
-	    int[] newcost = new int[len0];
+	    int[] cost = new int[length1];
+	    int[] newCost = new int[length1];
 
 	    // initial cost of skipping prefix in String s0
-	    for (int i = 0; i < len0; i++)
+	    for (int i = 0; i < length1; i++)
 	        cost[i] = i;
 
 	    // dynamically computing the array of distances
 
 	    // transformation cost for each letter in s1
-	    for (int j = 1; j < len1; j++) {
+	    for (int j = 1; j < length2; j++) {
 
 	        // initial cost of skipping prefix in String s1
-	        newcost[0] = j - 1;
+	        newCost[0] = j - 1;
 
 	        // transformation cost for each letter in s0
-	        for (int i = 1; i < len0; i++) {
+	        for (int i = 1; i < length1; i++) {
 
 	            // matching current letters in both strings
-	            int match = (s0.charAt(i - 1) == s1.charAt(j - 1)) ? 0 : 1;
+	            int match = (string1.charAt(i - 1) == string2.charAt(j - 1)) ? 0 : 1;
 
 	            // computing cost for each transformation
-	            int cost_replace = cost[i - 1] + match;
-	            int cost_insert = cost[i] + 1;
-	            int cost_delete = newcost[i - 1] + 1;
+	            int replaceCost = cost[i - 1] + match;
+	            int insertCost = cost[i] + 1;
+	            int deleteCost = newCost[i - 1] + 1;
 
 	            // keep minimum cost
-	            newcost[i] = Math.min(Math.min(cost_insert, cost_delete),
-	                    cost_replace);
+	            newCost[i] = Math.min(Math.min(insertCost, deleteCost),
+	                    replaceCost);
 	        }
 
 	        // swap cost/newcost arrays
 	        int[] swap = cost;
-	        cost = newcost;
-	        newcost = swap;
+	        cost = newCost;
+	        newCost = swap;
 	    }
 
 	    // the distance is the cost for transforming all letters in both strings
-	    return cost[len0 - 1];
+	    return cost[length1 - 1];
 	}
 	
 	public static int CalculateMatchPercentage(String s0, String s1) {                       
