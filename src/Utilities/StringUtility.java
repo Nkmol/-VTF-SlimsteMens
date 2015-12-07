@@ -54,11 +54,11 @@ public final class StringUtility {
 	    return cost[length1 - 1];
 	}
 	
-	public static int CalculateMatchPercentage(String s0, String s1) {                       
+	public static int CalculateMatchPercentage(String string1, String string2) {                       
 		
 		// Trim and remove duplicate spaces
-	    s0 = s0.trim().replaceAll("\\s+", " ");
-	    s1 = s1.trim().replaceAll("\\s+", " ");
-	    return (int) (100 - (float) CalculateLevenshteinDistance(s0, s1) * 100 / (float) Math.max(s0.length(), s1.length()));
+		string1 = string1.trim().replaceAll("\\s+", " ");
+		string2 = string2.trim().replaceAll("\\s+", " ");
+	    return (int) (100 - (float) CalculateLevenshteinDistance(string1, string2) * 100 / (float) Math.max(string1.length(), string2.length()));
 	}
 }
