@@ -1,8 +1,8 @@
 package Controllers;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
+import View.*;
 
 public class MainController {
 
@@ -15,6 +15,8 @@ public class MainController {
 					frame.setSize(500, 500);
 					frame.setVisible(true);
 					frame.setResizable(false);
+					
+					frame.setJMenuBar(new MenuBar());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
