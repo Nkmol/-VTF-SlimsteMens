@@ -36,23 +36,31 @@ public class DataManager {
 			while(data.next()) 
 				players.add(new Player(data));
 			
-		} catch (SQLException e) {
-		}
-		
+		} catch (SQLException e) { }
 		return players;
 	}
 	
 	public boolean registerUser(String name, String password, Role role) {
 		Connection c = DataManager.getInstance().getConnection();
 		try {
-			Statement statement = c.createStatement();
-			String sql = "insert into account (naam, wachtwoord) values ('"+name+"','"+password+"')";
-			statement.executeUpdate(sql);
-			sql = "insert into accountrol (account_naam, rol_type) values ('"+name+"','"+role.getValue()+"')";
-			statement.executeUpdate(sql);
+			String sql = "insert into account (naam, wachtwoord) values (?,?)";
+			PreparedStatement preparedStatement = c.prepareStatement(sql);
+			preparedStatement.setString(1, name);
+			preparedStatement.setString(2, password);
+			preparedStatement.executeUpdate();
+			
+			sql = "insert into accountrol (account_naam, rol_type) values (?,?)";
+			preparedStatement = c.prepareStatement(sql);
+			preparedStatement.setString(1, name);
+			preparedStatement.setString(2, role.getValue());
+			preparedStatement.executeUpdate();
+			
+			c.commit();
 			return true;
 		} catch (SQLException e) {
 			System.err.println("Error inserting a new player: " + e.getMessage());
+			try { c.rollback(); } 
+			catch (SQLException e1) { System.err.println("Error rolling back " + e1.getMessage()); }
 			return false;
 		}
 	}
@@ -61,6 +69,7 @@ public class DataManager {
 		try {
 			System.out.println("Connecting.....");
 			connection = DriverManager.getConnection(dbUrl, username, password);
+			connection.setAutoCommit(false);
 			System.out.println("Connected");
 		} catch (SQLException e) {
 			System.err.println("Connection Error: " + e.getMessage());
