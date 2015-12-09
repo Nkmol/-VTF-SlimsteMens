@@ -14,4 +14,15 @@ public class Answer {
 		this.alternatives = alternatives;
 	}
 	
+	public int getQuestionId() {
+		return questionId;
+	}
+
+	public String getAnswer() {
+		return answer;
+	}
+
+	public ArrayList<String> getAlternatives() {
+		return alternatives;
+	}
 }
