@@ -62,7 +62,7 @@ public class DataManager {
 	public Round getRound(RoundType roundType, int gameId) {
 		Round round = null;
 		try{
-			String sql = "";
+			String sql = ""; //TODO: get round
 			PreparedStatement preparedStatement = connection.prepareStatement("");
 		} catch (SQLException e) { }
 		return round;
@@ -83,8 +83,6 @@ public class DataManager {
 			System.err.println("Error fetching player with id: " + playerName);
 			System.err.println(e.getMessage());
 		}
-		
-		
 		return player;
 	}
 	
@@ -112,6 +110,41 @@ public class DataManager {
 		}
 	}
 	
+	public boolean pushChatMessage(int gameId, Timestamp timestamp, int millisec, String senderName, String message) {
+		try {
+			String sql = "insert into chatregel (spel_id, tijdstip, millisec, account_naam_zender, bericht)"
+					+ " values (?,?,?,?,?)";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, gameId);
+			preparedStatement.setTimestamp(2, timestamp);
+			preparedStatement.setInt(3, millisec);
+			preparedStatement.setString(4, senderName);
+			preparedStatement.setString(5, message);
+			preparedStatement.executeUpdate();
+			connection.commit();
+			return true;
+		} catch (SQLException e) {
+			System.err.println("Error inserting a new chat message: " + e.getMessage());
+			try { connection.rollback(); } 
+			catch (SQLException e1) { System.err.println("Error rolling back " + e1.getMessage()); }
+			return false;
+		}
+	}
+	
+	public ArrayList<ChatMessage> getChatMessages(int gameId) {
+		ArrayList<ChatMessage> chatMessages = null;
+		try {
+			String sql = "SELECT * FROM chatMessages WHERE spel_id = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, gameId);
+			ResultSet data = preparedStatement.executeQuery();
+			chatMessages = new ArrayList<>();
+			while(data.next()) 
+				chatMessages.add(new ChatMessage(data));
+		} catch (SQLException e) { }
+		return chatMessages;
+	}
+	
 	public Connection getConnection() {
 		try {
 			System.out.println("Connecting.....");
@@ -121,7 +154,6 @@ public class DataManager {
 		} catch (SQLException e) {
 			System.err.println("Connection Error: " + e.getMessage());
 		}
-		
 		return connection;
 	}
 	
