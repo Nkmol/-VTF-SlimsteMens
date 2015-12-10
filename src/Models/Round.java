@@ -25,4 +25,8 @@ public abstract class Round {
 		return turn;
 	}
 	
+	public void refreshTurn() {
+		//TODO: fetch turn from the database
+	}
+	
 }
