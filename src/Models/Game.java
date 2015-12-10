@@ -11,9 +11,29 @@ public class Game {
 	private Round currentRound;
 	private ArrayList<ChatMessage> chatMessages;
 	
-	public Game(Player player1, Player player2) {
+	public Game(int gameId, Player player1, Player player2, GameState gameState) {
+		this.id = gameId;
 		this.player1 = player1;
 		this.player2 = player2;
+		this.gameState = gameState;
 	}
+	
+	public int getGameId() {
+		return id;
+	}
+	
+	public Player getPlayer1() {
+		return player1;
+	}
+	
+	public Player getPlayer2() {
+		return player2;
+	}
+	
+	public GameState getGameState() {
+		return gameState;
+	}
+	
+	
 	
 }
