@@ -3,6 +3,7 @@ package View;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -29,16 +30,19 @@ public class AccountPanel extends JPanel{
 	
 		c.gridx = 0;
 		c.gridy = 1;
+		c.insets = new Insets(10, 0, 0, 0);
 		panel.add(new JLabel("new password: "), c);
 		c.gridx = 1;
 		panel.add(new JPasswordField(), c);
 		
+		c.insets = new Insets(0, 0, 0, 0);
 		c.gridx = 0;
 		c.gridy = 2;
 		panel.add(new JLabel("confirm password: "), c);
 		c.gridx = 1;
 		panel.add(new JPasswordField(), c);
 		
+		c.insets = new Insets(10, 0, 0, 0);
 		c.gridy = 3;
 		panel.add(new JButton("Confirm"), c);
 		add(panel);
