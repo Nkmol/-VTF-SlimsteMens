@@ -2,7 +2,8 @@ package Controller;
 
 import java.util.ArrayList;
 
-import Model.Player;
+import Models.Player;
+import Models.Role;
 import View.PlayerView;
 
 public class PlayerController {
@@ -23,16 +24,16 @@ public class PlayerController {
 	public Player[] getPlayers() {
 		Player[] playersList = new Player[10];
 		
-		playersList[0] = new Player("Henk");
-		playersList[1] = new Player("Piet");
-		playersList[2] = new Player("Jan");
-		playersList[3] = new Player("Willem");
-		playersList[4] = new Player("Peter");
-		playersList[5] = new Player("Felix");
-		playersList[6] = new Player("Max");
-		playersList[7] = new Player("Jonathan");
-		playersList[8] = new Player("Erik");
-		playersList[9] = new Player("Karel");
+		playersList[0] = new Player("Henk", Role.Player);
+		playersList[1] = new Player("Piet", Role.Player);
+		playersList[2] = new Player("Jan", Role.Player);
+		playersList[3] = new Player("Willem", Role.Player);
+		playersList[4] = new Player("Peter", Role.Player);
+		playersList[5] = new Player("Felix", Role.Player);
+		playersList[6] = new Player("Max", Role.Player);
+		playersList[7] = new Player("Jonathan", Role.Player);
+		playersList[8] = new Player("Erik", Role.Player);
+		playersList[9] = new Player("Karel", Role.Player);
 		
 		return playersList;
 	}

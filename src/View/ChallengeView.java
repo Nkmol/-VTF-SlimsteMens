@@ -21,9 +21,9 @@ public class ChallengeView extends JPanel {
 	public ChallengeView(String name) {
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		this.setLayout(gridBagLayout);	
+		setLayout(gridBagLayout);	
 		
-		this.setPreferredSize(new Dimension(400,100));
+		setPreferredSize(new Dimension(400,100));
 		
 		JLabel messageLabel = new JLabel();
 		messageLabel.setText("You have been challenged by " + name + "!");

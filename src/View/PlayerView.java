@@ -25,9 +25,9 @@ public class PlayerView extends JPanel {
 	public PlayerView(String playerName) {
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		this.setLayout(gridBagLayout);
+		setLayout(gridBagLayout);
 
-		this.setPreferredSize(new Dimension(100,100));
+		setPreferredSize(new Dimension(100,100));
 
 		playerNameLabel = new JLabel();
 		challengeButton = new JButton();
@@ -46,14 +46,8 @@ public class PlayerView extends JPanel {
 		challengeButton.setBorder(BorderFactory.createEmptyBorder());
 		challengeButton.setContentAreaFilled(false);
 
-		challengeButton.addActionListener(new ActionListener() { //TODO LAMBDA EXPRESSION
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
-				challengeButton.setEnabled(false);
-			}
-		});
+		
+		//challengeButton.addActionListener(e -> handleButtonClick());
 
 
 		playerNameLabel.setText(playerName);
@@ -78,7 +72,11 @@ public class PlayerView extends JPanel {
 
 
 		//249, 191, 147
-		this.setBackground(new Color(135,171,255));
+		setBackground(new Color(135,171,255));
+	}
+	
+	public void handleButtonClick() {
+		challengeButton.setEnabled(false);
 	}
 
 
