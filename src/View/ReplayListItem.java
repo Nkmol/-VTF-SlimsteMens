@@ -13,9 +13,10 @@ import javax.swing.border.Border;
 @SuppressWarnings("serial")
 public class ReplayListItem extends JPanel {
 	
-	Border DefaultBorder;
-    Border HoverBorder;
-	int Id;
+	private Border DefaultBorder;
+    private Border HoverBorder;
+	private int Id;
+	
 	public ReplayListItem (
 			int Id, 
 			String Opponent, 
