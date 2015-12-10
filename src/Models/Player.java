@@ -17,7 +17,7 @@ public class Player {
 		try {
 			this.name = data.getString("naam");
 			String role = data.getString("rol_type");
-			this.role = (role.equals("player")) ? Role.Player : Role.Observer; 
+			this.role = (role.equals(Role.Player.getValue())) ? Role.Player : Role.Observer; 
 		} catch (SQLException e) {
 			System.err.println("Error initializing player: " + e.getMessage());
 		}
