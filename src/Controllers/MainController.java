@@ -16,7 +16,8 @@ public class MainController {
 					frame.setVisible(true);
 					frame.setResizable(false);
 					
-					frame.setJMenuBar(new MenuBar());
+					MenuController menuController = new MenuController();
+					frame.setJMenuBar(menuController.getView());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
