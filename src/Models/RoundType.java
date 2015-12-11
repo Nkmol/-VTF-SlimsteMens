@@ -8,6 +8,23 @@ public enum RoundType {
 	Framed,
 	Final;
 	
+	public static RoundType fromString(String value) {
+		switch (value) {
+		case "369":
+			return ThreeSixNine;
+		case "opendeur":
+			return OpenDoor;
+		case "puzzel":
+			return Puzzle;
+		case "ingelijst":
+			return Framed;
+		case "finale":
+			return Final;
+		default:
+			return null;
+		}
+	}
+	
 	public String getValue() {
 		switch (this) {
 		case ThreeSixNine:

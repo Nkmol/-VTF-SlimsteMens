@@ -51,7 +51,6 @@ public class DataManager {
 				GameState gameState = GameState.fromString(data.getString("toestand_type"));
 				game = new Game(gameId, player1, player2, gameState);
 			}
-			
 		} catch (SQLException e) {
 			System.err.println("Error fetching game with id: " + gameId);
 			System.err.println(e.getMessage());
@@ -59,13 +58,143 @@ public class DataManager {
 		return game;
 	}
 	
-	public Round getRound(RoundType roundType, int gameId) {
+	public Round getRound(Game game, RoundType roundType) {
 		Round round = null;
 		try{
-			String sql = ""; //TODO: get round
-			PreparedStatement preparedStatement = connection.prepareStatement("");
+			String sql = "SELECT * FROM ronde WHERE spel_id = ? and rondenaam = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, game.getId());
+			preparedStatement.setString(2, roundType.getValue());
+			ResultSet data = preparedStatement.executeQuery();
+			if (data.next()) {
+				switch (roundType) {
+				case ThreeSixNine:	
+					round = new ThreeSixNine(data, game);
+					break;
+				case OpenDoor:
+					round = new OpenDoor(data, game);
+					break;
+				case Puzzle:
+					round = new Puzzle(data, game);
+					break;
+				case Framed:
+					round = new Framed(data, game);
+					break;
+				case Final:
+					round = new Final(data, game);
+					break;
+				default:
+					break;
+				}
+			}
 		} catch (SQLException e) { }
 		return round;
+	}
+	
+	public ArrayList<Round> getRounds(Game game) {
+		ArrayList<Round> rounds = null;
+		try{
+			String sql = "SELECT * FROM ronde WHERE spel_id = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, game.getId());
+			ResultSet data = preparedStatement.executeQuery();
+			RoundType roundType;
+			Round round = null;
+			rounds = new ArrayList<>();
+			while (data.next()) {
+				roundType = RoundType.fromString(data.getString("rondenaam"));
+				switch (roundType) {
+				case ThreeSixNine:	
+					round = new ThreeSixNine(data, game);
+					break;
+				case OpenDoor:
+					round = new OpenDoor(data, game);
+					break;
+				case Puzzle:
+					round = new Puzzle(data, game);
+					break;
+				case Framed:
+					round = new Framed(data, game);
+					break;
+				case Final:
+					round = new Final(data, game);
+					break;
+				default:
+					break;
+				}
+				rounds.add(round);
+			}
+		} catch (SQLException e) { }
+		return rounds;
+	}
+	
+	public Question getQuestion(Round round) {
+		Question question = null;
+		try {
+			String sql = "SELECT * FROM vraag WHERE rondenaam = ? ORDER BY RAND() LIMIT 1";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, round.getRoundType().getValue());
+			ResultSet data = preparedStatement.executeQuery();
+			if (data.next()) 
+				question = new Question(data, round);
+		} catch (SQLException e) {
+			System.err.println("Error fetching question");
+			System.err.println(e.getMessage());
+		}
+		
+		return null;
+	}
+	
+	public ArrayList<Question> getQuestions(Round round) {
+		ArrayList<Question> questions = null;
+		try {
+			String sql = "SELECT * FROM vraag WHERE rondenaam = ? ORDER BY RAND()";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, round.getRoundType().getValue());
+			ResultSet data = preparedStatement.executeQuery();
+			questions = new ArrayList<>();
+			while (data.next()) 
+				questions.add(new Question(data, round));
+		} catch (SQLException e) {
+			System.err.println("Error fetching questions for round: " + round.getRoundType().getValue());
+			System.err.println(e.getMessage());
+		}
+		return questions;
+	}
+	
+	public ArrayList<Answer> getAnswers(int questionId) {
+		ArrayList<Answer> answers = null;
+		try {
+			String sql = "SELECT * FROM sleutel WHERE vraag_id = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, questionId);
+			ResultSet data = preparedStatement.executeQuery();
+			answers = new ArrayList<>();
+			while (data.next()) 
+				answers.add(new Answer(data));
+		} catch (SQLException e) {
+			System.err.println("Error fetching answers for question id: " + questionId);
+			System.err.println(e.getMessage());
+		}
+		return answers;
+	}
+	
+	public ArrayList<String> getAlternatives(int questionId, String answer) {
+		ArrayList<String> alternatives = null;
+		try {
+			String sql = "SELECT * FROM alternatief WHERE vraag_id = ? AND antwoord = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, questionId);
+			preparedStatement.setString(2, answer);
+			ResultSet data = preparedStatement.executeQuery();
+			alternatives = new ArrayList<>();
+			while (data.next()) 
+				alternatives.add(data.getString("synoniem"));
+		} catch (SQLException e) {
+			System.err.println("Error fetching alternatives for question id: " + questionId);
+			System.err.println(e.getMessage());
+		}
+		return alternatives;
 	}
 	
 	public Player getPlayer(String playerName) {
