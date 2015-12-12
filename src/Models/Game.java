@@ -36,7 +36,7 @@ public class Game {
 		return false;
 	}
 	
-	public int getGameId() {
+	public int getId() {
 		return id;
 	}
 	

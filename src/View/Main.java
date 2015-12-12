@@ -3,7 +3,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
-import Controller.ChallengeListController;
+import Controllers.*;
 
 public class Main {
 
