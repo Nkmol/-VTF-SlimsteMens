@@ -27,7 +27,6 @@ public class Answer {
 			System.err.println("Error initializing answer");
 			System.err.println(e.getMessage());
 		}
-
 	}
 	
 	public int getQuestionId() {
@@ -41,5 +40,4 @@ public class Answer {
 	public ArrayList<String> getAlternatives() {
 		return alternatives;
 	}
-	
 }
