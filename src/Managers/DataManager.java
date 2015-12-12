@@ -142,7 +142,7 @@ public class DataManager {
 			System.err.println(e.getMessage());
 		}
 		
-		return null;
+		return question;
 	}
 	
 	public ArrayList<Question> getQuestions(Round round) {
