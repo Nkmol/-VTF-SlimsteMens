@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 
 import Controllers.ChallengeListController;
+import Managers.DataManager;
 
 public class Main {
 
@@ -41,6 +42,7 @@ public class Main {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		//create MVC
+		DataManager manager = DataManager.getInstance();
 	}
 
 }
