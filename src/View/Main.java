@@ -3,7 +3,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
-import Controller.ChallengeListController;
+import Controllers.ChallengeListController;
 
 public class Main {
 
@@ -39,9 +39,8 @@ public class Main {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		ChallengeListController challengeListController = new ChallengeListController(frame);
-		//PlayerListController playerListController = new PlayerListController(frame);
-		//AbstractGameController abstractGameController = new AbstractGameController(frame);
+
+		//create MVC
 	}
 
 }

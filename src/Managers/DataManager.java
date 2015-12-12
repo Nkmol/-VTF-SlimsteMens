@@ -63,7 +63,7 @@ public class DataManager {
 		try{
 			String sql = "SELECT * FROM ronde WHERE spel_id = ? and rondenaam = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, game.getId());
+			preparedStatement.setInt(1, game.getGameId());
 			preparedStatement.setString(2, roundType.getValue());
 			ResultSet data = preparedStatement.executeQuery();
 			if (data.next()) {
@@ -96,7 +96,7 @@ public class DataManager {
 		try{
 			String sql = "SELECT * FROM ronde WHERE spel_id = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, game.getId());
+			preparedStatement.setInt(1, game.getGameId());
 			ResultSet data = preparedStatement.executeQuery();
 			RoundType roundType;
 			Round round = null;
