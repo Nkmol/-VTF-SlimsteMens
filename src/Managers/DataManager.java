@@ -258,7 +258,7 @@ public class DataManager {
 	public ArrayList<ChatMessage> getChatMessages(int gameId) {
 		ArrayList<ChatMessage> chatMessages = null;
 		try {
-			String sql = "SELECT * FROM chatMessages WHERE spel_id = ?";
+			String sql = "SELECT * FROM chatregel WHERE spel_id = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, gameId);
 			ResultSet data = preparedStatement.executeQuery();
