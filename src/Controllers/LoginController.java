@@ -21,7 +21,9 @@ public class LoginController {
 	}
 	
 	private void btnLogin_Press() {
-		model.login(view.txtUsername.getText(), view.txtPassword.getText());
+		if(model.login(view.txtUsername.getText(), view.txtPassword.getText())) {
+			System.out.println("Succesvol ingelogd!");
+		}
 	}
 	
 	private void btnReg_Press() {

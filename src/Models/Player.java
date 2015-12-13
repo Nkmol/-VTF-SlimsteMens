@@ -10,7 +10,7 @@ public class Player extends Observable{
 	
 	private String name;
 	private Role role;
-	public String errorMsg;
+	public String errorMsg = "", succesMsg = "";
 	
 	public Player(String name, Role role) {
 		this.name = name;
@@ -43,7 +43,8 @@ public class Player extends Observable{
 		return role;
 	}
 	
-	public void login(String name, String password) {
+	public boolean login(String name, String password) {
+		boolean state = false;
 		if(name.equals("") || password.equals("")) {
 			errorMsg = "Vul alle velden in.";
 		}
@@ -51,19 +52,34 @@ public class Player extends Observable{
 			Player player = DataManager.getInstance().getPlayer(name);
 			if(player == null)
 				errorMsg = "De combinatie van je naam en wachtwoord klopt niet";
+			else {
+				String pass = DataManager.getInstance().getPasswordForPlayer(name);
+				if(pass.equals(password)) {
+					errorMsg = "";
+					state = true;
+				}
+				else
+					errorMsg = "De combinatie van je naam en wachtwoord klopt niet";
+			}
 		}
 		
 		setChanged();
 		notifyObservers(this);
+		return state;
 	}
 	
-	public static String register(String name, String password) {
+	public void register(String name, String password) {
 		if(name.equals("") || password.equals(""))
-			return "Vul alle velden in.";
+			errorMsg = "Vul alle velden in.";
 		else 
 			if(!DataManager.getInstance().registerUser(name, password, Role.Player))
-				return "Er is iets fout gegaan tijdens het registreren.";
+				errorMsg = "Er is iets fout gegaan tijdens het registreren.";
+			else {
+				errorMsg = "";
+				succesMsg = "U bent succesvol geregistreerd";
+			}
 		
-		return "";
+		setChanged();
+		notifyObservers(this);
 	}
 }

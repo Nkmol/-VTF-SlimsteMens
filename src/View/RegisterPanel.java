@@ -6,10 +6,13 @@ import java.util.Observer;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-public class RegisterPanel extends JPanel {
+import Models.Player;
+
+public class RegisterPanel extends JPanel implements Observer {
 	private final static String USERNAME 	 = "Username: ",
 						 	    PASSWORD 	 = "Password: ",
 						 	    BTN_REGISTR  = "Registrate",
+						 	    BTN_LOGIN	 = "Login",
 						 	    HEADER		 = "- Registreer -";
 	
 	public JTextField 	txtUsername,
@@ -73,8 +76,15 @@ public class RegisterPanel extends JPanel {
 		lblError.setForeground(Color.RED);
 		add(lblError, c);
 		
-		c.gridx = 1;
 		c.gridy = 4;
+		c.gridx = 0;
+		c.weightx = 0;
+		c.gridwidth = 1;
+		c.insets = new  Insets(10, 0, 0, 10);
+		btnLogin = new JButton(RegisterPanel.BTN_LOGIN);
+		add(btnLogin, c);
+		
+		c.gridx = 1;
 		c.weightx = 0;
 		c.gridwidth = 1;
 		c.insets = new Insets(10, 0, 0, 0);
@@ -82,7 +92,17 @@ public class RegisterPanel extends JPanel {
 		add(btnReg, c);
 	}
 	
-	public void setError(String error) {
-		lblError.setText(error);
+	@Override
+	public void update(Observable o, Object arg) {
+		Player model = (Player)arg;
+		System.out.println(model.succesMsg);
+		if(model.succesMsg == "") {
+			lblError.setText(model.errorMsg);
+			lblError.setForeground(Color.RED);
+		}
+		else {
+			lblError.setText(model.succesMsg);
+			lblError.setForeground(Color.GREEN);
+		}
 	}
 }
