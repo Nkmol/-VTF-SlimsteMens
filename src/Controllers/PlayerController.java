@@ -15,7 +15,7 @@ public class PlayerController {
 		playerList = getPlayers();
 		
 		for(int i = 0; i < playerList.length; i++) {
-			PlayerView playerView = new PlayerView(playerList[i].getName());
+			PlayerView playerView = new PlayerView(playerList[i].getName(), true);
 			playerViews.add(playerView);
 		}
 		

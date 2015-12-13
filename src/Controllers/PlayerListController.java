@@ -2,6 +2,7 @@ package Controllers;
 
 import javax.swing.JFrame;
 
+import Models.ActivePlayers;
 import View.ChallengeView;
 import View.PlayerListView;
 import View.PlayerView;
@@ -16,12 +17,23 @@ public class PlayerListController {
 		
 		this.main = main;
 		
-		PlayerListView playerListView = new PlayerListView(playerViews);
+		//PlayerListView playerListView = new PlayerListView(playerViews);
 		
 		ChallengeView challengeView = new ChallengeView("Henk");
 		
-		main.add(playerListView);
-		main.pack();
+		//main.add(playerListView);
+		//main.pack();
 		
+	}
+	
+	public PlayerListView temp()
+	{
+		
+		PlayerListView playerListView = new PlayerListView();
+		ActivePlayers activePlayers = new ActivePlayers();
+		
+		activePlayers.addObserver(playerListView);
+		
+		return playerListView;
 	}
 }

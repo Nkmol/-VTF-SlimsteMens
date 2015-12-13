@@ -22,7 +22,7 @@ public class PlayerView extends JPanel {
 	private JLabel playerNameLabel;
 	private JButton challengeButton;
 
-	public PlayerView(String playerName) {
+	public PlayerView(String playerName, Boolean enabled) {
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		setLayout(gridBagLayout);
@@ -47,7 +47,7 @@ public class PlayerView extends JPanel {
 		challengeButton.setContentAreaFilled(false);
 
 		
-		//challengeButton.addActionListener(e -> handleButtonClick());
+		challengeButton.addActionListener(e -> handleButtonClick());
 
 
 		playerNameLabel.setText(playerName);
@@ -70,14 +70,19 @@ public class PlayerView extends JPanel {
 
 		add(challengeButton, gridBagConstraintsButton);
 
+		challengeButton.setEnabled(enabled);
 
 		//249, 191, 147
 		setBackground(new Color(135,171,255));
 	}
 	
-	public void handleButtonClick() {
+	private void handleButtonClick() {
 		challengeButton.setEnabled(false);
+		sendChallenge();
 	}
-
+	
+	private void sendChallenge() {
+		// TODO Send a challenge to the opponent.
+	}
 
 }
