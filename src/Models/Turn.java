@@ -1,11 +1,10 @@
 package Models;
 
-import java.util.ArrayList;
-
 public class Turn {
 
 	private Round round;
-	private ArrayList<Question> questions; //Duplicate TODO: delete!
+	private Question question;
+	private Question sharedQuestion;
 	private TurnState turnState;
 	private Player player;
 	

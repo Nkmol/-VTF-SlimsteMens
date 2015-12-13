@@ -1,29 +1,20 @@
 package Controllers;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
+import View.MainFrame;
 
 import View.AccountPanel;
 
 public class MainController {
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
+	private MainFrame mainFrame;
 	
-			public void run() {
-				try {
-					JFrame frame = new JFrame();
-					frame.setSize(500, 500);
-					frame.setVisible(true);
-					frame.setResizable(false);
-					
-					frame.add(new AccountPanel());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	MainController() {
+		mainFrame = new MainFrame();
+		mainFrame.setVisible(true);
+	}
+	
+	public static void main(String[] args) {
+		new MainController();
 	}
 
 }
