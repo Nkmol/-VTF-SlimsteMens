@@ -57,6 +57,7 @@ public class Player extends Observable{
 				if(pass.equals(password)) {
 					errorMsg = "";
 					state = true;
+					AppStatic.curPlayer = this;
 				}
 				else
 					errorMsg = "De combinatie van je naam en wachtwoord klopt niet";

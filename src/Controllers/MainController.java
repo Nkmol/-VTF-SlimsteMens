@@ -25,6 +25,11 @@ public class MainController {
 		mainFrame.setVisible(true);
 	}
 	
+	public void showMain() {
+		//TODO: replace setContentPane to this method
+		mainFrame.showCustom();
+	}
+	
 	public static void main(String[] args) {
 		new MainController();
 	}

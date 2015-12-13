@@ -14,4 +14,8 @@ public class MainFrame extends JFrame {
 		setSize(600, 600);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
+	
+	public void showCustom() {
+		setContentPane(MainPanel);
+	}
 }
