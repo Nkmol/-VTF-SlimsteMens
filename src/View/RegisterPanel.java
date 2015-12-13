@@ -8,12 +8,12 @@ import javax.swing.border.EmptyBorder;
 
 import Models.Player;
 
-public class LoginPanel extends JPanel implements Observer {
+public class RegisterPanel extends JPanel implements Observer {
 	private final static String USERNAME 	 = "Username: ",
 						 	    PASSWORD 	 = "Password: ",
-						 	    BTN_LOGIN    = "Login",
 						 	    BTN_REGISTR  = "Registrate",
-						 	    HEADER		 = "- Login -";
+						 	    BTN_LOGIN	 = "Login",
+						 	    HEADER		 = "- Registreer -";
 	
 	public JTextField 	txtUsername,
 					   	txtPassword;
@@ -22,11 +22,10 @@ public class LoginPanel extends JPanel implements Observer {
 	private JLabel		lblError;
 	
 	
-	public LoginPanel() {
+	public RegisterPanel() {
 		setLayout(new GridBagLayout());
 		setBorder(new EmptyBorder(10, 10, 10, 10)); //add padding
 		createLoginPanel();
-		
 	}
 	
 	private void createLoginPanel() {
@@ -39,31 +38,33 @@ public class LoginPanel extends JPanel implements Observer {
 		c.weightx = 1;
 		c.gridwidth = 2;
 		c.ipady = 50;
-		JLabel lblHeader = new JLabel(LoginPanel.HEADER);
+		JLabel lblHeader = new JLabel(RegisterPanel.HEADER);
 		lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		lblHeader.setFont(new Font(Font.SANS_SERIF, 0, 28));
 		add(lblHeader, c);
 		
 		c.gridwidth = 1;
+		c.fill = GridBagConstraints.NONE;
 		c.ipady = 0;
-		c.anchor = GridBagConstraints.WEST;
 		c.gridy = 1;
-		c.insets = new  Insets(0, 0, 10, 20);
-		add(new JLabel(LoginPanel.USERNAME), c);
+		c.anchor = GridBagConstraints.WEST;
+		c.insets = new Insets(0, 0, 10, 20);
+		add(new JLabel(RegisterPanel.USERNAME), c);
 		
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
 		c.weightx = 1;
-		c.insets = new  Insets(0, 0, 10, 0);
 		c.ipadx = 350;
+		c.insets = new Insets(0, 0, 10, 0);
 		txtUsername = new JTextField();
 		add(txtUsername, c);
 		
-		c.ipadx = 0;
 		c.gridx = 0;
 		c.gridy = 2;
 		c.weightx = 0;
-		c.insets = new  Insets(0, 0, 0, 0);
-		add(new JLabel(LoginPanel.PASSWORD), c);
+		c.ipadx = 0;
+		c.insets = new Insets(0, 0, 0, 0);
+		add(new JLabel(RegisterPanel.PASSWORD), c);
 		
 		c.gridx = 1;
 		c.weightx = 1;
@@ -71,28 +72,37 @@ public class LoginPanel extends JPanel implements Observer {
 		add(txtPassword, c);
 		
 		c.gridy = 3;
-		lblError = new JLabel(" ");
+		lblError = new JLabel("");
 		lblError.setForeground(Color.RED);
 		add(lblError, c);
 		
-		c.gridx = 1;
 		c.gridy = 4;
-		c.gridwidth = 1;
-		c.insets = new  Insets(10, 0, 0, 0);
-		btnLogin = new JButton(LoginPanel.BTN_LOGIN);
-		add(btnLogin, c);
-		
 		c.gridx = 0;
 		c.weightx = 0;
 		c.gridwidth = 1;
 		c.insets = new  Insets(10, 0, 0, 10);
-		btnReg = new JButton(LoginPanel.BTN_REGISTR);
+		btnLogin = new JButton(RegisterPanel.BTN_LOGIN);
+		add(btnLogin, c);
+		
+		c.gridx = 1;
+		c.weightx = 0;
+		c.gridwidth = 1;
+		c.insets = new Insets(10, 0, 0, 0);
+		btnReg = new JButton(RegisterPanel.BTN_REGISTR);
 		add(btnReg, c);
 	}
-
+	
 	@Override
-	public void update(Observable arg0, Object arg1) {
-		Player player = (Player)arg1;
-		lblError.setText(player.errorMsg);
+	public void update(Observable o, Object arg) {
+		Player model = (Player)arg;
+		System.out.println(model.succesMsg);
+		if(model.succesMsg == "") {
+			lblError.setText(model.errorMsg);
+			lblError.setForeground(Color.RED);
+		}
+		else {
+			lblError.setText(model.succesMsg);
+			lblError.setForeground(Color.GREEN);
+		}
 	}
 }
