@@ -6,12 +6,12 @@ import Models.*;
 
 public class DataManager {
 
-	private static final String dbUrl = "jdbc:mysql://localhost/slimsteMens";
-	private static final String username = "root";
-	private static final String password = "root";
-//	private static final String dbUrl = "jdbc:mysql://databases.aii.avans.nl/spmol_db2";
-//	private static final String username = "spmol";
-//	private static final String password = "Ab12345";
+//	private static final String dbUrl = "jdbc:mysql://localhost/slimsteMens";
+//	private static final String username = "root";
+//	private static final String password = "root";
+	private static final String dbUrl = "jdbc:mysql://databases.aii.avans.nl/spmol_db2";
+	private static final String username = "spmol";
+	private static final String password = "Ab12345";
 	
 	private static DataManager instance = null;
 	private Connection connection;
@@ -232,6 +232,21 @@ public class DataManager {
 			catch (SQLException e1) { System.err.println("Error rolling back " + e1.getMessage()); }
 			return false;
 		}
+	}
+	
+	public String getPasswordForPlayer(String name) {
+		try {
+			String sql = "SELECT * FROM account WHERE naam = ? LIMIT 1;";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, name);
+			ResultSet data = preparedStatement.executeQuery();
+			if (data.next()) 
+				return data.getString("wachtwoord");
+		} catch (SQLException e) {
+			System.err.println("Error fetching password for user: " + name);
+			System.err.println(e.getMessage());
+		}
+		return null;
 	}
 	
 	public boolean pushChatMessage(int gameId, Timestamp timestamp, int millisec, String senderName, String message) {
