@@ -17,6 +17,10 @@ public class Player extends Observable{
 		this.role = role;
 	}
 	
+	public Player() {
+		//TODO: Do i need name and Role when i start the login screen?
+	}
+	
 	public Player(ResultSet data) {
 		try {
 			this.name = data.getString("naam");
@@ -37,6 +41,20 @@ public class Player extends Observable{
 	
 	public Role getRole() {
 		return role;
+	}
+	
+	public void login(String name, String password) {
+		if(name.equals("") || password.equals("")) {
+			errorMsg = "Vul alle velden in.";
+		}
+		else {
+			Player player = DataManager.getInstance().getPlayer(name);
+			if(player == null)
+				errorMsg = "De combinatie van je naam en wachtwoord klopt niet";
+		}
+		
+		setChanged();
+		notifyObservers(this);
 	}
 	
 	public static String register(String name, String password) {

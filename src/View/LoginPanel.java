@@ -1,20 +1,25 @@
 package View;
 import java.awt.*;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-public class LoginPanel extends JPanel {
+import Models.Player;
+
+public class LoginPanel extends JPanel implements Observer {
 	private final static String USERNAME 	 = "Username: ",
 						 	    PASSWORD 	 = "Password: ",
 						 	    BTN_LOGIN    = "Login",
 						 	    BTN_REGISTR  = "Registrate",
 						 	    HEADER		 = "- Login -";
 	
-	private JTextField 	txtUsername,
+	public JTextField 	txtUsername,
 					   	txtPassword;
 	public JButton 		btnLogin,
 						btnReg;
+	private JLabel		lblError;
 	
 	
 	public LoginPanel() {
@@ -66,9 +71,9 @@ public class LoginPanel extends JPanel {
 		add(txtPassword, c);
 		
 		c.gridy = 3;
-		JLabel error = new JLabel("Een voorbeeld error");
-		error.setForeground(Color.RED);
-		add(error, c);
+		lblError = new JLabel(" ");
+		lblError.setForeground(Color.RED);
+		add(lblError, c);
 		
 		c.gridx = 1;
 		c.gridy = 4;
@@ -83,5 +88,11 @@ public class LoginPanel extends JPanel {
 		c.insets = new  Insets(10, 0, 0, 10);
 		btnReg = new JButton(LoginPanel.BTN_REGISTR);
 		add(btnReg, c);
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		Player player = (Player)arg1;
+		lblError.setText(player.errorMsg);
 	}
 }
