@@ -12,6 +12,18 @@ public class PlayerAnswer {
 		this.moment = moment;
 	}
 	
+	public int getAnswerId() {
+		return answerId;
+	}
+
+	public String getAnswer() {
+		return answer;
+	}
+
+	public int getMoment() {
+		return moment;
+	}
+	
 	public void submit(Turn turn) {
 		//TODO: extract round name and turn id from turn
 	}
