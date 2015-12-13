@@ -8,10 +8,18 @@ public class MainController {
 	
 	MainController() {
 		mainFrame = new MainFrame();
-		
-		LoginController login = new LoginController();
+		showLogin();
+	}
+	
+	public void showLogin() {
+		LoginController login = new LoginController(this);
 		mainFrame.setContentPane(login.getView());
-		
+		mainFrame.setVisible(true);
+	}
+	
+	public void showRegister() {
+		RegisterController register = new RegisterController(this);
+		mainFrame.setContentPane(register.getView());
 		mainFrame.setVisible(true);
 	}
 	

@@ -2,11 +2,15 @@ package Models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Observable;
 
-public class Player {
+import Managers.DataManager;
+
+public class Player extends Observable{
 	
 	private String name;
 	private Role role;
+	public String errorMsg;
 	
 	public Player(String name, Role role) {
 		this.name = name;
@@ -35,4 +39,13 @@ public class Player {
 		return role;
 	}
 	
+	public static String register(String name, String password) {
+		if(name.equals("") || password.equals(""))
+			return "Vul alle velden in.";
+		else 
+			if(!DataManager.getInstance().registerUser(name, password, Role.Player))
+				return "Er is iets fout gegaan tijdens het registreren.";
+		
+		return "";
+	}
 }

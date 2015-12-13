@@ -1,5 +1,7 @@
 package View;
 import java.awt.*;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -10,10 +12,11 @@ public class RegisterPanel extends JPanel {
 						 	    BTN_REGISTR  = "Registrate",
 						 	    HEADER		 = "- Registreer -";
 	
-	private JTextField 	txtUsername,
+	public JTextField 	txtUsername,
 					   	txtPassword;
-	private JButton 	btnLogin,
+	public JButton 		btnLogin,
 						btnReg;
+	private JLabel		lblError;
 	
 	
 	public RegisterPanel() {
@@ -66,9 +69,9 @@ public class RegisterPanel extends JPanel {
 		add(txtPassword, c);
 		
 		c.gridy = 3;
-		JLabel error = new JLabel("Een voorbeeld error");
-		error.setForeground(Color.RED);
-		add(error, c);
+		lblError = new JLabel("");
+		lblError.setForeground(Color.RED);
+		add(lblError, c);
 		
 		c.gridx = 1;
 		c.gridy = 4;
@@ -77,5 +80,9 @@ public class RegisterPanel extends JPanel {
 		c.insets = new Insets(10, 0, 0, 0);
 		btnReg = new JButton(RegisterPanel.BTN_REGISTR);
 		add(btnReg, c);
+	}
+	
+	public void setError(String error) {
+		lblError.setText(error);
 	}
 }
