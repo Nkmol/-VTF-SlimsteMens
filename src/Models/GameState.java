@@ -24,13 +24,13 @@ public enum GameState {
 	public String getValue() {
 		switch (this) {
 		case Invited:
-			return "Uitgenodigd";
+			return "uitgedaagd";
 		case Rejected:
-			return "Verworpen";
+			return "verworpen";
 		case Busy:
-			return "Bezig";
+			return "bezig";
 		case Finished:
-			return "Afgelopen";
+			return "afgelopen";
 		default:
 			return null;
 		}
