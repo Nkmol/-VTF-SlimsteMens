@@ -13,7 +13,7 @@ public class LoginPanel extends JPanel {
 	
 	private JTextField 	txtUsername,
 					   	txtPassword;
-	private JButton 	btnLogin,
+	public JButton 		btnLogin,
 						btnReg;
 	
 	
@@ -21,6 +21,7 @@ public class LoginPanel extends JPanel {
 		setLayout(new GridBagLayout());
 		setBorder(new EmptyBorder(10, 10, 10, 10)); //add padding
 		createLoginPanel();
+		
 	}
 	
 	private void createLoginPanel() {

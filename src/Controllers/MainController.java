@@ -1,7 +1,5 @@
 package Controllers;
 
-import java.awt.EventQueue;
-import javax.swing.JFrame;
 import View.MainFrame;
 
 public class MainController {
@@ -10,6 +8,10 @@ public class MainController {
 	
 	MainController() {
 		mainFrame = new MainFrame();
+		
+		LoginController login = new LoginController();
+		mainFrame.setContentPane(login.getView());
+		
 		mainFrame.setVisible(true);
 	}
 	
