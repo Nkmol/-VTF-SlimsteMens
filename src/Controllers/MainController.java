@@ -11,7 +11,6 @@ public class MainController {
 	public MainController() {
 		mainModel = new Main();
 		mainFrame = new MainFrame();
-		mainFrame.setVisible(true);
 		showLogin();
 	}
 	
