@@ -3,6 +3,8 @@ package Models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import Managers.DataManager;
+
 public class GameScore {
 	
 	private int gameId;
@@ -60,4 +62,15 @@ public class GameScore {
 		return null;
 	}
 	
+	public String getOpponentName() {
+		boolean Player1IsUser = !getPlayer1Name().equals(DataManager.getInstance().getCurrentUser().getName());
+		boolean Player2IsUser = !getPlayer1Name().equals(DataManager.getInstance().getCurrentUser().getName());
+		
+		if (Player1IsUser && !Player2IsUser)
+			return getPlayer2Name();
+		else if (!Player1IsUser && Player2IsUser)
+			return getPlayer1Name();
+		else
+			return null; 
+	}
 }
