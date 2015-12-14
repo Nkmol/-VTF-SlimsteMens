@@ -71,6 +71,22 @@ public class DataManager {
 		return games;
 	}
 	
+	public GameScore getGameScore(int gameId) {
+		GameScore gameScore = null;
+		try {
+			String sql = "SELECT * FROM score WHERE spel_id = ? LIMIT 1";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, gameId);
+			ResultSet data = preparedStatement.executeQuery();
+			if (data.next())
+				gameScore = new GameScore(data);
+		} catch (SQLException e) {
+			System.err.println("Error fetching game score for game id: " + gameId);
+			System.err.println(e.getMessage());
+		}
+		return gameScore;
+	}
+	
 	public Game getGame(int gameId) {
 		Game game = null;
 		String sql = "SELECT * FROM spel WHERE spel_id = ?";
