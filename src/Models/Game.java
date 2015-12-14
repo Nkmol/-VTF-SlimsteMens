@@ -1,5 +1,7 @@
 package Models;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import Managers.DataManager;
@@ -22,21 +24,36 @@ public class Game {
 		this.player2 = player2;
 		this.gameState = gameState;
 		rounds = DataManager.getInstance().getRounds(this);
+		chatMessages = DataManager.getInstance().getChatMessages(id);
 	}
 	
-	public boolean IsPlayerAnswerCorrect(PlayerAnswer player, Answer answer) {
+	public Game(ResultSet data) {
+		try {
+			id = data.getInt("spel_id");
+			player1 = DataManager.getInstance().getPlayer(data.getString("speler1"));
+			player2 = DataManager.getInstance().getPlayer(data.getString("speler2"));
+			gameState = GameState.fromString(data.getString("toestand_type"));
+			rounds = DataManager.getInstance().getRounds(this);
+			chatMessages = DataManager.getInstance().getChatMessages(id);
+		} catch (SQLException e) {
+			System.err.println("Error initializing game");
+			System.err.println(e.getMessage());
+		}
+	}
+	
+	public boolean isPlayerAnswerCorrect(PlayerAnswer player, Answer answer) {
 		
 		if (StringUtility.CalculateMatchPercentage(player.getAnswer(), answer.getAnswer()) >=  MinimumAnswerPercentage)
 			return true;
 		
-		for (String Alternative : answer.getAlternatives())
-			if (StringUtility.CalculateMatchPercentage(player.getAnswer(), Alternative) >=  MinimumAnswerPercentage)
+		for (String alternative : answer.getAlternatives())
+			if (StringUtility.CalculateMatchPercentage(player.getAnswer(), alternative) >=  MinimumAnswerPercentage)
 				return true;
 		
 		return false;
 	}
 	
-	public int getGameId() {
+	public int getId() {
 		return id;
 	}
 	
@@ -54,5 +71,9 @@ public class Game {
 	
 	public ArrayList<Round> getRounds() {
 		return rounds;
+	}
+	
+	public ArrayList<ChatMessage> getChatMessages() {
+		return chatMessages;
 	}
 }

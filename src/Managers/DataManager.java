@@ -6,9 +6,12 @@ import Models.*;
 
 public class DataManager {
 
-	private static final String dbUrl = "jdbc:mysql://databases.aii.avans.nl/spmol_db2";
-	private static final String username = "spmol";
-	private static final String password = "Ab12345";
+	private static final String dbUrl = "jdbc:mysql://localhost/slimsteMens";
+	private static final String username = "root";
+	private static final String password = "root";
+//	private static final String dbUrl = "jdbc:mysql://databases.aii.avans.nl/spmol_db2";
+//	private static final String username = "spmol";
+//	private static final String password = "Ab12345";
 	
 	private static DataManager instance = null;
 	private Connection connection;
@@ -18,9 +21,8 @@ public class DataManager {
 	}
 	
 	public static DataManager getInstance() {
-		if(instance == null) {
+		if(instance == null) 
 			instance = new DataManager();
-		}
 		return instance;
 	}
 	
@@ -33,9 +35,40 @@ public class DataManager {
 			players = new ArrayList<>();
 			while(data.next()) 
 				players.add(new Player(data));
-			
 		} catch (SQLException e) { }
 		return players;
+	}
+	
+	public boolean pushNewGame(Player player1, Player player2) {
+		try {
+			String sql = "INSERT INTO spel (speler1, speler2, toestand_type) VALUES (?,?,?)";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, player1.getName());
+			preparedStatement.setString(2, player2.getName());
+			preparedStatement.setString(3, GameState.Invited.getValue());
+			if (preparedStatement.executeUpdate() > 0) 
+				connection.commit();
+			return true;
+		} catch (SQLException e) {
+			System.err.println("Error inserting new game");
+			System.err.println(e.getMessage());
+			return false;
+		}
+	}
+	
+	public ArrayList<Game> getAllGamesForPlayer(String name) {
+		ArrayList<Game> games = null;
+		try {
+			String sql = "SELECT * FROM spel WHERE speler1 = ? OR speler2 = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, name);
+			preparedStatement.setString(2, name);
+			ResultSet data = preparedStatement.executeQuery();
+			games = new ArrayList<>();
+			while(data.next()) 
+				games.add(new Game(data));
+		} catch (SQLException e) { }
+		return games;
 	}
 	
 	public Game getGame(int gameId) {
@@ -45,12 +78,8 @@ public class DataManager {
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, gameId);
 			ResultSet data = preparedStatement.executeQuery();
-			if (data.next()) {
-				Player player1 = DataManager.getInstance().getPlayer(data.getString("speler1"));
-				Player player2 = DataManager.getInstance().getPlayer(data.getString("speler2"));
-				GameState gameState = GameState.fromString(data.getString("toestand_type"));
-				game = new Game(gameId, player1, player2, gameState);
-			}
+			if (data.next()) 
+				game = new Game(data);
 		} catch (SQLException e) {
 			System.err.println("Error fetching game with id: " + gameId);
 			System.err.println(e.getMessage());
@@ -63,7 +92,7 @@ public class DataManager {
 		try{
 			String sql = "SELECT * FROM ronde WHERE spel_id = ? and rondenaam = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, game.getGameId());
+			preparedStatement.setInt(1, game.getId());
 			preparedStatement.setString(2, roundType.getValue());
 			ResultSet data = preparedStatement.executeQuery();
 			if (data.next()) {
@@ -96,7 +125,7 @@ public class DataManager {
 		try{
 			String sql = "SELECT * FROM ronde WHERE spel_id = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, game.getGameId());
+			preparedStatement.setInt(1, game.getId());
 			ResultSet data = preparedStatement.executeQuery();
 			RoundType roundType;
 			Round round = null;
@@ -126,23 +155,6 @@ public class DataManager {
 			}
 		} catch (SQLException e) { }
 		return rounds;
-	}
-	
-	public Question getQuestion(Round round) {
-		Question question = null;
-		try {
-			String sql = "SELECT * FROM vraag WHERE rondenaam = ? ORDER BY RAND() LIMIT 1";
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, round.getRoundType().getValue());
-			ResultSet data = preparedStatement.executeQuery();
-			if (data.next()) 
-				question = new Question(data, round);
-		} catch (SQLException e) {
-			System.err.println("Error fetching question");
-			System.err.println(e.getMessage());
-		}
-		
-		return null;
 	}
 	
 	public ArrayList<Question> getQuestions(Round round) {
@@ -239,6 +251,21 @@ public class DataManager {
 		}
 	}
 	
+	public String getPasswordForPlayer(String name) {
+		try {
+			String sql = "SELECT * FROM account WHERE naam = ? LIMIT 1;";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, name);
+			ResultSet data = preparedStatement.executeQuery();
+			if (data.next()) 
+				return data.getString("wachtwoord");
+		} catch (SQLException e) {
+			System.err.println("Error fetching password for user: " + name);
+			System.err.println(e.getMessage());
+		}
+		return null;
+	}
+	
 	public boolean pushChatMessage(int gameId, Timestamp timestamp, int millisec, String senderName, String message) {
 		try {
 			String sql = "insert into chatregel (spel_id, tijdstip, millisec, account_naam_zender, bericht)"
@@ -263,7 +290,7 @@ public class DataManager {
 	public ArrayList<ChatMessage> getChatMessages(int gameId) {
 		ArrayList<ChatMessage> chatMessages = null;
 		try {
-			String sql = "SELECT * FROM chatMessages WHERE spel_id = ?";
+			String sql = "SELECT * FROM chatregel WHERE spel_id = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, gameId);
 			ResultSet data = preparedStatement.executeQuery();
