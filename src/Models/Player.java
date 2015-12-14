@@ -6,6 +6,7 @@ import java.sql.SQLException;
 public class Player {
 	
 	private String name;
+	private String password;
 	private Role role;
 	
 	public Player(String name, Role role) {
@@ -15,9 +16,9 @@ public class Player {
 	
 	public Player(ResultSet data) {
 		try {
-			this.name = data.getString("naam");
-			String role = data.getString("rol_type");
-			this.role = (role.equals(Role.Player.getValue())) ? Role.Player : Role.Observer; 
+			name = data.getString("naam");
+			password = data.getString("wachtwoord");
+			role = Role.fromString(data.getString("rol_type"));
 		} catch (SQLException e) {
 			System.err.println("Error initializing player: " + e.getMessage());
 		}
@@ -33,6 +34,10 @@ public class Player {
 	
 	public Role getRole() {
 		return role;
+	}
+	
+	public String getPassword() {
+		return password;
 	}
 	
 }
