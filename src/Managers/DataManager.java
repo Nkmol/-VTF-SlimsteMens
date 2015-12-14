@@ -82,6 +82,25 @@ public class DataManager {
 		}
 	}
 	
+	public boolean gameExistsBetween(String player1, String player2, GameState gameState) {
+		boolean gameExists = false;
+		try {
+			String sql = "SELECT * FROM spel "
+					+ "WHERE speler1 = ? AND speler2 = ? AND toestand_type = ? LIMIT 1";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, player1);
+			preparedStatement.setString(2, player2);
+			preparedStatement.setString(3, gameState.getValue());
+			ResultSet data = preparedStatement.executeQuery();
+			if (data.next())
+				gameExists = true;
+		} catch (SQLException e) {
+			System.err.println("Error checking game");
+			System.err.println(e.getMessage());
+		}
+		return gameExists;
+	}
+	
 	public ArrayList<Game> getAllGamesForPlayer(String name) {
 		ArrayList<Game> games = null;
 		try {
