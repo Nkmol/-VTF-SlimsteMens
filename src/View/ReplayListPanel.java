@@ -13,13 +13,11 @@ import javax.swing.JScrollPane;
 @SuppressWarnings("serial")
 public class ReplayListPanel extends JPanel {
 
-	public ReplayListPanel()
+	private ReplayListPanel()
 	{
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	}
-	
-	
-	
+
 	public ReplayListPanel(ArrayList<ReplayListItem> list)
 	{
 		this();
