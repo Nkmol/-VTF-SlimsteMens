@@ -6,9 +6,9 @@ import Models.*;
 
 public class DataManager {
 
-	private static final String dbUrl = "jdbc:mysql://localhost/slimsteMens";
-	private static final String username = "root";
-	private static final String password = "root";
+	private static final String dbUrl = "jdbc:mysql://databases.aii.avans.nl/spmol_db2";
+	private static final String username = "spmol";
+	private static final String password = "Ab12345";
 	
 	private static DataManager instance = null;
 	private Connection connection;
@@ -63,7 +63,7 @@ public class DataManager {
 		try{
 			String sql = "SELECT * FROM ronde WHERE spel_id = ? and rondenaam = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, game.getId());
+			preparedStatement.setInt(1, game.getGameId());
 			preparedStatement.setString(2, roundType.getValue());
 			ResultSet data = preparedStatement.executeQuery();
 			if (data.next()) {
@@ -96,7 +96,7 @@ public class DataManager {
 		try{
 			String sql = "SELECT * FROM ronde WHERE spel_id = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, game.getId());
+			preparedStatement.setInt(1, game.getGameId());
 			ResultSet data = preparedStatement.executeQuery();
 			RoundType roundType;
 			Round round = null;
