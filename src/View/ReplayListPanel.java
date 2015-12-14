@@ -16,23 +16,13 @@ public class ReplayListPanel extends JPanel {
 	public ReplayListPanel()
 	{
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		
-		// TODO: get played games via databasemanager
-		ArrayList<ReplayListItem> list = new ArrayList<ReplayListItem>();
-		
-		// add listitems with temporary testdata
-		list.add(new ReplayListItem(3, "Temmie", false, 5, 150));
-		list.add(new ReplayListItem(3, "Marco", true, 5, 150));
-		list.add(new ReplayListItem(3, "Potato", true, 5, 42));
-		list.add(new ReplayListItem(3, "Aaron", true, 5, 150));
-		list.add(new ReplayListItem(3, "Temmie", false, 5, 150));
-		list.add(new ReplayListItem(3, "Temmie", false, 5, 150));
-		list.add(new ReplayListItem(1, "Vincent", false, 4, 2));
-		list.add(new ReplayListItem(2, "Temmie", false, 5, 150));
-		list.add(new ReplayListItem(3, "Temmie", false, 99, 42));
-		list.add(new ReplayListItem(3, "Temmie", false, 7, 150));
-		list.add(new ReplayListItem(3, "Temmie", false, 5, 150));
-		
+	}
+	
+	
+	
+	public ReplayListPanel(ArrayList<ReplayListItem> list)
+	{
+		this();
 		Dimension PrefferedItemDimension = new Dimension(getWidth(), 200);
 		for(ReplayListItem item : list)
 		{
