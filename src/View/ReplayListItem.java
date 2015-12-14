@@ -10,6 +10,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
+
+
 @SuppressWarnings("serial")
 public class ReplayListItem extends JPanel {
 	
@@ -17,20 +19,22 @@ public class ReplayListItem extends JPanel {
     private Border HoverBorder;
 	private int Id;
 	
-	public ReplayListItem (
-			int Id, 
-			String Opponent, 
-			Boolean won, 
-			int PlayerScore, 
-			int OpponentScore) {
+	private ReplayListItem()
+	{
 		DefaultBorder = BorderFactory.createLineBorder(Color.BLACK);
-	    HoverBorder = BorderFactory.createLineBorder(Color.RED,5);
+	    HoverBorder = BorderFactory.createLineBorder(Color.RED,2);
 		
 		setBorder(DefaultBorder);
 		setLayout(new GridLayout(2, 2, 0, 0));
+	}
+	
+	public ReplayListItem (
+			int Id, 
+			String Opponent, 
+			int PlayerScore, 
+			int OpponentScore) {
+		this();
 		this.Id = Id;
-		
-		// TODO: Fix layout
 		
 		JLabel lblOpponent = new JLabel("Tegen: " + Opponent);
 		add(lblOpponent);
@@ -38,8 +42,19 @@ public class ReplayListItem extends JPanel {
 		JLabel lblScore = new JLabel("jouw score: " + PlayerScore + " - OpponentScore: " + OpponentScore);
 		add (lblScore);
 		
-		JLabel lblGewonnen = new JLabel((won) ? "Gewonnen" : "Verloren");
-		add(lblGewonnen);
+		JLabel lblResult = new JLabel();
+		
+		if (PlayerScore == OpponentScore) {
+			lblResult.setText("Gelijkspel");
+		}
+		else if (PlayerScore > OpponentScore) {
+			lblResult.setText("Gewonnen");
+		}
+		else {
+			lblResult.setText("Verloren");
+		}
+			
+		add(lblResult);
 		
 		addMouseListener(new ReplayMouseAdapter());
 	}

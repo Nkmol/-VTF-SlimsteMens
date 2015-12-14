@@ -1,12 +1,15 @@
 package Controllers;
 
+import Models.Main;
 import View.MainFrame;
 
 public class MainController {
 
 	private MainFrame mainFrame;
+	private Main mainModel;
 	
-	MainController() {
+	public MainController() {
+		mainModel = new Main();
 		mainFrame = new MainFrame();
 		showLogin();
 	}
