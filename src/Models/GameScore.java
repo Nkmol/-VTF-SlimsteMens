@@ -3,8 +3,6 @@ package Models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.print.attribute.standard.RequestingUserName;
-
 public class GameScore {
 	
 	private int gameId;

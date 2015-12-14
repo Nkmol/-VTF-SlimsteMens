@@ -14,4 +14,15 @@ public enum Role {
 			return null;
 		}
 	}
+	
+	public static Role fromString(String value) {
+		switch (value) {
+		case "player":
+			return Player;
+		case "observer":
+			return Observer;
+		default:
+			return null;
+		}
+	}
 }

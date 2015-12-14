@@ -9,6 +9,7 @@ import Managers.DataManager;
 public class Player extends Observable{
 	
 	private String name;
+	private String password;
 	private Role role;
 	public String errorMsg = "", succesMsg = "";
 	
@@ -23,9 +24,9 @@ public class Player extends Observable{
 	
 	public Player(ResultSet data) {
 		try {
-			this.name = data.getString("naam");
-			String role = data.getString("rol_type");
-			this.role = (role.equals(Role.Player.getValue())) ? Role.Player : Role.Observer; 
+			name = data.getString("naam");
+			password = data.getString("wachtwoord");
+			role = Role.fromString(data.getString("rol_type"));
 		} catch (SQLException e) {
 			System.err.println("Error initializing player: " + e.getMessage());
 		}
@@ -49,18 +50,7 @@ public class Player extends Observable{
 			errorMsg = "Vul alle velden in.";
 		}
 		else {
-			Player player = DataManager.getInstance().getPlayer(name);
-			if(player == null)
-				errorMsg = "De combinatie van je naam en wachtwoord klopt niet";
-			else {
-				String pass = DataManager.getInstance().getPasswordForPlayer(name);
-				if(pass.equals(password)) {
-					errorMsg = "";
-					state = true;
-				}
-				else
-					errorMsg = "De combinatie van je naam en wachtwoord klopt niet";
-			}
+			//TODO Inlog
 		}
 		
 		setChanged();
@@ -81,5 +71,9 @@ public class Player extends Observable{
 		
 		setChanged();
 		notifyObservers(this);
+	}
+
+	public String getPassword() {
+		return password;
 	}
 }

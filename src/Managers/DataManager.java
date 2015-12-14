@@ -15,6 +15,7 @@ public class DataManager {
 	
 	private static DataManager instance = null;
 	private Connection connection;
+	private Player user;
 	
 	private DataManager() { 
 		connection = getConnection();
@@ -24,6 +25,31 @@ public class DataManager {
 		if(instance == null) 
 			instance = new DataManager();
 		return instance;
+	}
+	
+	public boolean signIn(String name, String password) {
+		boolean loggedIn = false;
+		try {
+			String sql = "SELECT * FROM account AS a "
+					+ "INNER JOIN accountrol AS ar on a.naam = ar.account_naam "
+					+ "WHERE a.naam = ? AND a.wachtwoord = ? LIMIT 1";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, name);
+			preparedStatement.setString(2, password);
+			ResultSet data = preparedStatement.executeQuery();
+			if (data.next()) {
+				user = new Player(data);
+				loggedIn = true;
+			}
+		} catch (SQLException e) {
+			System.err.println("Error fetching password for user: " + name);
+			System.err.println(e.getMessage());
+		}
+		return loggedIn;
+	}
+	
+	public Player getCurrentUser() {
+		return user;
 	}
 	
 	public ArrayList<Player> getAllPlayers() {
@@ -265,21 +291,6 @@ public class DataManager {
 			catch (SQLException e1) { System.err.println("Error rolling back " + e1.getMessage()); }
 			return false;
 		}
-	}
-	
-	public String getPasswordForPlayer(String name) {
-		try {
-			String sql = "SELECT * FROM account WHERE naam = ? LIMIT 1;";
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, name);
-			ResultSet data = preparedStatement.executeQuery();
-			if (data.next()) 
-				return data.getString("wachtwoord");
-		} catch (SQLException e) {
-			System.err.println("Error fetching password for user: " + name);
-			System.err.println(e.getMessage());
-		}
-		return null;
 	}
 	
 	public boolean pushChatMessage(int gameId, Timestamp timestamp, int millisec, String senderName, String message) {
