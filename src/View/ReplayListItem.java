@@ -59,8 +59,7 @@ public class ReplayListItem extends JPanel {
 		addMouseListener(new ReplayMouseAdapter());
 	}
 	
-	public int getGameId()
-	{
+	public int getGameId() {
 		return Id;
 	}
 	
