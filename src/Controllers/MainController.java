@@ -32,6 +32,10 @@ public class MainController {
 		mainFrame.getMainPanel().setCategoryPanel(panel);
 	}
 	
+	public void SetViewSidebar(JPanel panel) {
+		mainFrame.getMainPanel().setSidebar(panel);
+	}
+	
 	public static void main(String[] args) {
 		new MainController();
 	}
