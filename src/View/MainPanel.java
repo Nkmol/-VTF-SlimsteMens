@@ -11,22 +11,13 @@ public class MainPanel extends JPanel {
 	
 	public MainPanel() {
 		setLayout(new BorderLayout());
-		
-<<<<<<< HEAD
-		CategoryPanel = new AccountPanel();
-		// TODO: change JPanel constructor to actual View for Active games
-		ActiveGamesPanel = new JPanel();
-		ActiveGamesPanel.setPreferredSize(new Dimension(100, getHeight()));
-		add(CategoryPanel, BorderLayout.CENTER);
-		add(ActiveGamesPanel, BorderLayout.EAST);
-=======
+
 		categoryPanel = new CategoryPanel();
 		sidebarPanel = new JPanel();
 		sidebarPanel.setPreferredSize(new Dimension(100, getHeight()));
 		
 		add(categoryPanel, BorderLayout.CENTER);
 		add(sidebarPanel, BorderLayout.EAST);
->>>>>>> develop
 	}
 	
 	public MainPanel(JPanel sidebarPanel, JPanel categoryPanel) {
