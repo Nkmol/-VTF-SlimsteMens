@@ -13,6 +13,7 @@ public class ReplayListController {
 		this.parent = parent;
 		model = new ReplayList();
 		view = new ReplayListPanel(model.getScore(), this);
+		view.Observe(model);
 	}
 	
 	public void ShowView() {
