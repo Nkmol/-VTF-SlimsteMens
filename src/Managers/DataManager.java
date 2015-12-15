@@ -82,6 +82,24 @@ public class DataManager {
 		}
 	}
 	
+	public boolean updateGameState(GameState newGameState, int gameId) {
+		boolean updated = false;
+		try {
+			String sql = "UPDATE spel SET toestand_type = ? WHERE spel_id = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, newGameState.getValue());
+			preparedStatement.setInt(2, gameId);
+			if (preparedStatement.executeUpdate() > 0) {
+				connection.commit();
+				updated = true;
+			}
+		} catch (SQLException e) {
+			System.err.println("Error updating game with id: " + gameId);
+			System.err.println(e.getMessage());
+		}
+		return updated;
+	}
+	
 	public boolean gameExistsBetween(String player1, String player2, GameState gameState) {
 		boolean gameExists = false;
 		try {
