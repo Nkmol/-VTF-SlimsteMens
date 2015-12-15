@@ -17,7 +17,8 @@ public class MenuController {
 	}
 	
 	private void Account_Click() {
-		
+		AccountController accountPanel = new AccountController(parent);
+		parent.SetViewCategoryPanel(accountPanel.getView());
 	}
 	
 	private void Exit_Click() {

@@ -25,6 +25,7 @@ public class LoginController {
 			// Show main frame
 			parent.ShowMainPanel();
 			
+			//TODO: Use ScreenManager?
 			// Test value for the category
 			AccountController accountPanel = new AccountController(parent);
 			parent.SetViewCategoryPanel(accountPanel.getView());
