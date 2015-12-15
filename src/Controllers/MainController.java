@@ -1,5 +1,7 @@
 package Controllers;
 
+import javax.swing.JPanel;
+
 import Models.Main;
 import View.MainFrame;
 
@@ -24,6 +26,10 @@ public class MainController {
 		RegisterController register = new RegisterController(this);
 		mainFrame.setContentPane(register.getView());
 		mainFrame.setVisible(true);
+	}
+	
+	public void SetViewCategoryPanel(JPanel panel) {
+		mainFrame.getMainPanel().setCategoryPanel(panel);
 	}
 	
 	public static void main(String[] args) {
