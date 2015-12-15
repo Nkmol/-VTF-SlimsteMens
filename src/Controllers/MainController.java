@@ -15,7 +15,13 @@ public class MainController {
 	public MainController() {
 		mainModel = new Main();
 		mainFrame = new MainFrame();
+		
 		showLogin();
+	}
+	
+	public void addMenu() {
+		MenuController menu = new MenuController(this);
+		mainFrame.setJMenuBar(menu.getView());
 	}
 	
 	public void showLogin() {
@@ -58,6 +64,8 @@ public class MainController {
 	}
 	
 	public void ShowMainPanel() {
+		//TODO: Only instantiate this once, when main screen is shown for the first time.
+		addMenu();
 		mainFrame.ShowMainPanel();
 		mainFrame.setVisible(true);
 	}
