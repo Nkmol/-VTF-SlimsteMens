@@ -1,29 +1,34 @@
 package Controllers;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
+import Models.Main;
+import View.MainFrame;
 
 import View.Ronde2;
 
 public class MainController {
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
+	private MainFrame mainFrame;
+	private Main mainModel;
 	
-			public void run() {
-				try {
-					JFrame frame = new JFrame();
-					frame.setSize(500, 500);
-					frame.setVisible(true);
-					frame.setResizable(false);
-					
-					frame.add(new Ronde2());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	public MainController() {
+		mainModel = new Main();
+		mainFrame = new MainFrame();
+		showLogin();
 	}
-
+	
+	public void showLogin() {
+		LoginController login = new LoginController(this);
+		mainFrame.setContentPane(login.getView());
+		mainFrame.setVisible(true);
+	}
+	
+	public void showRegister() {
+		RegisterController register = new RegisterController(this);
+		mainFrame.setContentPane(register.getView());
+		mainFrame.setVisible(true);
+	}
+	
+	public static void main(String[] args) {
+		new MainController();
+	}
 }
