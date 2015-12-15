@@ -48,6 +48,24 @@ public class DataManager {
 		return loggedIn;
 	}
 	
+	public boolean changeUserPassword(String name, String newPassword) {
+		boolean updated = false;
+		try {
+			String sql = "UPDATE account set wachtwoord = ? WHERE naam = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, newPassword);
+			preparedStatement.setString(2, name);
+			if (preparedStatement.executeUpdate() > 0) {
+				connection.commit();
+				updated = true;
+			}
+		} catch (SQLException e) {
+			System.err.println("Error changing password for user: " + name);
+			System.err.println(e.getMessage());
+		}
+		return updated;
+	}
+	
 	public Player getCurrentUser() {
 		return user;
 	}
