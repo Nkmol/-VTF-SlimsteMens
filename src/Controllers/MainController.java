@@ -3,7 +3,7 @@ package Controllers;
 import javax.swing.JPanel;
 
 import Models.Main;
-import View.MainFrame;
+import View.*;
 
 public class MainController {
 
@@ -30,10 +30,34 @@ public class MainController {
 	
 	public void SetViewCategoryPanel(JPanel panel) {
 		mainFrame.getMainPanel().setCategoryPanel(panel);
+		mainFrame.setVisible(true);
 	}
 	
 	public void SetViewSidebar(JPanel panel) {
 		mainFrame.getMainPanel().setSidebar(panel);
+		mainFrame.setVisible(true);
+	}
+	
+	public void SetViewMainPanel(MainPanel panel) {
+		mainFrame.setMainPanel(panel);
+		mainFrame.setVisible(true);
+	}
+	
+	public MainPanel GetViewMainPanel() {
+		return mainFrame.getMainPanel();
+	}
+	
+	public void ShowMainPanel() {
+		mainFrame.ShowMainPanel();
+		mainFrame.setVisible(true);
+	}
+	
+	public void RefreshView() {
+		mainFrame.getContentPane().repaint();
+	}
+	
+	public MainFrame getView() {
+		return mainFrame;
 	}
 	
 	public static void main(String[] args) {
