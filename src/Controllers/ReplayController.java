@@ -9,6 +9,9 @@ public class ReplayController {
 	public ReplayController(int id, MainController parent) {
 		this.parent = parent;
 		View = new ReplayPanel(this);
+	}
+	
+	public void ShowView() {
 		parent.SetViewCategoryPanel(View);
 	}
 }
