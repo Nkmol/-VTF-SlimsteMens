@@ -81,4 +81,12 @@ public class ChallengeView extends JPanel {
 		 
 	     g.drawImage(img, 0, 0, null);
 	}
+	
+	private void acceptChallenge() {
+		
+	}
+	
+	private void rejectChallenge() {
+		
+	}
 }

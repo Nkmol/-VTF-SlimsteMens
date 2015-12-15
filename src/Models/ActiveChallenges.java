@@ -38,4 +38,12 @@ public class ActiveChallenges extends Observable {
 		setChanged();
 		notifyObservers(activeChallenges);
 	}
+	
+	private void rejectChallenge() {
+		
+	}
+	
+	private void acceptChallenge() {
+		
+	} 
 }

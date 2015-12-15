@@ -26,5 +26,13 @@ public class ChallengeListController {
 		return view;
 	}
 	
+	public void handleAcceptButtonClick() {
+		
+	}
+	
+	public void handleRejectButtonClick() {
+		
+	}
+	
 	
 }
