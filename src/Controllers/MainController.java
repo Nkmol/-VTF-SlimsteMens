@@ -47,6 +47,14 @@ public class MainController {
 		return mainFrame.getMainPanel();
 	}
 	
+	public JPanel GetViewCategoryPanel() {
+		return GetViewMainPanel().getCategoryPanel();
+	}
+	
+	public JPanel GetViewSidebar() {
+		return GetViewMainPanel().getSidebar();
+	}
+	
 	public void ShowMainPanel() {
 		mainFrame.ShowMainPanel();
 		mainFrame.setVisible(true);
