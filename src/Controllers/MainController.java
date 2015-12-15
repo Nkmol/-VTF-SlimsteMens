@@ -34,7 +34,9 @@ public class MainController {
 	}
 	
 	public void showChallenges() {
-		
+		ChallengeListController challenge = new ChallengeListController(this);
+		mainFrame.setContentPane(challenge.getView());
+		mainFrame.setVisible(true);
 	}
 	
 	public static void main(String[] args) {

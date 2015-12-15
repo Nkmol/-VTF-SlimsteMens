@@ -39,11 +39,11 @@ public class ActiveChallenges extends Observable {
 		notifyObservers(activeChallenges);
 	}
 	
-	private void rejectChallenge() {
-		
+	public void rejectChallenge() {
+		// TODO reject challenge func
 	}
 	
-	private void acceptChallenge() {
-		
+	public void acceptChallenge() {
+		// TODO accept challenge func
 	} 
 }

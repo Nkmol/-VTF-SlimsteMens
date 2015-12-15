@@ -16,9 +16,15 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import Controllers.ChallengeListController;
+
 public class ChallengeView extends JPanel {
 
-	public ChallengeView(String name) {
+	ChallengeListController controller;
+	
+	public ChallengeView(String name, ChallengeListController controller) {
+		
+		this.controller = controller;
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		setLayout(gridBagLayout);	
@@ -50,6 +56,8 @@ public class ChallengeView extends JPanel {
 		gridBagConstraintsAccept.weightx = 0.5;
 		gridBagConstraintsAccept.fill = GridBagConstraints.VERTICAL;
 		
+		acceptButton.addActionListener(e -> acceptChallenge());
+		
 		add(acceptButton, gridBagConstraintsAccept);
 		
 		JButton declineButton = new JButton();
@@ -63,8 +71,9 @@ public class ChallengeView extends JPanel {
 		gridBagConstraintsDecline.weightx = 0.5;
 		gridBagConstraintsDecline.fill = GridBagConstraints.VERTICAL;
 		
+		declineButton.addActionListener(e -> rejectChallenge());
+		
 		add(declineButton, gridBagConstraintsDecline);
-
 	}
 	
 	@Override
@@ -83,10 +92,10 @@ public class ChallengeView extends JPanel {
 	}
 	
 	private void acceptChallenge() {
-		
+		controller.handleAcceptButtonClick();
 	}
 	
 	private void rejectChallenge() {
-		
+		controller.handleRejectButtonClick();
 	}
 }

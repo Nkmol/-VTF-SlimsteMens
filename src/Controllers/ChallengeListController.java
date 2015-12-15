@@ -17,7 +17,7 @@ public class ChallengeListController {
 	
 	public ChallengeListController(MainController parent) {
 		this.parent = parent;
-		view = new ChallengeListView();
+		view = new ChallengeListView(this);
 		model = new ActiveChallenges();
 		model.addObserver(view);
 	}
@@ -27,11 +27,11 @@ public class ChallengeListController {
 	}
 	
 	public void handleAcceptButtonClick() {
-		
+		model.acceptChallenge();
 	}
 	
 	public void handleRejectButtonClick() {
-		
+		model.rejectChallenge();
 	}
 	
 	
