@@ -18,12 +18,19 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import Managers.DataManager;
+import Models.Player;
+import Models.Role;
+
 public class PlayerView extends JPanel {
 	private JLabel playerNameLabel;
 	private JButton challengeButton;
+	private String playerName;
 
 	public PlayerView(String playerName, Boolean enabled) {
 
+		this.playerName = playerName;
+		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		setLayout(gridBagLayout);
 
@@ -83,6 +90,7 @@ public class PlayerView extends JPanel {
 	
 	private void sendChallenge() {
 		// TODO Send a challenge to the opponent.
+		DataManager.getInstance().pushNewGame(new Player("Test", Role.Player), new Player(playerName, Role.Player));
 	}
 
 }
