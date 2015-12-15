@@ -4,11 +4,14 @@ import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import Controllers.ReplayListController;
+import Models.GameScore;
+import Models.ReplayList;
 
 @SuppressWarnings("serial")
 public class ReplayListPanel extends JPanel {
@@ -19,7 +22,7 @@ public class ReplayListPanel extends JPanel {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	}
 
-	public ReplayListPanel(ArrayList<ReplayListItem> list, ReplayListController controller)
+	public ReplayListPanel(Collection<ReplayListItem> list, ReplayListController controller)
 	{
 		this();
 		this.controller = controller;
@@ -30,6 +33,10 @@ public class ReplayListPanel extends JPanel {
 			item.setPreferredSize(PrefferedItemDimension);
 			add(item);
 		}
+	}
+	
+	public ReplayListPanel(ArrayList<GameScore> scores, ReplayListController controller) {
+		this(ReplayList.GameScoreListToReplayItemList(scores), controller);
 	}
 	
 	private class ReplayMouseAdapter extends MouseAdapter {
