@@ -22,7 +22,12 @@ public class LoginController {
 	
 	private void btnLogin_Press() {
 		if(model.login(view.txtUsername.getText(), view.txtPassword.getText())) {
-
+			// Show main frame
+			parent.ShowMainPanel();
+			
+			// Test value for the category
+			AccountController accountPanel = new AccountController(parent);
+			parent.SetViewCategoryPanel(accountPanel.getView());
 		}
 	}
 	

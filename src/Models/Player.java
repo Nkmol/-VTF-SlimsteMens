@@ -49,8 +49,9 @@ public class Player extends Observable{
 		if(name.equals("") || password.equals("")) {
 			errorMsg = "Vul alle velden in.";
 		}
-		else {
-			//TODO Inlog
+		else if(DataManager.getInstance().signIn(name, password)){
+			errorMsg = "";
+			state = true;
 		}
 		
 		setChanged();
@@ -69,6 +70,22 @@ public class Player extends Observable{
 				succesMsg = "U bent succesvol geregistreerd";
 			}
 		
+		setChanged();
+		notifyObservers(this);
+	}
+	
+	public void changePassword(String oldPass, String newPass, String newPassRe) {
+		if(!newPass.equals(newPassRe))
+			errorMsg = "Het nieuwe wachtwoord moet 2x hetzelfde zijn";
+		else {
+			errorMsg = "";
+		}
+		
+		setChanged();
+		notifyObservers(this);
+	}
+	
+	public void updateView() {
 		setChanged();
 		notifyObservers(this);
 	}
