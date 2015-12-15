@@ -25,6 +25,9 @@ public class LoginController {
 			// Show main frame
 			parent.ShowMainPanel();
 			
+			// Save logged player to file
+			model.saveName();
+			
 			//TODO: Use ScreenManager?
 			// Test value for the category
 			AccountController accountPanel = new AccountController(parent);

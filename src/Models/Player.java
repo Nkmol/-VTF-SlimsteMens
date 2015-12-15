@@ -1,5 +1,10 @@
 package Models;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Observable;
@@ -12,6 +17,7 @@ public class Player extends Observable{
 	private String password;
 	private Role role;
 	public String errorMsg = "", succesMsg = "";
+	public static final String path = "playerName.txt";
 	
 	public Player(String name, Role role) {
 		this.name = name;
@@ -52,6 +58,8 @@ public class Player extends Observable{
 		else if(DataManager.getInstance().signIn(name, password)){
 			errorMsg = "";
 			state = true;
+			this.name = name;
+			this.password = password;
 		}
 		
 		setChanged();
@@ -60,6 +68,7 @@ public class Player extends Observable{
 	}
 	
 	public void register(String name, String password) {
+		succesMsg = "";
 		if(name.equals("") || password.equals(""))
 			errorMsg = "Vul alle velden in.";
 		else 
@@ -75,7 +84,11 @@ public class Player extends Observable{
 	}
 	
 	public void changePassword(String oldPass, String newPass, String newPassRe) {
-		if(!newPass.equals(newPassRe))
+		succesMsg = "";
+		if(oldPass.equals(password)){
+			errorMsg = "Je oude wachtwoord klopt niet";
+		}
+		else if(!newPass.equals(newPassRe))
 			errorMsg = "Het nieuwe wachtwoord moet 2x hetzelfde zijn";
 		else {
 			if(DataManager.getInstance().changeUserPassword(name, newPass)) {
@@ -94,8 +107,30 @@ public class Player extends Observable{
 		setChanged();
 		notifyObservers(this);
 	}
-
+	
 	public String getPassword() {
 		return password;
+	}
+
+	public void saveName() {
+		try {
+			PrintWriter out = new PrintWriter("playerName.txt");
+			out.println(name);
+			out.close();
+		}
+		catch (FileNotFoundException e) {
+			
+		}
+	}
+	
+	public void loadName() {
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("playerName.txt"));
+			System.out.println(br.readLine());
+			br.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
