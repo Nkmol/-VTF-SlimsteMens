@@ -24,7 +24,7 @@ public class ReplayListController {
 	}
 	
 	public void StartReplay(int Id) {
-		
+		new ReplayController(Id, parent);
 	}
 	
 	private ArrayList<ReplayListItem> GameScoreListToReplayItemList(ArrayList<GameScore> scores) {
