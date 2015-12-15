@@ -10,30 +10,21 @@ import View.PlayerListView;
 
 public class ChallengeListController {
 
-	JFrame main;
+	MainController parent;
+	ChallengeListView view;
+	ActiveChallenges model;
 	
-	public ChallengeListController(JFrame main) {
-		
-		ChallengeController challengeController = new ChallengeController();
-		ChallengeView[] challengesView = challengeController.getChallengeViews();
-		
-		this.main = main;
-		
-		//ChallengeListView challengeListView = new ChallengeListView(challengesView);
-		
-		//main.add(playerListView);
-		//main.pack();
+	
+	public ChallengeListController(MainController parent) {
+		this.parent = parent;
+		view = new ChallengeListView();
+		model = new ActiveChallenges();
+		model.addObserver(view);
 	}
 	
-	public ChallengeListView temp()
-	{
-		
-		ChallengeListView challengeListView = new ChallengeListView();
-		ActiveChallenges activeChallenges = new ActiveChallenges();
-		
-		activeChallenges.addObserver(challengeListView);
-		
-		return challengeListView;
+	public ChallengeListView getView() {
+		return view;
 	}
+	
 	
 }

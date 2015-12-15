@@ -8,32 +8,22 @@ import View.PlayerListView;
 import View.PlayerView;
 
 public class PlayerListController {
-	private JFrame main;
+	PlayerListView view;
+	ActivePlayers model;
+	MainController parent;
 	
-	public PlayerListController(JFrame main) {
-		
-		PlayerController playerController = new PlayerController();
-		PlayerView[] playerViews = playerController.getPlayerViews();
-		
-		this.main = main;
-		
-		//PlayerListView playerListView = new PlayerListView(playerViews);
-		
-		ChallengeView challengeView = new ChallengeView("Henk");
-		
-		//main.add(playerListView);
-		//main.pack();
-		
+	public PlayerListController(MainController parent) {	
+		this.parent = parent;
+		view = new PlayerListView(this);
+		model = new ActivePlayers();
+		model.addObserver(view);
 	}
 	
-	public PlayerListView temp()
-	{
-		
-		PlayerListView playerListView = new PlayerListView();
-		ActivePlayers activePlayers = new ActivePlayers();
-		
-		activePlayers.addObserver(playerListView);
-		
-		return playerListView;
+	public PlayerListView getView() {
+		return view;
+	}
+	
+	public void handleButtonClick(String playername) {
+		model.sendChallenge(playername);
 	}
 }

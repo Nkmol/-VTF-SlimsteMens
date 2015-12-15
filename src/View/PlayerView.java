@@ -6,8 +6,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -18,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import Controllers.PlayerListController;
 import Managers.DataManager;
 import Models.Player;
 import Models.Role;
@@ -26,10 +25,12 @@ public class PlayerView extends JPanel {
 	private JLabel playerNameLabel;
 	private JButton challengeButton;
 	private String playerName;
+	private PlayerListController controller;
 
-	public PlayerView(String playerName, Boolean enabled) {
+	public PlayerView(String playerName, Boolean enabled, PlayerListController controller) {
 
 		this.playerName = playerName;
+		this.controller = controller;
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		setLayout(gridBagLayout);
@@ -89,8 +90,8 @@ public class PlayerView extends JPanel {
 	}
 	
 	private void sendChallenge() {
-		// TODO Send a challenge to the opponent.
-		DataManager.getInstance().pushNewGame(new Player("Test", Role.Player), new Player(playerName, Role.Player));
+		// TODO use classes instead of names.
+		controller.handleButtonClick(playerName);
 	}
 
 }
