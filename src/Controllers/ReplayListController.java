@@ -1,37 +1,25 @@
 package Controllers;
 
-import java.util.ArrayList;
-
-import Managers.DataManager;
-import Models.Game;
-import Models.GameScore;
+import Models.ReplayList;
 import View.ReplayListPanel;
-import View.ReplayListItem;
 
 public class ReplayListController {
 
 	private MainController parent;
 	private ReplayListPanel view;
-
+	private ReplayList model;
+	
 	public ReplayListController(MainController parent) {
 		this.parent = parent;
-		ArrayList<Game> games = DataManager.getInstance().getAllGamesForPlayer(DataManager.getInstance().getCurrentUser().getName());
-		ArrayList<GameScore> scores = new ArrayList<>();
-		for (Game g : games) {
-			scores.add(DataManager.getInstance().getGameScore(g.getId()));
-		}
-		view = new ReplayListPanel(GameScoreListToReplayItemList(scores), this);
+		model = new ReplayList();
+		view = new ReplayListPanel(model.getScore(), this);
+	}
+	
+	public void ShowView() {
+		parent.SetViewCategoryPanel(view);
 	}
 	
 	public void StartReplay(int Id) {
-		new ReplayController(Id, parent);
+		new ReplayController(Id, parent).ShowView();
 	}
-	
-	private ArrayList<ReplayListItem> GameScoreListToReplayItemList(ArrayList<GameScore> scores) {
-		ArrayList<ReplayListItem> items = new ArrayList<>();
-		for (GameScore s : scores) {
-			items.add(new ReplayListItem(s));
-		}
-		return items;
-	} 
 }
