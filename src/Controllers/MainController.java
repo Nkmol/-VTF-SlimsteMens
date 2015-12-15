@@ -1,28 +1,76 @@
 package Controllers;
 
-import java.awt.EventQueue;
-import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import Models.Main;
 import View.*;
+
+import View.AccountPanel;
 
 public class MainController {
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
+	private MainFrame mainFrame;
+	private Main mainModel;
 	
-			public void run() {
-				try {
-					JFrame frame = new JFrame();
-					frame.setSize(500, 500);
-					frame.setVisible(true);
-					frame.setResizable(false);
-					
-					MenuController menuController = new MenuController();
-					frame.setJMenuBar(menuController.getView());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	public MainController() {
+		mainModel = new Main();
+		mainFrame = new MainFrame();
+		showLogin();
+	}
+	
+	public void showLogin() {
+		LoginController login = new LoginController(this);
+		mainFrame.setContentPane(login.getView());
+		mainFrame.setVisible(true);
+	}
+	
+	public void showRegister() {
+		RegisterController register = new RegisterController(this);
+		mainFrame.setContentPane(register.getView());
+		mainFrame.setVisible(true);
 	}
 
+	public void SetViewCategoryPanel(JPanel panel) {
+		mainFrame.getMainPanel().setCategoryPanel(panel);
+		mainFrame.setVisible(true);
+	}
+	
+	public void SetViewSidebar(JPanel panel) {
+		mainFrame.getMainPanel().setSidebar(panel);
+		mainFrame.setVisible(true);
+	}
+	
+	public void SetViewMainPanel(MainPanel panel) {
+		mainFrame.setMainPanel(panel);
+		mainFrame.setVisible(true);
+	}
+	
+	public MainPanel GetViewMainPanel() {
+		return mainFrame.getMainPanel();
+	}
+	
+	public JPanel GetViewCategoryPanel() {
+		return GetViewMainPanel().getCategoryPanel();
+	}
+	
+	public JPanel GetViewSidebar() {
+		return GetViewMainPanel().getSidebar();
+	}
+	
+	public void ShowMainPanel() {
+		mainFrame.ShowMainPanel();
+		mainFrame.setVisible(true);
+	}
+	
+	public void RefreshView() {
+		mainFrame.getContentPane().repaint();
+	}
+	
+	public MainFrame getView() {
+		return mainFrame;
+	}
+	
+	public static void main(String[] args) {
+		new MainController();
+	}
 }
