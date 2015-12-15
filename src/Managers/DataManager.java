@@ -134,6 +134,24 @@ public class DataManager {
 		return games;
 	}
 	
+	public ArrayList<GameScore> getGameScoresForPlayer(String playerName) {
+		ArrayList<GameScore> gameScores = null;
+		try {
+			String sql = "SELECT * FROM score WHERE speler1 = ? OR speler2 = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, playerName);
+			preparedStatement.setString(2, playerName);
+			ResultSet data = preparedStatement.executeQuery();
+			gameScores = new ArrayList<>();
+			while (data.next()) 
+				gameScores.add(new GameScore(data));
+		} catch (SQLException e) {
+			System.err.println("Erroring fetching games score for player: " + playerName);
+			System.err.println(e.getMessage());
+		}
+		return gameScores;
+	}
+	
 	public GameScore getGameScore(int gameId) {
 		GameScore gameScore = null;
 		try {
