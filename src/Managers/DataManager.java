@@ -48,6 +48,24 @@ public class DataManager {
 		return loggedIn;
 	}
 	
+	public boolean changeUserPassword(String name, String newPassword) {
+		boolean updated = false;
+		try {
+			String sql = "UPDATE account set wachtwoord = ? WHERE naam = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, newPassword);
+			preparedStatement.setString(2, name);
+			if (preparedStatement.executeUpdate() > 0) {
+				connection.commit();
+				updated = true;
+			}
+		} catch (SQLException e) {
+			System.err.println("Error changing password for user: " + name);
+			System.err.println(e.getMessage());
+		}
+		return updated;
+	}
+	
 	public Player getCurrentUser() {
 		return user;
 	}
@@ -82,6 +100,24 @@ public class DataManager {
 		}
 	}
 	
+	public boolean updateGameState(GameState newGameState, int gameId) {
+		boolean updated = false;
+		try {
+			String sql = "UPDATE spel SET toestand_type = ? WHERE spel_id = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, newGameState.getValue());
+			preparedStatement.setInt(2, gameId);
+			if (preparedStatement.executeUpdate() > 0) {
+				connection.commit();
+				updated = true;
+			}
+		} catch (SQLException e) {
+			System.err.println("Error updating game with id: " + gameId);
+			System.err.println(e.getMessage());
+		}
+		return updated;
+	}
+	
 	public boolean gameExistsBetween(String player1, String player2, GameState gameState) {
 		boolean gameExists = false;
 		try {
@@ -114,6 +150,24 @@ public class DataManager {
 				games.add(new Game(data));
 		} catch (SQLException e) { }
 		return games;
+	}
+	
+	public ArrayList<GameScore> getGameScoresForPlayer(String playerName) {
+		ArrayList<GameScore> gameScores = null;
+		try {
+			String sql = "SELECT * FROM score WHERE speler1 = ? OR speler2 = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, playerName);
+			preparedStatement.setString(2, playerName);
+			ResultSet data = preparedStatement.executeQuery();
+			gameScores = new ArrayList<>();
+			while (data.next()) 
+				gameScores.add(new GameScore(data));
+		} catch (SQLException e) {
+			System.err.println("Erroring fetching games score for player: " + playerName);
+			System.err.println(e.getMessage());
+		}
+		return gameScores;
 	}
 	
 	public GameScore getGameScore(int gameId) {

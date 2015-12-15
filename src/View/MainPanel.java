@@ -11,7 +11,7 @@ public class MainPanel extends JPanel {
 	
 	public MainPanel() {
 		setLayout(new BorderLayout());
-		
+
 		categoryPanel = new CategoryPanel();
 		sidebarPanel = new JPanel();
 		sidebarPanel.setPreferredSize(new Dimension(100, getHeight()));

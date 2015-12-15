@@ -2,25 +2,29 @@ package Controllers;
 
 import javax.swing.JFrame;
 
+import Models.ActiveChallenges;
+import Models.ActivePlayers;
 import View.ChallengeListView;
 import View.ChallengeView;
 import View.PlayerListView;
 
 public class ChallengeListController {
 
-	JFrame main;
+	MainController parent;
+	ChallengeListView view;
+	ActiveChallenges model;
 	
-	public ChallengeListController(JFrame main) {
-		
-		ChallengeController challengeController = new ChallengeController();
-		ChallengeView[] challengesView = challengeController.getChallengeViews();
-		
-		this.main = main;
-		
-		ChallengeListView playerListView = new ChallengeListView(challengesView);
-		
-		main.add(playerListView);
-		main.pack();
+	
+	public ChallengeListController(MainController parent) {
+		this.parent = parent;
+		view = new ChallengeListView();
+		model = new ActiveChallenges();
+		model.addObserver(view);
 	}
+	
+	public ChallengeListView getView() {
+		return view;
+	}
+	
 	
 }
