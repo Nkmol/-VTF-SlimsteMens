@@ -22,7 +22,7 @@ public class LoginController {
 	
 	private void btnLogin_Press() {
 		if(model.login(view.txtUsername.getText(), view.txtPassword.getText())) {
-			System.out.println("Succesvol ingelogd!");
+			
 		}
 	}
 	

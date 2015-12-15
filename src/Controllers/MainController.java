@@ -11,8 +11,7 @@ public class MainController {
 	public MainController() {
 		mainModel = new Main();
 		mainFrame = new MainFrame();
-		//showLogin();
-		showPlayers();
+		showLogin();
 	}
 	
 	public void showLogin() {
