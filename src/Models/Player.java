@@ -78,7 +78,12 @@ public class Player extends Observable{
 		if(!newPass.equals(newPassRe))
 			errorMsg = "Het nieuwe wachtwoord moet 2x hetzelfde zijn";
 		else {
-			errorMsg = "";
+			if(DataManager.getInstance().changeUserPassword(name, newPass)) {
+				errorMsg = "";
+				succesMsg = "Password succesvol veranderd";
+			}
+			else 
+				errorMsg = "Er is iets verkeerd gegaan tijdens het wachtwoord veranderen";
 		}
 		
 		setChanged();
