@@ -15,6 +15,7 @@ public class DataManager {
 	
 	private static DataManager instance = null;
 	private Connection connection;
+	private Player user;
 	
 	private DataManager() { 
 		connection = getConnection();
@@ -24,6 +25,31 @@ public class DataManager {
 		if(instance == null) 
 			instance = new DataManager();
 		return instance;
+	}
+	
+	public boolean signIn(String name, String password) {
+		boolean loggedIn = false;
+		try {
+			String sql = "SELECT * FROM account AS a "
+					+ "INNER JOIN accountrol AS ar on a.naam = ar.account_naam "
+					+ "WHERE a.naam = ? AND a.wachtwoord = ? LIMIT 1";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, name);
+			preparedStatement.setString(2, password);
+			ResultSet data = preparedStatement.executeQuery();
+			if (data.next()) {
+				user = new Player(data);
+				loggedIn = true;
+			}
+		} catch (SQLException e) {
+			System.err.println("Error fetching password for user: " + name);
+			System.err.println(e.getMessage());
+		}
+		return loggedIn;
+	}
+	
+	public Player getCurrentUser() {
+		return user;
 	}
 	
 	public ArrayList<Player> getAllPlayers() {
@@ -39,6 +65,42 @@ public class DataManager {
 		return players;
 	}
 	
+	public boolean pushNewGame(Player player1, Player player2) {
+		try {
+			String sql = "INSERT INTO spel (speler1, speler2, toestand_type) VALUES (?,?,?)";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, player1.getName());
+			preparedStatement.setString(2, player2.getName());
+			preparedStatement.setString(3, GameState.Invited.getValue());
+			if (preparedStatement.executeUpdate() > 0) 
+				connection.commit();
+			return true;
+		} catch (SQLException e) {
+			System.err.println("Error inserting new game");
+			System.err.println(e.getMessage());
+			return false;
+		}
+	}
+	
+	public boolean gameExistsBetween(String player1, String player2, GameState gameState) {
+		boolean gameExists = false;
+		try {
+			String sql = "SELECT * FROM spel "
+					+ "WHERE speler1 = ? AND speler2 = ? AND toestand_type = ? LIMIT 1";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, player1);
+			preparedStatement.setString(2, player2);
+			preparedStatement.setString(3, gameState.getValue());
+			ResultSet data = preparedStatement.executeQuery();
+			if (data.next())
+				gameExists = true;
+		} catch (SQLException e) {
+			System.err.println("Error checking game");
+			System.err.println(e.getMessage());
+		}
+		return gameExists;
+	}
+	
 	public ArrayList<Game> getAllGamesForPlayer(String name) {
 		ArrayList<Game> games = null;
 		try {
@@ -52,6 +114,22 @@ public class DataManager {
 				games.add(new Game(data));
 		} catch (SQLException e) { }
 		return games;
+	}
+	
+	public GameScore getGameScore(int gameId) {
+		GameScore gameScore = null;
+		try {
+			String sql = "SELECT * FROM score WHERE spel_id = ? LIMIT 1";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, gameId);
+			ResultSet data = preparedStatement.executeQuery();
+			if (data.next())
+				gameScore = new GameScore(data);
+		} catch (SQLException e) {
+			System.err.println("Error fetching game score for game id: " + gameId);
+			System.err.println(e.getMessage());
+		}
+		return gameScore;
 	}
 	
 	public Game getGame(int gameId) {
@@ -232,21 +310,6 @@ public class DataManager {
 			catch (SQLException e1) { System.err.println("Error rolling back " + e1.getMessage()); }
 			return false;
 		}
-	}
-	
-	public String getPasswordForPlayer(String name) {
-		try {
-			String sql = "SELECT * FROM account WHERE naam = ? LIMIT 1;";
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, name);
-			ResultSet data = preparedStatement.executeQuery();
-			if (data.next()) 
-				return data.getString("wachtwoord");
-		} catch (SQLException e) {
-			System.err.println("Error fetching password for user: " + name);
-			System.err.println(e.getMessage());
-		}
-		return null;
 	}
 	
 	public boolean pushChatMessage(int gameId, Timestamp timestamp, int millisec, String senderName, String message) {

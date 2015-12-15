@@ -6,8 +6,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -18,12 +16,22 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import Controllers.PlayerListController;
+import Managers.DataManager;
+import Models.Player;
+import Models.Role;
+
 public class PlayerView extends JPanel {
 	private JLabel playerNameLabel;
 	private JButton challengeButton;
+	private String playerName;
+	private PlayerListController controller;
 
-	public PlayerView(String playerName) {
+	public PlayerView(String playerName, Boolean enabled, PlayerListController controller) {
 
+		this.playerName = playerName;
+		this.controller = controller;
+		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		setLayout(gridBagLayout);
 
@@ -47,7 +55,7 @@ public class PlayerView extends JPanel {
 		challengeButton.setContentAreaFilled(false);
 
 		
-		//challengeButton.addActionListener(e -> handleButtonClick());
+		challengeButton.addActionListener(e -> handleButtonClick());
 
 
 		playerNameLabel.setText(playerName);
@@ -70,14 +78,20 @@ public class PlayerView extends JPanel {
 
 		add(challengeButton, gridBagConstraintsButton);
 
+		challengeButton.setEnabled(enabled);
 
 		//249, 191, 147
 		setBackground(new Color(135,171,255));
 	}
 	
-	public void handleButtonClick() {
+	private void handleButtonClick() {
 		challengeButton.setEnabled(false);
+		sendChallenge();
 	}
-
+	
+	private void sendChallenge() {
+		// TODO use classes instead of names.
+		controller.handleButtonClick(playerName);
+	}
 
 }
