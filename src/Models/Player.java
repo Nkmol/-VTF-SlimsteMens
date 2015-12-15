@@ -49,8 +49,8 @@ public class Player extends Observable{
 		if(name.equals("") || password.equals("")) {
 			errorMsg = "Vul alle velden in.";
 		}
-		else {
-			//TODO Inlog
+		else if(!DataManager.getInstance().signIn(name, password)) {
+			errorMsg = "De combinatie van je naam en password is niet bekent bij ons.";
 		}
 		
 		setChanged();
