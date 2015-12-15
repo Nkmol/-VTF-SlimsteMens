@@ -12,7 +12,7 @@ public class MainController {
 		mainModel = new Main();
 		mainFrame = new MainFrame();
 		//showLogin();
-		showPlayers();
+		showChallenges();
 	}
 	
 	public void showLogin() {

@@ -17,6 +17,7 @@ public class ChallengeListView extends JPanel implements Observer {
 	ChallengeListController controller;
 	
 	public ChallengeListView(ChallengeListController controller) {
+		this.controller = controller;
 		
 		this.setPreferredSize(new Dimension(500,500));
 		
