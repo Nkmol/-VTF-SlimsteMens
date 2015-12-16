@@ -1,6 +1,5 @@
 package View;
 
-import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -50,11 +49,9 @@ public class ReplayListPanel extends JPanel {
 	}
 	
 	private void addList(Collection<ReplayListItem> list) {
-		Dimension PrefferedItemDimension = new Dimension(getWidth(), 200);
 		for(ReplayListItem item : list)
 		{
 			item.addMouseListener(new ReplayMouseAdapter());
-			item.setPreferredSize(PrefferedItemDimension);
 			add(item);
 			itemList.add(item);
 		}
