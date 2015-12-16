@@ -5,8 +5,6 @@ import javax.swing.JPanel;
 import Models.Main;
 import View.*;
 
-import View.AccountPanel;
-
 public class MainController {
 
 	private MainFrame mainFrame;

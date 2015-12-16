@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 import Managers.DataManager;
-import View.ReplayListItem;
 
 public class ReplayList extends Observable {
 	
