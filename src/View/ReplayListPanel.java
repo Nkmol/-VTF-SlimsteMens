@@ -21,6 +21,7 @@ public class ReplayListPanel extends JPanel {
 	
 	private ReplayListPanel(ReplayListController controller) {
 		this.controller = controller;
+		itemList = new ArrayList<>();
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	}
 
