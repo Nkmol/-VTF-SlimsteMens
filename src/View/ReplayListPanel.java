@@ -19,14 +19,12 @@ public class ReplayListPanel extends JPanel {
 	private ReplayListController controller;
 	private Collection<ReplayListItem> itemList;
 	
-	private ReplayListPanel(ReplayListController controller)
-	{
+	private ReplayListPanel(ReplayListController controller) {
 		this.controller = controller;
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	}
 
-	public ReplayListPanel(Collection<ReplayListItem> list, ReplayListController controller)
-	{
+	public ReplayListPanel(Collection<ReplayListItem> list, ReplayListController controller) {
 		this(controller);
 		addList(list);
 	}
