@@ -60,12 +60,12 @@ public class ReplayListPanel extends JPanel {
 		}
 	}
 	
-	public void Observe(Observable observable) {
-		observable.addObserver(this::update);
+	public void Observe(ReplayList observable) {
+		observable.addObserver((arg1, arg2) -> update((ReplayList)arg1, arg2));
 	}
 
-	private void update(Observable observable, Object object) {
-		setItemList(GameScoreListToReplayItemList(((ReplayList)observable).getScore()));
+	private void update(ReplayList model, Object object) {
+		setItemList(GameScoreListToReplayItemList(model.getScore()));
 	}
 	
 	public static ArrayList<ReplayListItem> GameScoreListToReplayItemList(ArrayList<GameScore> scores) {
