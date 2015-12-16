@@ -3,20 +3,23 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
    
+@SuppressWarnings("serial")
 public class MainPanel extends JPanel {
 	
 	private CategoryPanel categoryPanel;
 	private JPanel sidebarPanel;
+	private JScrollPane scrollPane;
 	
 	public MainPanel() {
 		setLayout(new BorderLayout());
 
 		categoryPanel = new CategoryPanel();
 		sidebarPanel = new JPanel();
+		scrollPane = new JScrollPane(categoryPanel);
 		sidebarPanel.setPreferredSize(new Dimension(100, getHeight()));
-		
-		add(categoryPanel, BorderLayout.CENTER);
+		add(scrollPane, BorderLayout.CENTER);
 		add(sidebarPanel, BorderLayout.EAST);
 	}
 	
