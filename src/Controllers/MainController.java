@@ -72,6 +72,7 @@ public class MainController {
 	
 	public void RefreshView() {
 		mainFrame.getContentPane().repaint();
+		mainFrame.getContentPane().revalidate();
 	}
 	
 	public MainFrame getView() {
