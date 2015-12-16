@@ -24,6 +24,8 @@ public class ReplayListPanel extends JPanel {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	}
 
+	// the first parameter is a Collection<> and not a ArrayList 
+	// because the other constructor gives problems with generic Type Erasure
 	public ReplayListPanel(Collection<ReplayListItem> list, ReplayListController controller) {
 		this(controller);
 		addList(list);
