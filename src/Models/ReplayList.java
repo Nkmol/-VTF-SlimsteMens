@@ -30,12 +30,4 @@ public class ReplayList extends Observable {
 			notifyObservers();
 		}
 	}
-	
-	public static ArrayList<ReplayListItem> GameScoreListToReplayItemList(ArrayList<GameScore> scores) {
-		ArrayList<ReplayListItem> items = new ArrayList<>();
-		for (GameScore s : scores) {
-			items.add(new ReplayListItem(s));
-		}
-		return items;
-	}
 }
