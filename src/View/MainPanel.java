@@ -10,16 +10,14 @@ public class MainPanel extends JPanel {
 	
 	private CategoryPanel categoryPanel;
 	private JPanel sidebarPanel;
-	private JScrollPane scrollPane;
 	
 	public MainPanel() {
 		setLayout(new BorderLayout());
 
 		categoryPanel = new CategoryPanel();
 		sidebarPanel = new JPanel();
-		scrollPane = new JScrollPane(categoryPanel);
 		sidebarPanel.setPreferredSize(new Dimension(100, getHeight()));
-		add(scrollPane, BorderLayout.CENTER);
+		add(new JScrollPane(categoryPanel), BorderLayout.CENTER);
 		add(sidebarPanel, BorderLayout.EAST);
 	}
 	
