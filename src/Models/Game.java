@@ -3,11 +3,13 @@ package Models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Observable;
 
 import Managers.DataManager;
 import Utilities.StringUtility;
 
-public class Game {
+public class Game extends Observable{
 	
 	private int id;
 	private Player player1;
@@ -15,6 +17,8 @@ public class Game {
 	private GameState gameState;
 	private ArrayList<Round> rounds;
 	private ArrayList<ChatMessage> chatMessages;
+	
+	private static final int MinimumAnswerPercentage = 80;
 	
 	public Game(int gameId, Player player1, Player player2, GameState gameState) {
 		this.id = gameId;
@@ -61,5 +65,25 @@ public class Game {
 	
 	public ArrayList<ChatMessage> getChatMessages() {
 		return chatMessages;
+	}
+	
+	public boolean IsCorrect(String playerAnswer, Answer answer) {
+		if (StringUtility.CalculateMatchPercentage(playerAnswer, answer.getAnswer()) >=  MinimumAnswerPercentage)
+			return true;
+		for (String alternative : answer.getAlternatives())
+			if (StringUtility.CalculateMatchPercentage(playerAnswer, alternative) >=  MinimumAnswerPercentage)
+				return true;
+		return false;
+	}
+	
+	public boolean IsCorrect(String playerAnswer, Collection<Answer> answers) {
+		for (Answer answer : answers) {
+			if (StringUtility.CalculateMatchPercentage(playerAnswer, answer.getAnswer()) >=  MinimumAnswerPercentage)
+				return true;
+			for (String alternative : answer.getAlternatives())
+				if (StringUtility.CalculateMatchPercentage(playerAnswer, alternative) >=  MinimumAnswerPercentage)
+					return true;
+		}
+		return false;
 	}
 }
