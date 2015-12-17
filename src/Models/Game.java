@@ -3,11 +3,12 @@ package Models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Observable;
 
 import Managers.DataManager;
 import Utilities.StringUtility;
 
-public class Game {
+public class Game extends Observable {
 	
 	private int id;
 	private Player player1;
@@ -16,7 +17,7 @@ public class Game {
 	private ArrayList<Round> rounds;
 	private ArrayList<ChatMessage> chatMessages;
 	
-	private final int MinimumAnswerPercentage = 80;
+	private static final int MinimumAnswerPercentage = 80;
 	
 	public Game(int gameId, Player player1, Player player2, GameState gameState) {
 		this.id = gameId;
@@ -41,7 +42,7 @@ public class Game {
 		}
 	}
 	
-	public boolean isPlayerAnswerCorrect(PlayerAnswer player, Answer answer) {
+	public static boolean isPlayerAnswerCorrect(PlayerAnswer player, Answer answer) {
 		
 		if (StringUtility.CalculateMatchPercentage(player.getAnswer(), answer.getAnswer()) >=  MinimumAnswerPercentage)
 			return true;
