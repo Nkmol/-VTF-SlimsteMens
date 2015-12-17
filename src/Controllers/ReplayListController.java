@@ -20,6 +20,10 @@ public class ReplayListController {
 		parent.SetViewCategoryPanel(view);
 	}
 	
+	public ReplayListPanel getView() {
+		return view;
+	}
+	
 	public void StartReplay(int Id) {
 		new ReplayController(Id, parent).ShowView();
 	}
