@@ -16,8 +16,6 @@ public class Game {
 	private ArrayList<Round> rounds;
 	private ArrayList<ChatMessage> chatMessages;
 	
-	private final int MinimumAnswerPercentage = 80;
-	
 	public Game(int gameId, Player player1, Player player2, GameState gameState) {
 		this.id = gameId;
 		this.player1 = player1;
@@ -39,18 +37,6 @@ public class Game {
 			System.err.println("Error initializing game");
 			System.err.println(e.getMessage());
 		}
-	}
-	
-	public boolean isPlayerAnswerCorrect(PlayerAnswer player, Answer answer) {
-		
-		if (StringUtility.CalculateMatchPercentage(player.getAnswer(), answer.getAnswer()) >=  MinimumAnswerPercentage)
-			return true;
-		
-		for (String alternative : answer.getAlternatives())
-			if (StringUtility.CalculateMatchPercentage(player.getAnswer(), alternative) >=  MinimumAnswerPercentage)
-				return true;
-		
-		return false;
 	}
 	
 	public int getId() {
