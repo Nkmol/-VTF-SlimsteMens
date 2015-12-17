@@ -67,7 +67,7 @@ public class Game extends Observable{
 		return chatMessages;
 	}
 	
-	public boolean IsCorrect(String playerAnswer, Answer answer) {
+	public static boolean IsPlayerAnswerCorrect(String playerAnswer, Answer answer) {
 		if (StringUtility.CalculateMatchPercentage(playerAnswer, answer.getAnswer()) >=  MinimumAnswerPercentage)
 			return true;
 		for (String alternative : answer.getAlternatives())
@@ -76,7 +76,7 @@ public class Game extends Observable{
 		return false;
 	}
 	
-	public boolean IsCorrect(String playerAnswer, Collection<Answer> answers) {
+	public static boolean IsPlayerAnswerCorrect(String playerAnswer, Collection<Answer> answers) {
 		for (Answer answer : answers) {
 			if (StringUtility.CalculateMatchPercentage(playerAnswer, answer.getAnswer()) >=  MinimumAnswerPercentage)
 				return true;
