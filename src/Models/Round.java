@@ -3,10 +3,11 @@ package Models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Observable;
 
 import Managers.DataManager;
 
-public abstract class Round {
+public abstract class Round extends Observable{
 
 	protected RoundType roundType;
 	protected ArrayList<Question> questions;
