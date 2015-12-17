@@ -60,8 +60,8 @@ public class GamePanel extends JPanel implements Observer{
 		
 		//TODO: Not sure which round i should choose to determ the round
 		lblRoundType.setText(model.getRounds().get(0).getRoundType().toString());
-		lblPlayer1.setText(model.getPlayer1().getName() + " : " + model.getRounds().get(0).getTime());
-		lblPlayer2.setText(model.getPlayer2().getName() + " : " + model.getRounds().get(1).getTime());
+		lblPlayer1.setText(model.getPlayer1().getName() + " : " + model.getTime1());
+		lblPlayer2.setText(model.getPlayer2().getName() + " : " + model.getTime2());
 	}
 	
 }
