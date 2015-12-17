@@ -28,6 +28,7 @@ public class ReplayListItem extends JPanel {
 		setBorder(DefaultBorder);
 		setPreferredSize(new Dimension(getWidth(), 50));
 		setLayout(new GridLayout(2, 2, 0, 0));
+		setToolTipText("Klik om het verloop van deze match te zien.");
 	}
 	
 	public ReplayListItem(GameScore gameScore) {		
