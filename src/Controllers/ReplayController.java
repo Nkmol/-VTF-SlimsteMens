@@ -14,4 +14,8 @@ public class ReplayController {
 	public void ShowView() {
 		parent.SetViewCategoryPanel(View);
 	}
+	
+	public ReplayPanel GetView() {
+		return View;
+	}
 }
