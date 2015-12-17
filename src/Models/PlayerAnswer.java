@@ -32,23 +32,11 @@ public class PlayerAnswer {
 	}
 	
 	public boolean IsCorrect(Answer answer) {
-		if (StringUtility.CalculateMatchPercentage(getAnswer(), answer.getAnswer()) >=  MinimumAnswerPercentage)
-			return true;
-		for (String alternative : answer.getAlternatives())
-			if (StringUtility.CalculateMatchPercentage(getAnswer(), alternative) >=  MinimumAnswerPercentage)
-				return true;
-		return false;
+		return Game.IsPlayerAnswerCorrect(getAnswer(), answer);
 	}
 	
 	public boolean IsCorrect(Collection<Answer> answers) {
-		for (Answer answer : answers) {
-			if (StringUtility.CalculateMatchPercentage(getAnswer(), answer.getAnswer()) >=  MinimumAnswerPercentage)
-				return true;
-			for (String alternative : answer.getAlternatives())
-				if (StringUtility.CalculateMatchPercentage(getAnswer(), alternative) >=  MinimumAnswerPercentage)
-					return true;
-		}
-		return false;
+		return Game.IsPlayerAnswerCorrect(getAnswer(), answers);
 	}
 	
 	public void submit(Turn turn) {

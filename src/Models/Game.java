@@ -78,11 +78,8 @@ public class Game extends Observable{
 	
 	public static boolean IsPlayerAnswerCorrect(String playerAnswer, Collection<Answer> answers) {
 		for (Answer answer : answers) {
-			if (StringUtility.CalculateMatchPercentage(playerAnswer, answer.getAnswer()) >=  MinimumAnswerPercentage)
+			if (IsPlayerAnswerCorrect(playerAnswer, answer))
 				return true;
-			for (String alternative : answer.getAlternatives())
-				if (StringUtility.CalculateMatchPercentage(playerAnswer, alternative) >=  MinimumAnswerPercentage)
-					return true;
 		}
 		return false;
 	}
