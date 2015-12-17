@@ -15,11 +15,15 @@ public class GameController {
 		model = DataManager.getInstance().getGame(gameId);
 		view = new GamePanel();
 		model.addObserver(view);
+		model.updateView();
 	}
 	
 	public void setRoundView(JPanel round) {
 		view.setRound(round);
 	}
 	
+	public GamePanel getView() {
+		return view;
+	}
 	
 }

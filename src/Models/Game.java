@@ -10,6 +10,8 @@ import Utilities.StringUtility;
 
 public class Game extends Observable {
 	
+	private static final int MinimumAnswerPercentage = 80;
+	
 	private int id;
 	private Player player1;
 	private Player player2;
@@ -17,7 +19,15 @@ public class Game extends Observable {
 	private ArrayList<Round> rounds;
 	private ArrayList<ChatMessage> chatMessages;
 	
-	private static final int MinimumAnswerPercentage = 80;
+	private int time1, time2;
+	
+	public int getTime1() {
+		return time1;
+	}
+	
+	public int getTime2() {
+		return time1;
+	}
 	
 	public Game(int gameId, Player player1, Player player2, GameState gameState) {
 		this.id = gameId;
@@ -40,6 +50,11 @@ public class Game extends Observable {
 			System.err.println("Error initializing game");
 			System.err.println(e.getMessage());
 		}
+	}
+	
+	public void updateView() {
+		setChanged();
+		notifyObservers(this);
 	}
 	
 	public static boolean isPlayerAnswerCorrect(PlayerAnswer player, Answer answer) {
