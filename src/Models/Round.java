@@ -50,5 +50,4 @@ public abstract class Round {
 	public ArrayList<Question> getQuestions() {
 		return questions;
 	}
-	
 }
