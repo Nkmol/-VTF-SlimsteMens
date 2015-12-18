@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import Models.Game;
+import Models.PlayerGame;
 import Models.Round;
 
 public class GamePanel extends JPanel implements Observer{
@@ -58,10 +59,14 @@ public class GamePanel extends JPanel implements Observer{
 	public void update(Observable arg0, Object arg1) {
 		Game model = (Game)arg1;
 		
+		PlayerGame playerGame1, playerGame2;
+		playerGame1 = model.getPlayerGame1();
+		playerGame2 = model.getPlayerGame2();
+		
 		//TODO: Not sure which round i should choose to determ the round
 		lblRoundType.setText(model.getRounds().get(0).getRoundType().toString());
-		lblPlayer1.setText(model.getPlayer1().getName() + " : " + model.getTime1());
-		lblPlayer2.setText(model.getPlayer2().getName() + " : " + model.getTime2());
+		lblPlayer1.setText(playerGame1.getPlayer().getName() + " : " + playerGame1.getTime());
+		lblPlayer2.setText(playerGame2.getPlayer().getName() + " : " + playerGame2.getTime());
 	}
 	
 }
