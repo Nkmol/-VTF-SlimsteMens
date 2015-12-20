@@ -29,9 +29,11 @@ public class LoginController {
 			model.saveName();
 			
 			//TODO: Use ScreenManager?
+			
 			// Test value for the category
-			AccountController accountPanel = new AccountController(parent);
-			parent.SetViewCategoryPanel(accountPanel.getView());
+			parent.SetViewCategoryPanel(new AccountController(parent).getView());
+			
+			// Right Screen 
 		}
 	}
 	
