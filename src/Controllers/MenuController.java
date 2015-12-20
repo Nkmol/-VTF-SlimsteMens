@@ -16,6 +16,11 @@ public class MenuController {
 		ComponentUtility.addActionListener(view, "menuAccount", (e) -> Account_Click());
 		ComponentUtility.addActionListener(view, "menuPlayers", (e) -> Players_Click());
 		ComponentUtility.addActionListener(view, "menuFile", (e) -> Exit_Click());
+		ComponentUtility.addActionListener(view, "menuChallenges", (e) -> Challenges_Click());
+	}
+	
+	private void Challenges_Click() {
+		parent.SetViewCategoryPanel(new ChallengeListController(parent).getView());
 	}
 	
 	private void Players_Click() {

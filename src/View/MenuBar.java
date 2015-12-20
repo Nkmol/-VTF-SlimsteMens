@@ -7,7 +7,7 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
 public class MenuBar extends JMenuBar {
-	public JMenu menuFile, menuAccount, menuHighscrs, menuPlayers;
+	public JMenu menuFile, menuAccount, menuHighscrs, menuPlayers, menuChallenges;
 	public JMenuItem menuExit;
 	
 	public MenuBar() {
@@ -29,5 +29,9 @@ public class MenuBar extends JMenuBar {
 		menuHighscrs = new JMenu("Highscores");
 		menuAccount.setMnemonic(KeyEvent.VK_H);
 		add(menuHighscrs);
+		
+		menuChallenges = new JMenu("Challenges");
+		menuChallenges.setMnemonic(KeyEvent.VK_H);
+		add(menuChallenges);
 	}
 }
