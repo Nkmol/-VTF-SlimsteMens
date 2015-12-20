@@ -26,12 +26,12 @@ public class ChallengeListController {
 		return view;
 	}
 	
-	public void handleAcceptButtonClick() {
-		model.acceptChallenge();
+	public void handleAcceptButtonClick(int gameId) {
+		model.acceptChallenge(gameId);
 	}
 	
-	public void handleRejectButtonClick() {
-		model.rejectChallenge();
+	public void handleRejectButtonClick(int gameId) {
+		model.rejectChallenge(gameId);
 	}
 	
 	

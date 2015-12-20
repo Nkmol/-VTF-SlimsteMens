@@ -39,11 +39,13 @@ public class ActiveChallenges extends Observable {
 		notifyObservers(activeChallenges);
 	}
 	
-	public void rejectChallenge() {
+	public void rejectChallenge(int gameId) {
 		// TODO reject challenge func
+		DataManager.getInstance().updateGameState(GameState.Rejected, gameId);
 	}
 	
-	public void acceptChallenge() {
+	public void acceptChallenge(int gameId) {
 		// TODO accept challenge func
+		DataManager.getInstance().updateGameState(GameState.Busy, gameId);
 	} 
 }
