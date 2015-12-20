@@ -1,7 +1,11 @@
 package Controllers;
 
+import javax.swing.JPanel;
+
 import Models.Main;
-import View.MainFrame;
+import View.*;
+
+import View.AccountPanel;
 
 public class MainController {
 
@@ -11,8 +15,13 @@ public class MainController {
 	public MainController() {
 		mainModel = new Main();
 		mainFrame = new MainFrame();
-		//showLogin();
-		showChallenges();
+		
+		showLogin();
+	}
+	
+	public void addMenu() {
+		MenuController menu = new MenuController(this);
+		mainFrame.setJMenuBar(menu.getView());
 	}
 	
 	public void showLogin() {
@@ -26,17 +35,47 @@ public class MainController {
 		mainFrame.setContentPane(register.getView());
 		mainFrame.setVisible(true);
 	}
-	
-	public void showPlayers() {
-		PlayerListController players = new PlayerListController(this);
-		mainFrame.setContentPane(players.getView());
+
+	public void SetViewCategoryPanel(JPanel panel) {
+		mainFrame.getMainPanel().setCategoryPanel(panel);
 		mainFrame.setVisible(true);
 	}
 	
-	public void showChallenges() {
-		ChallengeListController challenge = new ChallengeListController(this);
-		mainFrame.setContentPane(challenge.getView());
+	public void SetViewSidebar(JPanel panel) {
+		mainFrame.getMainPanel().setSidebar(panel);
 		mainFrame.setVisible(true);
+	}
+	
+	public void SetViewMainPanel(MainPanel panel) {
+		mainFrame.setMainPanel(panel);
+		mainFrame.setVisible(true);
+	}
+	
+	public MainPanel GetViewMainPanel() {
+		return mainFrame.getMainPanel();
+	}
+	
+	public JPanel GetViewCategoryPanel() {
+		return GetViewMainPanel().getCategoryPanel();
+	}
+	
+	public JPanel GetViewSidebar() {
+		return GetViewMainPanel().getSidebar();
+	}
+	
+	public void ShowMainPanel() {
+		//TODO: Only instantiate this once, when main screen is shown for the first time.
+		addMenu();
+		mainFrame.ShowMainPanel();
+		mainFrame.setVisible(true);
+	}
+	
+	public void RefreshView() {
+		mainFrame.getContentPane().repaint();
+	}
+	
+	public MainFrame getView() {
+		return mainFrame;
 	}
 	
 	public static void main(String[] args) {

@@ -22,7 +22,16 @@ public class LoginController {
 	
 	private void btnLogin_Press() {
 		if(model.login(view.txtUsername.getText(), view.txtPassword.getText())) {
-			System.out.println("Succesvol ingelogd!");
+			// Show main frame
+			parent.ShowMainPanel();
+			
+			// Save logged player to file
+			model.saveName();
+			
+			//TODO: Use ScreenManager?
+			// Test value for the category
+			AccountController accountPanel = new AccountController(parent);
+			parent.SetViewCategoryPanel(accountPanel.getView());
 		}
 	}
 	

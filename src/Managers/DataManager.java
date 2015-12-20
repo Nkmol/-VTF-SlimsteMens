@@ -48,6 +48,24 @@ public class DataManager {
 		return loggedIn;
 	}
 	
+	public boolean changeUserPassword(String name, String newPassword) {
+		boolean updated = false;
+		try {
+			String sql = "UPDATE account set wachtwoord = ? WHERE naam = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, newPassword);
+			preparedStatement.setString(2, name);
+			if (preparedStatement.executeUpdate() > 0) {
+				connection.commit();
+				updated = true;
+			}
+		} catch (SQLException e) {
+			System.err.println("Error changing password for user: " + name);
+			System.err.println(e.getMessage());
+		}
+		return updated;
+	}
+	
 	public Player getCurrentUser() {
 		return user;
 	}
@@ -82,6 +100,24 @@ public class DataManager {
 		}
 	}
 	
+	public boolean updateGameState(GameState newGameState, int gameId) {
+		boolean updated = false;
+		try {
+			String sql = "UPDATE spel SET toestand_type = ? WHERE spel_id = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, newGameState.getValue());
+			preparedStatement.setInt(2, gameId);
+			if (preparedStatement.executeUpdate() > 0) {
+				connection.commit();
+				updated = true;
+			}
+		} catch (SQLException e) {
+			System.err.println("Error updating game with id: " + gameId);
+			System.err.println(e.getMessage());
+		}
+		return updated;
+	}
+	
 	public boolean gameExistsBetween(String player1, String player2, GameState gameState) {
 		boolean gameExists = false;
 		try {
@@ -114,6 +150,24 @@ public class DataManager {
 				games.add(new Game(data));
 		} catch (SQLException e) { }
 		return games;
+	}
+	
+	public ArrayList<GameScore> getGameScoresForPlayer(String playerName) {
+		ArrayList<GameScore> gameScores = null;
+		try {
+			String sql = "SELECT * FROM score WHERE speler1 = ? OR speler2 = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, playerName);
+			preparedStatement.setString(2, playerName);
+			ResultSet data = preparedStatement.executeQuery();
+			gameScores = new ArrayList<>();
+			while (data.next()) 
+				gameScores.add(new GameScore(data));
+		} catch (SQLException e) {
+			System.err.println("Erroring fetching games score for player: " + playerName);
+			System.err.println(e.getMessage());
+		}
+		return gameScores;
 	}
 	
 	public GameScore getGameScore(int gameId) {
@@ -218,6 +272,61 @@ public class DataManager {
 		return rounds;
 	}
 	
+	public ArrayList<Turn> getTurns(Round round) {
+		ArrayList<Turn> turns = null;
+		try {
+			String sql = "SELECT * FROM beurt WHERE spel_id = ? AND rondenaam = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, round.getGame().getId());
+			preparedStatement.setString(2, round.getRoundType().getValue());
+			ResultSet data = preparedStatement.executeQuery();
+			turns = new ArrayList<>();
+			while (data.next())
+				turns.add(new Turn(data));
+		} catch (SQLException e) {
+			System.err.println("Error fetching turns for game id: " + round.getGame().getId());
+		}
+		return turns;
+	}
+	
+	public ArrayList<SharedQuestion> getSharedQuestions(Turn turn) {
+		ArrayList<SharedQuestion> sharedQuestions = null;
+		try {
+			String sql = "SELECT * FROM deelvraag WHERE spel_id = ? AND rondenaam = ? AND beurt_id = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, turn.getGameId());
+			preparedStatement.setString(2, turn.getRoundType().getValue());
+			preparedStatement.setInt(3, turn.getTurnId());
+			ResultSet data = preparedStatement.executeQuery();
+			sharedQuestions = new ArrayList<>();
+			while (data.next())
+				sharedQuestions.add(new SharedQuestion(data));
+		} catch (SQLException e) {
+			System.err.println("Error fetching shared questions");
+			System.err.println(e.getMessage());
+		}
+		return sharedQuestions;
+	}
+	
+	public ArrayList<PlayerAnswer> getPlayerAnswers(Turn turn) {
+		ArrayList<PlayerAnswer> playerAnswers = null;
+		try {
+			String sql = "SELECT * FROM spelerantwoord WHERE spel_id = ? AND rondenaam = ? AND beurt_id = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, turn.getGameId());
+			preparedStatement.setString(2, turn.getRoundType().getValue());
+			preparedStatement.setInt(3, turn.getTurnId());
+			ResultSet data = preparedStatement.executeQuery();
+			playerAnswers = new ArrayList<>();
+			while (data.next())
+				playerAnswers.add(new PlayerAnswer(data));
+		} catch (SQLException e) {
+			System.err.println("Error fetching player answers");
+			System.err.println(e.getMessage());
+		}
+		return playerAnswers;
+	}
+	
 	public ArrayList<Question> getQuestions(Round round) {
 		ArrayList<Question> questions = null;
 		try {
@@ -227,7 +336,7 @@ public class DataManager {
 			ResultSet data = preparedStatement.executeQuery();
 			questions = new ArrayList<>();
 			while (data.next()) 
-				questions.add(new Question(data, round));
+				questions.add(new Question(data, round)); //TODO: remove round from the parameters 
 		} catch (SQLException e) {
 			System.err.println("Error fetching questions for round: " + round.getRoundType().getValue());
 			System.err.println(e.getMessage());

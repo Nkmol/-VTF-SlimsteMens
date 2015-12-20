@@ -10,17 +10,21 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import Controllers.ReplayListController;
+
 @SuppressWarnings("serial")
 public class ReplayListPanel extends JPanel {
 
+	ReplayListController controller;
 	private ReplayListPanel()
 	{
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	}
 
-	public ReplayListPanel(ArrayList<ReplayListItem> list)
+	public ReplayListPanel(ArrayList<ReplayListItem> list, ReplayListController controller)
 	{
 		this();
+		this.controller = controller;
 		Dimension PrefferedItemDimension = new Dimension(getWidth(), 200);
 		for(ReplayListItem item : list)
 		{
@@ -33,9 +37,7 @@ public class ReplayListPanel extends JPanel {
 	private class ReplayMouseAdapter extends MouseAdapter {
 		
 		public void mouseClicked(MouseEvent e){
-			ReplayListItem item = (ReplayListItem)e.getSource();
-			int Id = item.getGameId();
-			// TODO: Start replay with Id
+			controller.StartReplay(((ReplayListItem)e.getSource()).getGameId());
 		}
 	}
 }
