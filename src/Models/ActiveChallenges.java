@@ -38,4 +38,12 @@ public class ActiveChallenges extends Observable {
 		setChanged();
 		notifyObservers(activeChallenges);
 	}
+	
+	public void rejectChallenge() {
+		// TODO reject challenge func
+	}
+	
+	public void acceptChallenge() {
+		// TODO accept challenge func
+	} 
 }
