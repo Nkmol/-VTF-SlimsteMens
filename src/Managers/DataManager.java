@@ -83,6 +83,21 @@ public class DataManager {
 		return players;
 	}
 	
+	public ArrayList<CompeitionRankItem> getCompetitionRank() {
+		ArrayList<CompeitionRankItem> competitionRank = null;
+		try {
+			String sql = "SELECT * FROM competitiestand ORDER BY (aantal_gewonnen_spellen / aantal_verloren_spellen)";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			ResultSet data = preparedStatement.executeQuery();
+			competitionRank = new ArrayList<>();
+			while (data.next())
+				competitionRank.add(new CompeitionRankItem(data));
+		} catch (SQLException e) {
+			System.err.println("Error fetching competition rank");
+		}
+		return competitionRank;
+	}
+	
 	public boolean pushNewGame(Player player1, Player player2) {
 		try {
 			String sql = "INSERT INTO spel (speler1, speler2, toestand_type) VALUES (?,?,?)";
