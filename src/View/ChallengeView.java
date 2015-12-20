@@ -21,10 +21,12 @@ import Controllers.ChallengeListController;
 public class ChallengeView extends JPanel {
 
 	ChallengeListController controller;
+	private int gameId;
 	
-	public ChallengeView(String name, ChallengeListController controller) {
+	public ChallengeView(int gameId, String name, ChallengeListController controller) {
 		
 		this.controller = controller;
+		this.gameId = gameId;
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		setLayout(gridBagLayout);	
@@ -92,10 +94,10 @@ public class ChallengeView extends JPanel {
 	}
 	
 	private void acceptChallenge() {
-		controller.handleAcceptButtonClick();
+		controller.handleAcceptButtonClick(gameId);
 	}
 	
 	private void rejectChallenge() {
-		controller.handleRejectButtonClick();
+		controller.handleRejectButtonClick(gameId);
 	}
 }

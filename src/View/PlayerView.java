@@ -24,12 +24,12 @@ import Models.Role;
 public class PlayerView extends JPanel {
 	private JLabel playerNameLabel;
 	private JButton challengeButton;
-	private String playerName;
+	private Player player;
 	private PlayerListController controller;
 
-	public PlayerView(String playerName, Boolean enabled, PlayerListController controller) {
+	public PlayerView(Player player, Boolean enabled, PlayerListController controller) {
 
-		this.playerName = playerName;
+		this.player = player;
 		this.controller = controller;
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -58,7 +58,7 @@ public class PlayerView extends JPanel {
 		challengeButton.addActionListener(e -> handleButtonClick());
 
 
-		playerNameLabel.setText(playerName);
+		playerNameLabel.setText(player.getName());
 		playerNameLabel.setFont(new Font("Serif", Font.ITALIC, 15));
 
 		GridBagConstraints gridBagConstraintsLabel = new GridBagConstraints();
@@ -91,7 +91,7 @@ public class PlayerView extends JPanel {
 	
 	private void sendChallenge() {
 		// TODO use classes instead of names.
-		controller.handleButtonClick(playerName);
+		controller.handleButtonClick(player);
 	}
 
 }
