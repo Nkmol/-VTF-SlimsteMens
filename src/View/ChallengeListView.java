@@ -41,7 +41,7 @@ public class ChallengeListView extends JPanel implements Observer {
 		challengeViews = new ChallengeView[games.size()];
 		
 		for(int i = 0; i < games.size(); i++) {
-			challengeViews[i] = new ChallengeView(games.get(i).getPlayer2().getName()); // TODO add a check to see if the player has already been challenged.
+			challengeViews[i] = new ChallengeView(games.get(i).getPlayerGame1().getPlayer().getName()); // TODO add a check to see if the player has already been challenged.
 			add(challengeViews[i]);
 		}
 	}
