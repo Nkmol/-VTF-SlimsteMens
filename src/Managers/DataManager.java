@@ -101,16 +101,37 @@ public class DataManager {
 	public boolean pushNewGame(Player player1, Player player2) {
 		try {
 			String sql = "INSERT INTO spel (speler1, speler2, toestand_type) VALUES (?,?,?)";
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, player1.getName());
-			preparedStatement.setString(2, player2.getName());
-			preparedStatement.setString(3, GameState.Invited.getValue());
-			if (preparedStatement.executeUpdate() > 0) 
-				connection.commit();
+			PreparedStatement gameStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+			gameStatement.setString(1, player1.getName());
+			gameStatement.setString(2, player2.getName());
+			gameStatement.setString(3, GameState.Invited.getValue());
+			if (gameStatement.executeUpdate() > 0) {
+				ResultSet keys = gameStatement.getGeneratedKeys();
+				if (keys.next()) {
+					int insertedGameId = keys.getInt(1);
+					RoundType[] roundTypes = new RoundType[5];
+					roundTypes[0] = RoundType.ThreeSixNine;
+					roundTypes[1] = RoundType.OpenDoor;
+					roundTypes[2] = RoundType.Puzzle;
+					roundTypes[3] = RoundType.Framed;
+					roundTypes[4] = RoundType.Final;
+					for (int i = 0; i < roundTypes.length; i++) {
+						sql = "INSERT INTO ronde VALUES (?, ?)";
+						PreparedStatement roundStatement = connection.prepareStatement(sql);
+						roundStatement.setInt(1, insertedGameId);
+						roundStatement.setString(2, roundTypes[i].getValue());
+						roundStatement.executeUpdate();
+					}
+					connection.commit();
+				}
+			}
 			return true;
 		} catch (SQLException e) {
 			System.err.println("Error inserting new game");
 			System.err.println(e.getMessage());
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {	}
 			return false;
 		}
 	}
