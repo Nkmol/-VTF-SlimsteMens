@@ -51,10 +51,10 @@ public class ActivePlayers extends Observable{
 		notifyObservers(activePlayers);
 	}
 	
-	public void sendChallenge(String playerName) {
+	public void sendChallenge(Player player2) {
 		// TODO Use player classes instead of names
-		Player p2 = new Player(playerName, Role.Player);
-		DataManager.getInstance().pushNewGame(TESTCURRENTUSER, p2);
+		Player player1 = DataManager.getInstance().getCurrentUser();
+		DataManager.getInstance().pushNewGame(player1, player2);
 	}
 	
 }
