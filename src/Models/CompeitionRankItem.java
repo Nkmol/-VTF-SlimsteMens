@@ -3,7 +3,7 @@ package Models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CompeitionRankItem {
+public class CompetitionRankItem {
 
 	private String player;
 	private int amountPlayedGames;
