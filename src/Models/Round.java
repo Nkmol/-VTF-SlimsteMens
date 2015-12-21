@@ -52,4 +52,9 @@ public abstract class Round extends Observable{
 		return questions;
 	}
 	
+	public void updateView() {
+		setChanged();
+		notifyObservers(this);
+	}
+	
 }
