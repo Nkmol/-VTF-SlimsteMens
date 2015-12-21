@@ -38,9 +38,10 @@ public class ActivePlayers extends Observable{
 		
 		for(int i = 0; i < playerList.size(); i++) {
 			if(!playerList.get(i).getName().equals(DataManager.getInstance().getCurrentUser().getName())) {
+				if(playerList.get(i).getRole() == Role.Player) {
 				ChallengedPlayer challengedPlayer = new ChallengedPlayer(DataManager.getInstance().getCurrentUser(), playerList.get(i));
 				players.add(challengedPlayer);
-				//TODO: fix disabled/enabled
+				}
 			}
 		}
 		
