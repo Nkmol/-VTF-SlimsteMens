@@ -17,6 +17,8 @@ public class GamePanel extends JPanel implements Observer{
 	
 	private JPanel middle;
 	private JLabel lblPlayer1, lblPlayer2, lblRoundType;
+	public JButton btnSubmit;
+	public JTextField txtInput;
 	
 	public GamePanel() {
 		setLayout(new BorderLayout());
@@ -46,6 +48,10 @@ public class GamePanel extends JPanel implements Observer{
 		
 		JPanel bottom = new JPanel();
 		bottom.setPreferredSize(new Dimension(0, 50));
+		btnSubmit = new JButton("Submit");
+		bottom.add(btnSubmit);
+		txtInput = new JTextField();
+		bottom.add(txtInput);
 		add(bottom, BorderLayout.PAGE_END);
 	}
 	
