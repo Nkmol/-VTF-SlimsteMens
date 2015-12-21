@@ -3,10 +3,12 @@ package Models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import Managers.DataManager;
 
-public abstract class Round {
+public abstract class Round extends Observable {
 
 	protected RoundType roundType;
 	protected ArrayList<Question> questions;
@@ -56,4 +58,10 @@ public abstract class Round {
 	public ArrayList<Question> getQuestions() {
 		return questions;
 	}
+	
+    public void updateView() {
+        setChanged();
+        notifyObservers(this);
+    }
+
 }

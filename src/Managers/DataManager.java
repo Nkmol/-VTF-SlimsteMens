@@ -99,41 +99,25 @@ public class DataManager {
 	}
 	
 	public boolean pushNewGame(Player player1, Player player2) {
+		boolean pushed = false;
 		try {
 			String sql = "INSERT INTO spel (speler1, speler2, toestand_type) VALUES (?,?,?)";
-			PreparedStatement gameStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+			PreparedStatement gameStatement = connection.prepareStatement(sql);
 			gameStatement.setString(1, player1.getName());
 			gameStatement.setString(2, player2.getName());
 			gameStatement.setString(3, GameState.Invited.getValue());
 			if (gameStatement.executeUpdate() > 0) {
-				ResultSet keys = gameStatement.getGeneratedKeys();
-				if (keys.next()) {
-					int insertedGameId = keys.getInt(1);
-					RoundType[] roundTypes = new RoundType[5];
-					roundTypes[0] = RoundType.ThreeSixNine;
-					roundTypes[1] = RoundType.OpenDoor;
-					roundTypes[2] = RoundType.Puzzle;
-					roundTypes[3] = RoundType.Framed;
-					roundTypes[4] = RoundType.Final;
-					for (int i = 0; i < roundTypes.length; i++) {
-						sql = "INSERT INTO ronde VALUES (?, ?)";
-						PreparedStatement roundStatement = connection.prepareStatement(sql);
-						roundStatement.setInt(1, insertedGameId);
-						roundStatement.setString(2, roundTypes[i].getValue());
-						roundStatement.executeUpdate();
-					}
-					connection.commit();
-				}
+				connection.commit();
+				pushed = true;
 			}
-			return true;
 		} catch (SQLException e) {
 			System.err.println("Error inserting new game");
 			System.err.println(e.getMessage());
 			try {
 				connection.rollback();
 			} catch (SQLException e1) {	}
-			return false;
 		}
+		return pushed;
 	}
 	
 	public boolean updateGameState(GameState newGameState, int gameId) {
@@ -186,6 +170,21 @@ public class DataManager {
 				games.add(new Game(data));
 		} catch (SQLException e) { }
 		return games;
+	}
+	
+	public ArrayList<GameInfo> getAllGameInfosForPlayer(String name) {
+		ArrayList<GameInfo> gameInfos = null;
+		try {
+			String sql = "SELECT * FROM spel WHERE speler1 = ? OR speler2 = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, name);
+			preparedStatement.setString(2, name);
+			ResultSet data = preparedStatement.executeQuery();
+			gameInfos = new ArrayList<>();
+			while(data.next()) 
+				gameInfos.add(new GameInfo(data));
+		} catch (SQLException e) { }
+		return gameInfos;
 	}
 	
 	public ArrayList<GameScore> getGameScoresForPlayer(String playerName) {
@@ -269,6 +268,27 @@ public class DataManager {
 			}
 		} catch (SQLException e) { }
 		return round;
+	}
+	
+	public boolean pushRound(Round round) {
+		boolean pushed = false;
+		try {
+			String sql = "INSERT INTO ronde VALUES (?, ?)";
+			PreparedStatement roundStatement = connection.prepareStatement(sql);
+			roundStatement.setInt(1, round.getGame().getId());
+			roundStatement.setString(2, round.getRoundType().getValue());
+			if (roundStatement.executeUpdate() > 0) {
+				connection.commit();
+				pushed = true;
+			}
+		} catch (SQLException e) {
+			System.err.println("Error pushing new round of type: " + round.getRoundType().getValue() + " & game id: " + round.getGame().getId());
+			System.err.println(e.getMessage());
+			try {
+				connection.rollback();
+			} catch (SQLException e1) { }
+		}
+		return pushed;
 	}
 	
 	public ArrayList<Round> getRounds(Game game) {
