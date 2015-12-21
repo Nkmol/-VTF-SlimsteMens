@@ -1,11 +1,8 @@
 package Controllers;
 
-import javax.swing.JFrame;
-
 import Models.ActivePlayers;
-import View.ChallengeView;
+import Models.Player;
 import View.PlayerListView;
-import View.PlayerView;
 
 public class PlayerListController {
 	PlayerListView view;
@@ -23,7 +20,7 @@ public class PlayerListController {
 		return view;
 	}
 	
-	public void handleButtonClick(String playername) {
-		model.sendChallenge(playername);
+	public void handleButtonClick(Player player2) {
+		model.sendChallenge(player2);
 	}
 }

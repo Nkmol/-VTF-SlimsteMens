@@ -8,24 +8,19 @@ import java.util.Observer;
 
 import javax.swing.JPanel;
 
+import Controllers.ChallengeListController;
 import Models.Game;
 
 public class ChallengeListView extends JPanel implements Observer {
 
 	ChallengeView[] challengeViews;
+	ChallengeListController controller;
 	
-	public ChallengeListView() {
+	public ChallengeListView(ChallengeListController controller) {
+		this.controller = controller;
 		
 		this.setPreferredSize(new Dimension(500,500));
 		
-		/*
-		for(int i = 0; i < challengeViews.length; i++)
-		{
-			ChallengeView challengeView = challengeViews[i];
-			
-			add(challengeView);
-		}
-		*/
 		this.setBackground(new Color(193,212,255));
 		
 	}
@@ -41,7 +36,8 @@ public class ChallengeListView extends JPanel implements Observer {
 		challengeViews = new ChallengeView[games.size()];
 		
 		for(int i = 0; i < games.size(); i++) {
-			challengeViews[i] = new ChallengeView(games.get(i).getPlayer2().getName()); // TODO add a check to see if the player has already been challenged.
+			Game game = games.get(i);
+			challengeViews[i] = new ChallengeView(game.getId(), game.getPlayerGame2().getPlayer().getName(), controller); // TODO add a check to see if the player has already been challenged.
 			add(challengeViews[i]);
 		}
 	}

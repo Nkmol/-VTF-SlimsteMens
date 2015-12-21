@@ -37,9 +37,10 @@ public class ActivePlayers extends Observable{
 		ArrayList<ChallengedPlayer> players = new ArrayList<ChallengedPlayer>();
 		
 		for(int i = 0; i < playerList.size(); i++) {
-			if(!playerList.get(i).getName().equals(TESTCURRENTUSERNAME)) {
-				ChallengedPlayer challengedPlayer = new ChallengedPlayer(TESTCURRENTUSER, playerList.get(i));
+			if(!playerList.get(i).getName().equals(DataManager.getInstance().getCurrentUser().getName())) {
+				ChallengedPlayer challengedPlayer = new ChallengedPlayer(DataManager.getInstance().getCurrentUser(), playerList.get(i));
 				players.add(challengedPlayer);
+				//TODO: fix disabled/enabled
 			}
 		}
 		
@@ -51,10 +52,10 @@ public class ActivePlayers extends Observable{
 		notifyObservers(activePlayers);
 	}
 	
-	public void sendChallenge(String playerName) {
+	public void sendChallenge(Player player2) {
 		// TODO Use player classes instead of names
-		Player p2 = new Player(playerName, Role.Player);
-		DataManager.getInstance().pushNewGame(TESTCURRENTUSER, p2);
+		Player player1 = DataManager.getInstance().getCurrentUser();
+		DataManager.getInstance().pushNewGame(player1, player2);
 	}
 	
 }

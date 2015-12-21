@@ -1,9 +1,13 @@
 package Models;
 
-import java.util.Collection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class PlayerAnswer {
 
+	private int gameId;
+	private RoundType roundType;
+	private int turnId;
 	private int answerId;
 	private String answer;
 	private int moment;
@@ -12,6 +16,33 @@ public class PlayerAnswer {
 		this.answerId = answerId;
 		this.answer = answer;
 		this.moment = moment;
+	}
+	
+	public PlayerAnswer(ResultSet data) {
+		try {
+			gameId = data.getInt("spel_id");
+			roundType = RoundType.fromString(data.getString("rondenaam"));
+			turnId = data.getInt("beurt_id");
+			answerId = data.getInt("antwoord_id");
+			answer = data.getString("antwoord");
+			moment = data.getInt("moment");
+		} catch (SQLException e) {
+			System.err.println("Error initialzing PlayerAnswer");
+			System.err.println(e.getMessage());
+		}
+		
+	}
+	
+	public int getGameId() {
+		return gameId;
+	}
+	
+	public RoundType getRoundType() {
+		return roundType;
+	}
+	
+	public int getTurnId() {
+		return turnId;
 	}
 	
 	public int getAnswerId() {
@@ -24,14 +55,6 @@ public class PlayerAnswer {
 
 	public int getMoment() {
 		return moment;
-	}
-	
-	public boolean IsCorrect(Answer answer) {
-		return Game.IsPlayerAnswerCorrect(getAnswer(), answer);
-	}
-	
-	public boolean IsCorrect(Collection<Answer> answers) {
-		return Game.IsPlayerAnswerCorrect(getAnswer(), answers);
 	}
 	
 	public void submit(Turn turn) {

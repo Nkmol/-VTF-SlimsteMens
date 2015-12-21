@@ -1,9 +1,16 @@
 package Utilities;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.AbstractButton;
 import javax.swing.JComponent;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuKeyEvent;
+import javax.swing.event.MenuKeyListener;
+import javax.swing.event.MenuListener;
 
 public final class ComponentUtility {
 	
@@ -16,10 +23,25 @@ public final class ComponentUtility {
 	 * @return returns if it has successfully completed the method 
 	 */
 	public static boolean addActionListener(JComponent to, String fieldName, ActionListener l) {
-		AbstractButton component = null;
 		try {
+			AbstractButton component = null;
 			component = (AbstractButton) to.getClass().getDeclaredField(fieldName).get(to);
-			component.addActionListener(l);
+			if(component instanceof JMenu) {
+				JMenu menuComp = (JMenu)component;
+				menuComp.addMenuListener(new MenuListener() {
+					@Override
+					public void menuCanceled(MenuEvent arg0) { }
+					@Override
+					public void menuDeselected(MenuEvent arg0) { }
+					@Override
+					public void menuSelected(MenuEvent arg0) {
+						// TODO Auto-generated method stub
+						l.actionPerformed(new ActionEvent(to, 0, ""));
+					} });
+			}
+			else {
+				component.addActionListener(l);
+			}
 			return true;
 		} catch (IllegalArgumentException|IllegalAccessException|NoSuchFieldException|SecurityException e) {
 			e.printStackTrace();
@@ -27,3 +49,23 @@ public final class ComponentUtility {
 		}
 	}
 }
+
+/*menuComp.addMenuKeyListener(new MenuKeyListener() {
+
+	@Override
+	public void menuKeyPressed(MenuKeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void menuKeyReleased(MenuKeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void menuKeyTyped(MenuKeyEvent arg0) {
+		// TODO Auto-generated method stub
+		l.actionPerformed(new ActionEvent(to, 0, ""));
+	} });*/

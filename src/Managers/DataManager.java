@@ -83,19 +83,55 @@ public class DataManager {
 		return players;
 	}
 	
+	public ArrayList<CompetitionRankItem> getCompetitionRank() {
+		ArrayList<CompetitionRankItem> competitionRank = null;
+		try {
+			String sql = "SELECT * FROM competitiestand ORDER BY (aantal_gewonnen_spellen / aantal_verloren_spellen)";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			ResultSet data = preparedStatement.executeQuery();
+			competitionRank = new ArrayList<>();
+			while (data.next())
+				competitionRank.add(new CompetitionRankItem(data));
+		} catch (SQLException e) {
+			System.err.println("Error fetching competition rank");
+		}
+		return competitionRank;
+	}
+	
 	public boolean pushNewGame(Player player1, Player player2) {
 		try {
 			String sql = "INSERT INTO spel (speler1, speler2, toestand_type) VALUES (?,?,?)";
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, player1.getName());
-			preparedStatement.setString(2, player2.getName());
-			preparedStatement.setString(3, GameState.Invited.getValue());
-			if (preparedStatement.executeUpdate() > 0) 
-				connection.commit();
+			PreparedStatement gameStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+			gameStatement.setString(1, player1.getName());
+			gameStatement.setString(2, player2.getName());
+			gameStatement.setString(3, GameState.Invited.getValue());
+			if (gameStatement.executeUpdate() > 0) {
+				ResultSet keys = gameStatement.getGeneratedKeys();
+				if (keys.next()) {
+					int insertedGameId = keys.getInt(1);
+					RoundType[] roundTypes = new RoundType[5];
+					roundTypes[0] = RoundType.ThreeSixNine;
+					roundTypes[1] = RoundType.OpenDoor;
+					roundTypes[2] = RoundType.Puzzle;
+					roundTypes[3] = RoundType.Framed;
+					roundTypes[4] = RoundType.Final;
+					for (int i = 0; i < roundTypes.length; i++) {
+						sql = "INSERT INTO ronde VALUES (?, ?)";
+						PreparedStatement roundStatement = connection.prepareStatement(sql);
+						roundStatement.setInt(1, insertedGameId);
+						roundStatement.setString(2, roundTypes[i].getValue());
+						roundStatement.executeUpdate();
+					}
+					connection.commit();
+				}
+			}
 			return true;
 		} catch (SQLException e) {
 			System.err.println("Error inserting new game");
 			System.err.println(e.getMessage());
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {	}
 			return false;
 		}
 	}
@@ -272,6 +308,61 @@ public class DataManager {
 		return rounds;
 	}
 	
+	public ArrayList<Turn> getTurns(Round round) {
+		ArrayList<Turn> turns = null;
+		try {
+			String sql = "SELECT * FROM beurt WHERE spel_id = ? AND rondenaam = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, round.getGame().getId());
+			preparedStatement.setString(2, round.getRoundType().getValue());
+			ResultSet data = preparedStatement.executeQuery();
+			turns = new ArrayList<>();
+			while (data.next())
+				turns.add(new Turn(data));
+		} catch (SQLException e) {
+			System.err.println("Error fetching turns for game id: " + round.getGame().getId());
+		}
+		return turns;
+	}
+	
+	public ArrayList<SharedQuestion> getSharedQuestions(Turn turn) {
+		ArrayList<SharedQuestion> sharedQuestions = null;
+		try {
+			String sql = "SELECT * FROM deelvraag WHERE spel_id = ? AND rondenaam = ? AND beurt_id = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, turn.getGameId());
+			preparedStatement.setString(2, turn.getRoundType().getValue());
+			preparedStatement.setInt(3, turn.getTurnId());
+			ResultSet data = preparedStatement.executeQuery();
+			sharedQuestions = new ArrayList<>();
+			while (data.next())
+				sharedQuestions.add(new SharedQuestion(data));
+		} catch (SQLException e) {
+			System.err.println("Error fetching shared questions");
+			System.err.println(e.getMessage());
+		}
+		return sharedQuestions;
+	}
+	
+	public ArrayList<PlayerAnswer> getPlayerAnswers(Turn turn) {
+		ArrayList<PlayerAnswer> playerAnswers = null;
+		try {
+			String sql = "SELECT * FROM spelerantwoord WHERE spel_id = ? AND rondenaam = ? AND beurt_id = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, turn.getGameId());
+			preparedStatement.setString(2, turn.getRoundType().getValue());
+			preparedStatement.setInt(3, turn.getTurnId());
+			ResultSet data = preparedStatement.executeQuery();
+			playerAnswers = new ArrayList<>();
+			while (data.next())
+				playerAnswers.add(new PlayerAnswer(data));
+		} catch (SQLException e) {
+			System.err.println("Error fetching player answers");
+			System.err.println(e.getMessage());
+		}
+		return playerAnswers;
+	}
+	
 	public ArrayList<Question> getQuestions(Round round) {
 		ArrayList<Question> questions = null;
 		try {
@@ -281,7 +372,7 @@ public class DataManager {
 			ResultSet data = preparedStatement.executeQuery();
 			questions = new ArrayList<>();
 			while (data.next()) 
-				questions.add(new Question(data, round));
+				questions.add(new Question(data, round)); //TODO: remove round from the parameters 
 		} catch (SQLException e) {
 			System.err.println("Error fetching questions for round: " + round.getRoundType().getValue());
 			System.err.println(e.getMessage());
