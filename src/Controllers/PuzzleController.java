@@ -6,14 +6,17 @@ import View.PuzzlePanel;
 
 public class PuzzleController {
 	
-	private PuzzlePanel View;
+	private PuzzlePanel view;
 	
 	private Puzzle model;
 	
 	public PuzzleController(Game game) {
-		View = new PuzzlePanel();
+		view = new PuzzlePanel(this);
 		model = new Puzzle(game);
+		view.Observe(model);
 	}
 	
-
+	public PuzzlePanel GetView() {
+		return view;
+	}
 }
