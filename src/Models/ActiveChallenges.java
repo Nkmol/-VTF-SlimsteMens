@@ -22,17 +22,27 @@ public class ActiveChallenges extends Observable {
 
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
 				getChallengesForPlayer();
-				notifyObs();
 			}
 			
 		}, 0L, 1000L);
 	}
 	
 	private void getChallengesForPlayer() {
-		//TODO: Zorgen dat de de ingelogde speler de challenges heeft van de andere spelers. Niet challenges die hij zelf gestuurd heeft.
-		activeChallenges = DataManager.getInstance().getAllGamesForPlayer(DataManager.getInstance().getCurrentUser().getName());
+		//TODO: Zorgen dat de datamanger functie niet vastloopt of heel lang gaat duren
+		ArrayList<Game> challenges = DataManager.getInstance().getAllGamesForPlayer(DataManager.getInstance().getCurrentUser().getName());
+		
+		activeChallenges = new ArrayList<Game>();
+		
+		for(int i = 0; i < challenges.size(); i++) {
+			if(challenges.get(i).getPlayerGame2().getPlayer().getName().equals(DataManager.getInstance().getCurrentUser().getName())) {
+				if(challenges.get(i).getGameState() == GameState.Invited) {
+					activeChallenges.add(challenges.get(i));
+				}
+			}
+		}
+		
+		notifyObs();
 	}
 	
 	private void notifyObs() {
