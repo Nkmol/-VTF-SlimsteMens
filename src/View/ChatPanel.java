@@ -30,7 +30,6 @@ public class ChatPanel extends JPanel implements Observer {
 	private void createChatPanel() {
 		
 		frame = new JFrame();
-		//frame.setBounds(100, 100, 500, 500);
 		frame.setSize(500, 555);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//frame.setResizable(false);
