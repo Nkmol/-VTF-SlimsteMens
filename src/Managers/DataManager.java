@@ -83,8 +83,8 @@ public class DataManager {
 		return players;
 	}
 	
-	public ArrayList<CompeitionRankItem> getCompetitionRank() {
-		ArrayList<CompeitionRankItem> competitionRank = null;
+	public ArrayList<CompetitionRankItem> getCompetitionRank() {
+		ArrayList<CompetitionRankItem> competitionRank = null;
 		try {
 			String sql = "SELECT * FROM competitiestand ORDER BY (aantal_gewonnen_spellen / aantal_verloren_spellen)";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
