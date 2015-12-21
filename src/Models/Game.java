@@ -13,26 +13,17 @@ public class Game extends Observable {
 	private static final int MinimumAnswerPercentage = 80;
 	
 	private int id;
-	private Player player1;
-	private Player player2;
+	private PlayerGame player1;
+	private PlayerGame player2;
 	private GameState gameState;
 	private ArrayList<Round> rounds;
+	private Round currentRound;
 	private ArrayList<ChatMessage> chatMessages;
-	
-	private int time1, time2;
-	
-	public int getTime1() {
-		return time1;
-	}
-	
-	public int getTime2() {
-		return time1;
-	}
 	
 	public Game(int gameId, Player player1, Player player2, GameState gameState) {
 		this.id = gameId;
-		this.player1 = player1;
-		this.player2 = player2;
+		this.player1 = new PlayerGame(player1);
+		this.player2 = new PlayerGame(player2);
 		this.gameState = gameState;
 		rounds = DataManager.getInstance().getRounds(this);
 		chatMessages = DataManager.getInstance().getChatMessages(id);
@@ -41,8 +32,8 @@ public class Game extends Observable {
 	public Game(ResultSet data) {
 		try {
 			id = data.getInt("spel_id");
-			player1 = DataManager.getInstance().getPlayer(data.getString("speler1"));
-			player2 = DataManager.getInstance().getPlayer(data.getString("speler2"));
+			player1 = new PlayerGame(DataManager.getInstance().getPlayer(data.getString("speler1")));
+			player2 = new PlayerGame(DataManager.getInstance().getPlayer(data.getString("speler2")));
 			gameState = GameState.fromString(data.getString("toestand_type"));
 			rounds = DataManager.getInstance().getRounds(this);
 			chatMessages = DataManager.getInstance().getChatMessages(id);
@@ -73,11 +64,11 @@ public class Game extends Observable {
 		return id;
 	}
 	
-	public Player getPlayer1() {
+	public PlayerGame getPlayerGame1() {
 		return player1;
 	}
 	
-	public Player getPlayer2() {
+	public PlayerGame getPlayerGame2() {
 		return player2;
 	}
 	

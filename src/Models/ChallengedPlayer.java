@@ -25,6 +25,10 @@ public class ChallengedPlayer {
 		return challengedPlayer.getName();
 	}
 	
+	public Player getPlayer() {
+		return challengedPlayer;
+	}
+	
 	public Boolean isChallenged() {
 		return challenged;
 	}

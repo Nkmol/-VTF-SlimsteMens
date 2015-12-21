@@ -3,15 +3,15 @@ package Models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Observable;
 
 import Managers.DataManager;
 
-public abstract class Round extends Observable{
+public abstract class Round {
 
 	protected RoundType roundType;
 	protected ArrayList<Question> questions;
-	protected Turn turn;
+	protected Turn turn; //TODO: don't sure if we want to keep this (new turn)
+	protected ArrayList<Turn> turns;
 	protected Game game;
 	
 	public Round(Game game) {
@@ -23,6 +23,7 @@ public abstract class Round extends Observable{
 			roundType = RoundType.fromString(data.getString("rondenaam"));
 			questions = DataManager.getInstance().getQuestions(this);
 			this.game = game;
+			turns = DataManager.getInstance().getTurns(this);
 		} catch (SQLException e) {
 			System.err.println("Error initializing round");
 		}
@@ -36,8 +37,12 @@ public abstract class Round extends Observable{
 		this.turn = turn;
 	}
 	
-	public Turn getTurn() {
+	public Turn getTurn() { //TODO: not useful?
 		return turn;
+	}
+	
+	public ArrayList<Turn> getTurns() {
+		return turns;
 	}
 	
 	public void refreshTurn() {
@@ -51,10 +56,4 @@ public abstract class Round extends Observable{
 	public ArrayList<Question> getQuestions() {
 		return questions;
 	}
-	
-	public void updateView() {
-		setChanged();
-		notifyObservers(this);
-	}
-	
 }

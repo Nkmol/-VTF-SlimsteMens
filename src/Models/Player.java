@@ -61,6 +61,9 @@ public class Player extends Observable{
 			this.name = name;
 			this.password = password;
 		}
+		else {
+			errorMsg = "Het wachtwoord en/of username bestaat niet.";
+		}
 		
 		setChanged();
 		notifyObservers(this);

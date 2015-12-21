@@ -31,7 +31,7 @@ public class MainPanel extends JPanel {
 		add(this.sidebarPanel, BorderLayout.EAST);
 	}
 	
-	public void setCategoryPanel(JPanel newPanel){
+	public void setCategoryPanel(JPanel newPanel) {
 		categoryPanel.setPanel(newPanel);
 	}
 	
