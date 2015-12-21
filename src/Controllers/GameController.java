@@ -16,6 +16,14 @@ public class GameController {
 		view = new GamePanel();
 		model.addObserver(view);
 		model.updateView();
+		
+		Utilities.ComponentUtility.addActionListener(view, "btnSubmit", (e) -> Submit_Click());
+	}
+	
+	public void Submit_Click() {
+		
+		
+		model.createTurn();
 	}
 	
 	public void setRoundView(JPanel round) {
