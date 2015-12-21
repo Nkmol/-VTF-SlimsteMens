@@ -17,6 +17,7 @@ public class Game extends Observable {
 	private PlayerGame player2;
 	private GameState gameState;
 	private ArrayList<Round> rounds;
+	private Round currentRound;
 	private ArrayList<ChatMessage> chatMessages;
 	
 	public Game(int gameId, Player player1, Player player2, GameState gameState) {
