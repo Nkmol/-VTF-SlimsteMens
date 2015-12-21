@@ -83,4 +83,12 @@ public class Game extends Observable {
 	public ArrayList<ChatMessage> getChatMessages() {
 		return chatMessages;
 	}
+	
+	public Round getCurrentRound() {
+		return currentRound;
+	}
+	
+	public void setCurrentRound(Round newRound) {
+		currentRound = newRound;
+	}
 }
