@@ -1,17 +1,12 @@
 package Models;
 
-import java.util.ArrayList;
 import java.util.Collection;
-
-import Utilities.StringUtility;
 
 public class PlayerAnswer {
 
 	private int answerId;
 	private String answer;
 	private int moment;
-	
-	private static final int MinimumAnswerPercentage = 80;
 	
 	public PlayerAnswer(int answerId, String answer, int moment) {
 		this.answerId = answerId;
