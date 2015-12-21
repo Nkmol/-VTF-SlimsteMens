@@ -2,6 +2,7 @@ package Models;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Observable;
 
 public class ThreeSixNine extends Round {
 
@@ -9,6 +10,8 @@ public class ThreeSixNine extends Round {
 	
 	public ThreeSixNine(Game game) {
 		super(game);
+		
+		currentQuestion = this.getQuestions().get(0);
 	}
 	
 	public ThreeSixNine(ResultSet data, Game game) {
@@ -16,32 +19,33 @@ public class ThreeSixNine extends Round {
 	}
 	
 	public Boolean checkTurn(){
-		// TODO
+		// TODO later naar kijken
 		return false;
 	}
 	
-	public Boolean isAnswerCorrect(int questionID, String Answer, ArrayList<Answer> answers){
-		
-		for(Answer answer : answers){
-			if(answer.getQuestionId() == questionID){
-				if(answer.getAnswer().equals(Answer)){
-					return true;
-				}
-			}
-		}
-		
-		return false;
-	}
 	
 	public void setNewQuestion(){
 		// Get the view to update question with a new question
+		int current = this.getQuestions().indexOf(currentQuestion);
 		
-		setChanged();
-		notifyObservers();
+		if(this.getQuestions().get(current + 1) != null){
+
+			setCurrentQuestion(++current);
+
+			setChanged();
+			notifyObservers();
+
+		}
 	}
 	
 	public Question getCurrentQuestion(){
 		return currentQuestion;
 	}
+	
+	public void setCurrentQuestion(int index){
+		this.currentQuestion = this.getQuestions().get(index);
+	}
+
+
 
 }

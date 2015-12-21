@@ -13,7 +13,7 @@ public class ThreeSixNineController {
 	public ThreeSixNineController(Game parent) {
 		
 		model = new ThreeSixNine(parent);
-		view = new ThreeSixNineView();
+		view = new ThreeSixNineView(model);
 		model.addObserver(view);
 		model.updateView();
 		
@@ -24,7 +24,9 @@ public class ThreeSixNineController {
 	
 	private void btnSendAnswer_Press(){
 		
-		model.isAnswerCorrect(view.getCurrentQuestion().getId(), view.getAnswer(), view.getCurrentQuestion().getAnswers());
+		//model.isAnswerCorrect(view.getCurrentQuestion().getId(), view.getAnswer(), view.getCurrentQuestion().getAnswers());
+	
+		
 	}
 	
 	private void btnPass_Press(){

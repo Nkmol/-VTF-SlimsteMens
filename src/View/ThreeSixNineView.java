@@ -23,6 +23,8 @@ public class ThreeSixNineView extends JPanel implements Observer {
 								
 	
 	// Player answers 9 question in this round
+	// Player can pass 
+	
 	
 	private JFrame frame;
 	private JLabel question,
@@ -37,10 +39,12 @@ public class ThreeSixNineView extends JPanel implements Observer {
 	private ArrayList<Question> questions;
 	private Question currentQuestion;
 	
-	public ThreeSixNineView()
+	
+	
+	public ThreeSixNineView(ThreeSixNine currentRound)
 	{
-		//this.currentRound = currentRound;
-		//this.questions = currentRound.getQuestions();
+		this.currentRound = currentRound;
+		this.questions = currentRound.getQuestions();
 		createRoundOnePanel();
 	}
 
@@ -59,7 +63,7 @@ public class ThreeSixNineView extends JPanel implements Observer {
 		timeRemainingPlayer1.setText("Time left: " + 33 + " sec");
 		this.add(timeRemainingPlayer1, "wrap");
 		
-		currentQuestion = questions.get(0);
+		currentQuestion = currentRound.getCurrentQuestion();
 		question = new JLabel();
 		question.setText(currentQuestion.getText());
 		this.add(question, "wrap");
