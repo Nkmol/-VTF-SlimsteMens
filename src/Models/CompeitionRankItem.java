@@ -3,7 +3,7 @@ package Models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CompeitionRankItem {
+public class CompetitionRankItem {
 
 	private String player;
 	private int amountPlayedGames;
@@ -11,7 +11,7 @@ public class CompeitionRankItem {
 	private int amountGamesLost;
 	private int averageSecondsLeft;
 	
-	public CompeitionRankItem(ResultSet data) {
+	public CompetitionRankItem(ResultSet data) {
 		try {
 			player = data.getString("speler");
 			amountPlayedGames = data.getInt("aantal_gespeelde_spellen");
