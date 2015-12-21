@@ -91,7 +91,7 @@ public class DataManager {
 			ResultSet data = preparedStatement.executeQuery();
 			competitionRank = new ArrayList<>();
 			while (data.next())
-				competitionRank.add(new CompeitionRankItem(data));
+				competitionRank.add(new CompetitionRankItem(data));
 		} catch (SQLException e) {
 			System.err.println("Error fetching competition rank");
 		}
