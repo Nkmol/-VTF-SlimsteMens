@@ -172,6 +172,21 @@ public class DataManager {
 		return games;
 	}
 	
+	public ArrayList<GameInfo> getAllGameInfosForPlayer(String name) {
+		ArrayList<GameInfo> gameInfos = null;
+		try {
+			String sql = "SELECT * FROM spel WHERE speler1 = ? OR speler2 = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, name);
+			preparedStatement.setString(2, name);
+			ResultSet data = preparedStatement.executeQuery();
+			gameInfos = new ArrayList<>();
+			while(data.next()) 
+				gameInfos.add(new GameInfo(data));
+		} catch (SQLException e) { }
+		return gameInfos;
+	}
+	
 	public ArrayList<GameScore> getGameScoresForPlayer(String playerName) {
 		ArrayList<GameScore> gameScores = null;
 		try {
