@@ -364,14 +364,14 @@ public class DataManager {
 		return sharedQuestions;
 	}
 	
-	public ArrayList<PlayerAnswer> getPlayerAnswers(Turn turn) {
+	public ArrayList<PlayerAnswer> getPlayerAnswers(int gameid, RoundType roundType, int turnid) {
 		ArrayList<PlayerAnswer> playerAnswers = null;
 		try {
 			String sql = "SELECT * FROM spelerantwoord WHERE spel_id = ? AND rondenaam = ? AND beurt_id = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, turn.getGameId());
-			preparedStatement.setString(2, turn.getRoundType().getValue());
-			preparedStatement.setInt(3, turn.getTurnId());
+			preparedStatement.setInt(1, gameid);
+			preparedStatement.setString(2, roundType.getValue());
+			preparedStatement.setInt(3, turnid);
 			ResultSet data = preparedStatement.executeQuery();
 			playerAnswers = new ArrayList<>();
 			while (data.next())

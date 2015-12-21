@@ -23,7 +23,6 @@ public class ThreeSixNine extends Round {
 		return false;
 	}
 	
-	
 	public void setNewQuestion(){
 		// Get the view to update question with a new question
 		int current = this.getQuestions().indexOf(currentQuestion);
@@ -45,7 +44,4 @@ public class ThreeSixNine extends Round {
 	public void setCurrentQuestion(int index){
 		this.currentQuestion = this.getQuestions().get(index);
 	}
-
-
-
 }

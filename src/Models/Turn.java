@@ -29,6 +29,10 @@ public class Turn {
 //		this.player = player;
 	}
 	
+	public Turn(RoundType rondeType, Player playerGame, int gameId) {
+		
+	}
+	
 	public Turn(ResultSet data) {
 		try {
 			gameId = data.getInt("spel_id");
@@ -40,7 +44,8 @@ public class Turn {
 			secondsEarnd = data.getInt("sec_verdiend");
 			secondsFinal = data.getInt("sec_finale_af");
 			sharedQuestions = DataManager.getInstance().getSharedQuestions(this);
-			playerAnswers = DataManager.getInstance().getPlayerAnswers(this);
+			//TODO: turn id
+			playerAnswers = DataManager.getInstance().getPlayerAnswers(gameId, roundType, turnId);
 		} catch (SQLException e) {
 			System.err.println("Error initializing Turn");
 			System.err.println(e.getMessage());
@@ -79,6 +84,10 @@ public class Turn {
 		return turnState;
 	}
 	
+	public void setTurnState(TurnState state) {
+		turnState = state;
+	}
+	
 	public int getSecondsEarned() {
 		return secondsEarnd;
 	}
@@ -110,5 +119,18 @@ public class Turn {
 	public int getTime() {
 		return time;
 	}
+	
+	public void setPlayerAnswers(ArrayList<PlayerAnswer> playerAnswers) {
+		
+	}
+	
+	public void addPlayerAnswer(PlayerAnswer answer) {
+		playerAnswers.add(answer);
+	}
+	
+	public int getAmountAnswers() {
+		return playerAnswers.size();
+	}
+	
 	
 }
