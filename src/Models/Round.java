@@ -35,11 +35,11 @@ public abstract class Round extends Observable {
 		return game;
 	}
 	
-	public void setTurn(Turn turn) {
+	public void setCurrrentTurn(Turn turn) {
 		this.currentTurn = turn;
 	}
 	
-	public Turn getTurn() { //TODO: not useful?
+	public Turn getCurrentTurn() {
 		return currentTurn;
 	}
 	
@@ -73,7 +73,7 @@ public abstract class Round extends Observable {
 		//TODO: setQuestionId
 		
 		//TODO: Push turn
-		setTurn(turn);
+		setCurrrentTurn(turn);
 	}
 	
 	public int generateAnswerId() {
@@ -81,7 +81,7 @@ public abstract class Round extends Observable {
 	}
 	
 	public void updateAnswer(String answer) {
-		getTurn().addPlayerAnswer(new PlayerAnswer(game.getId(), answer, generateAnswerId()));
+		getCurrentTurn().addPlayerAnswer(new PlayerAnswer(game.getId(), answer, generateAnswerId()));
 	}
 	
 	public static Round createRound(RoundType type, Game game) {

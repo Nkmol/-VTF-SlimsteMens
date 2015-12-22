@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import Managers.DataManager;
 import Models.Game;
 import Models.PlayerAnswer;
+import Models.Round;
 import View.GamePanel;
 
 public class GameController {
@@ -22,9 +23,10 @@ public class GameController {
 	}
 	
 	public void Submit_Click() {
-		int answerId = model.getCurrentRound().generateAnswerId();
-		model.getCurrentRound().getTurn().addPlayerAnswer(new PlayerAnswer(answerId, view.txtInput.getText(), 0));
-		//TODO: keep track of the moment it is posted
+		Round currentRound = model.getCurrentRound();
+		int answerId = currentRound.generateAnswerId();
+		
+		currentRound.getCurrentTurn().addPlayerAnswer(new PlayerAnswer(answerId, view.txtInput.getText(), currentRound.getCurrentTurn().getTime()));
 	}
 	
 	public void setRoundView(JPanel round) {
