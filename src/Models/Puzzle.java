@@ -20,7 +20,7 @@ public class Puzzle extends Round {
 	}
 	
 	public Question GetQuestion() {
-		SharedQuestion sharedQuestion = turn.getSharedQuestions().get(turn.getSharedQuestions().size() - 1);
+		SharedQuestion sharedQuestion = getCurrentTurn().getSharedQuestions().get(getCurrentTurn().getSharedQuestions().size() - 1);
 		for (Question question : getQuestions())
 			if (sharedQuestion.getQuestionId() == question.getId())
 				return question;
