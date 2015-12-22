@@ -11,6 +11,24 @@ public class SharedQuestion {
 	private int indexNumber;
 	private int questionId;
 	private String answer;
+	
+	public SharedQuestion(int gameId, RoundType roundType, int turnId, int index, int questionId, String answer) {
+		this.gameId = gameId;
+		this.roundType = roundType;
+		this.turnId = turnId;
+		this.indexNumber = index; 
+		this.questionId = questionId;
+		this.answer = answer;
+	}
+	
+	public SharedQuestion(Turn turn, int index, String answer) {
+		this.gameId = turn.getGameId();
+		this.roundType = turn.getRoundType();
+		this.turnId = turn.getTurnId();
+		this.indexNumber = index;
+		this.questionId = turn.getQuestionId();
+		this.answer = answer;
+	}
 
 	public SharedQuestion(ResultSet data) {
 		try {

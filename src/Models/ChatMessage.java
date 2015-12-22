@@ -16,7 +16,7 @@ public class ChatMessage extends Observable {
 		private String senderName;
 		private String message;
 		
-		public ChatMessage(int gameId, Timestamp timestamp, int millisec, String senderName, String message) {
+		public ChatMessage(int gameId, String senderName, String message) {
 			this.gameId = gameId;
 			this.timestamp = currentTimeStamp();
 			this.millisec = currentTimeMillis();
@@ -49,14 +49,31 @@ public class ChatMessage extends Observable {
 
 		public void send() {
 			try {
-			DataManager.getInstance().pushChatMessage(gameId, timestamp, millisec, senderName, message);
-			
-			setChanged();
-			notifyObservers();
+				DataManager.getInstance().pushChatMessage(this);
 			}
 			catch (Exception e) {
 				System.err.println("Error sending chat message: " + e.getMessage());
 			}
+		}
+		
+		public int getGameId() {
+			return gameId;
+		}
+
+		public Timestamp getTimestamp() {
+			return timestamp;
+		}
+
+		public int getMillisec() {
+			return millisec;
+		}
+
+		public String getSenderName() {
+			return senderName;
+		}
+
+		public String getMessage() {
+			return message;
 		}
 	
 }

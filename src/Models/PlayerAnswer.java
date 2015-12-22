@@ -12,7 +12,10 @@ public class PlayerAnswer {
 	private String answer;
 	private int moment;
 	
-	public PlayerAnswer(int answerId, String answer, int moment) {
+	public PlayerAnswer(Turn turn, int answerId, String answer, int moment) {
+		this.gameId = turn.getGameId();
+		this.roundType = turn.getRoundType();
+		this.turnId = turn.getTurnId();
 		this.answerId = answerId;
 		this.answer = answer;
 		this.moment = moment;

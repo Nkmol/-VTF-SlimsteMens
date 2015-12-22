@@ -83,4 +83,17 @@ public class Game extends Observable {
 	public ArrayList<ChatMessage> getChatMessages() {
 		return chatMessages;
 	}
+	
+	public Round getCurrentRound() {
+		return currentRound;
+	}
+	
+	public void setCurrentRound(Round round) {		
+		//TODO: add to Rounds<>
+		currentRound = round;	
+	}
+	
+	public void nextRound() {
+		currentRound = Round.createRound(RoundType.nextRoundType(currentRound.getRoundType()), this);
+	}
 }

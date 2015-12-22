@@ -33,17 +33,17 @@ public class ChatController {
 	
 	private void btnSendMessage_Press()
 	{
+		System.out.println("test");
+		
 		//model.addObserver(view);
 		
 		Date date = new Date();
-		int milisecs = toIntExact(new Timestamp(date.getTime()).getTime());
 		String playername = DataManager.getInstance().getCurrentUser().getName();
 		
 		// TODO Find out which playername gets used for this
 		model = new ChatMessage(parent.getId(), 
-				new Timestamp(date.getTime()), 
-				milisecs, 
-				playername, view.getMessage());
+				playername, 
+				view.getMessage());
 	
 		model.send();
 		
@@ -54,6 +54,8 @@ public class ChatController {
 	{
 		ArrayList<ChatMessage> chatMessages = 
 				DataManager.getInstance().getChatMessages(parent.getId());
+		
+		view.updateChatBehavior(chatMessages);
 	}
 	
 	public ChatMessageView returnView(){

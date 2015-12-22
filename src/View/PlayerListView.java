@@ -37,9 +37,11 @@ public class PlayerListView extends JPanel implements Observer{
 		playerViews = new PlayerView[players.size()];
 		
 		for(int i = 0; i < players.size(); i++) {
-			playerViews[i] = new PlayerView(players.get(i).getPlayer(), players.get(i).isChallenged(), controller); // TODO add a check to see if the player has already been challenged.
+			playerViews[i] = new PlayerView(players.get(i).getPlayer(), !players.get(i).isChallenged(), controller); // TODO add a check to see if the player has already been challenged.
 			add(playerViews[i]);
 		}
+		
+		repaint();
 	}
 	
 	@Override

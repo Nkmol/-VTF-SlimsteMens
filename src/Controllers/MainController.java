@@ -12,6 +12,8 @@ import View.*;
 
 import View.AccountPanel;
 
+import View.Ronde2;
+
 public class MainController {
 
 	private MainFrame mainFrame;
@@ -22,15 +24,7 @@ public class MainController {
 		mainFrame = new MainFrame();
 		
 		showLogin();
-		
-		System.out.println(currentTimeStamp());
 	}
-	
-    public Timestamp currentTimeStamp()
-    {
-	  Date date = new Date();
-	  return new Timestamp(date.getTime());
-    }
 	
 	public void addMenu() {
 		MenuController menu = new MenuController(this);

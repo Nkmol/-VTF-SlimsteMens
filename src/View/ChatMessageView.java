@@ -19,7 +19,7 @@ import net.miginfocom.swing.MigLayout;
 public class ChatMessageView extends JPanel implements Observer {
 
 	private JFrame frame;
-	private JButton btnSendMessage;
+	public JButton btnSendMessage;
 	private JTextField messageBox;
 	private JTextArea chatBox;
 	private String currentPlayerUsername;
@@ -27,17 +27,17 @@ public class ChatMessageView extends JPanel implements Observer {
 	public ChatMessageView() {
 		createChatPanel();
 		
-		currentPlayerUsername = "Jamam";
+		//currentPlayerUsername = "Jamam";
 	}
 
 	private void createChatPanel() {
 		
-		frame = new JFrame();
-		frame.setSize(500, 555);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//frame = new JFrame();
+		//frame.setSize(500, 555);
+		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//frame.setResizable(false);
-		frame.getContentPane().setLayout(new MigLayout("", "[470px]", "[1px]"));
-		this.setLayout(new MigLayout());
+		//frame.getContentPane().setLayout(new MigLayout("", "[470px]", "[1px]"));
+		//this.setLayout(new MigLayout());
 		
 		chatBox = new JTextArea();
 		chatBox.setEditable(false);
@@ -46,24 +46,24 @@ public class ChatMessageView extends JPanel implements Observer {
 		
 		this.add(chatBox, "grow, pushx, wrap");
 
-		messageBox = new JTextField(40);
+		messageBox = new JTextField(30);
 		messageBox.requestFocusInWindow();
 		
 		
 		this.add(messageBox);
 
 		btnSendMessage = new JButton("Send");
-		btnSendMessage.addActionListener(e -> activateChatboxBehavior());
+		//btnSendMessage.addActionListener(e -> activateChatboxBehavior());
 
 		
 		this.add(btnSendMessage);
 
-		frame.getContentPane().add(this, "cell 0 0,growx,aligny top");
-		frame.setVisible(true);
+		//frame.getContentPane().add(this, "cell 0 0,growx,aligny top");
+		//frame.setVisible(true);
 
 	}
 
-	private void activateChatboxBehavior() {
+/*	private void activateChatboxBehavior() {
 		if (messageBox.getText().length() < 1) {
 			// do nothing
 		} else {
@@ -71,7 +71,7 @@ public class ChatMessageView extends JPanel implements Observer {
 			messageBox.setText("");
 		}
 		messageBox.requestFocusInWindow();
-	}
+	}*/
 	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
@@ -83,12 +83,17 @@ public class ChatMessageView extends JPanel implements Observer {
 	
 	public void updateChatBehavior(ArrayList<ChatMessage> chatMessages)
 	{
+		//System.out.println("updateChatBehavior");
+		
 		chatBox.setText(null);
 		
 		for(ChatMessage message: chatMessages){
 			
+		chatBox.append("<" + message.getSenderName() + ">:  " + message.getMessage() + "\n");
+		messageBox.setText("");
+			
 		}
-		
+		messageBox.requestFocusInWindow();
 	}
 	
 	@Override

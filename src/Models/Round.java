@@ -12,7 +12,7 @@ public abstract class Round extends Observable {
 
 	protected RoundType roundType;
 	protected ArrayList<Question> questions;
-	protected Turn turn; //TODO: don't sure if we want to keep this (new turn)
+	protected Turn currentTurn;
 	protected ArrayList<Turn> turns;
 	protected Game game;
 	
@@ -35,12 +35,12 @@ public abstract class Round extends Observable {
 		return game;
 	}
 	
-	public void setTurn(Turn turn) {
-		this.turn = turn;
+	public void setCurrrentTurn(Turn turn) {
+		this.currentTurn = turn;
 	}
 	
-	public Turn getTurn() { //TODO: not useful?
-		return turn;
+	public Turn getCurrentTurn() {
+		return currentTurn;
 	}
 	
 	public ArrayList<Turn> getTurns() {
@@ -63,5 +63,42 @@ public abstract class Round extends Observable {
         setChanged();
         notifyObservers(this);
     }
+    
+    public int getTurnAmount() {
+    	return turns.size();
+    }
 
+	public void createTurn() {
+		Turn turn = new Turn(getRoundType(), DataManager.getInstance().getCurrentUser(), game.getId());
+		//TODO: setQuestionId
+		
+		//TODO: Push turn
+		setCurrrentTurn(turn);
+	}
+	
+	public int generateAnswerId() {
+		System.out.println(currentTurn);
+		return currentTurn.getAmountAnswers() == 0 ? 1 : currentTurn.getTurnId() + 1;
+	}
+	
+	public void updateAnswer(String answer) {
+		getCurrentTurn().addPlayerAnswer(new PlayerAnswer(currentTurn, game.getId(), answer, generateAnswerId()));
+	}
+	
+	public static Round createRound(RoundType type, Game game) {
+		switch (type) {
+		case ThreeSixNine:
+			return new ThreeSixNine(game);
+		case OpenDoor:
+			return new OpenDoor(game);
+		case Puzzle:
+			return new Puzzle(game);
+		case Framed:
+			return new Framed(game);
+		case Final:
+			return new Final(game);
+		default:
+			return null;
+		}
+	}
 }

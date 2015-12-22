@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 
 import Controllers.ChallengeListController;
 import Models.Game;
+import Models.GameInfo;
 
 public class ChallengeListView extends JPanel implements Observer {
 
@@ -25,7 +26,7 @@ public class ChallengeListView extends JPanel implements Observer {
 		
 	}
 
-	private void updateChallenges(ArrayList<Game> games) {
+	private void updateChallenges(ArrayList<GameInfo> games) {
 		
 		if(challengeViews != null) {
 			for(int i = 0; i < challengeViews.length; i++) {
@@ -36,15 +37,17 @@ public class ChallengeListView extends JPanel implements Observer {
 		challengeViews = new ChallengeView[games.size()];
 		
 		for(int i = 0; i < games.size(); i++) {
-			Game game = games.get(i);
-			challengeViews[i] = new ChallengeView(game.getId(), game.getPlayerGame2().getPlayer().getName(), controller); // TODO add a check to see if the player has already been challenged.
+			GameInfo game = games.get(i);
+			challengeViews[i] = new ChallengeView(game.getGameId(), game.getPlayer1().getName(), controller); // TODO add a check to see if the player has already been challenged.
 			add(challengeViews[i]);
 		}
+		
+		repaint();
 	}
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		updateChallenges((ArrayList<Game>) arg); // TODO UNCHECKED CAST FIX
+		updateChallenges((ArrayList<GameInfo>) arg); // TODO UNCHECKED CAST FIX
 		validate();
 	}
 }
