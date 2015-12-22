@@ -47,7 +47,7 @@ public class PuzzlePanel extends JPanel {
 	
 	private void Update(Puzzle puzzle) {
 		// TODO: Does puzzle only have one question?	
-		txtQuestion.setText(puzzle.getTurn().getQuestion().getText());
+		txtQuestion.setText(puzzle.GetQuestion().getText());
 		
 		for (int I = 0; I < lblAnswers.length || I < puzzle.getTurn().getPlayerAnswers().size(); I++)
 			lblAnswers[I].setText(puzzle.getTurn().getPlayerAnswers().get(I).getAnswer());

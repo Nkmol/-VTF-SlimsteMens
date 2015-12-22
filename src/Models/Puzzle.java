@@ -8,6 +8,7 @@ public class Puzzle extends Round {
 	
 	public Puzzle(Game game) {
 		super(game);
+		
 	}
 	
 	public Puzzle(ResultSet data, Game game) {
@@ -16,5 +17,13 @@ public class Puzzle extends Round {
 	
 	public static int getAnswerAmount() {
 		return AnswerAmount;
+	}
+	
+	public Question GetQuestion() {
+		SharedQuestion sharedQuestion = turn.getSharedQuestions().get(turn.getSharedQuestions().size() - 1);
+		for (Question question : getQuestions())
+			if (sharedQuestion.getQuestionId() == question.getId())
+				return question;
+		return null;
 	}
 }
