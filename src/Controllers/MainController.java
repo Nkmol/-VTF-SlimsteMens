@@ -18,7 +18,7 @@ public class MainController {
 		mainModel = new Main();
 		mainFrame = new MainFrame();
 		
-		//showLogin();
+		showLogin();
 	}
 	
 	public void addMenu() {

@@ -26,8 +26,13 @@ public class ChallengeListController {
 		return view;
 	}
 	
+	public void startGame(int gameId) {
+		parent.SetViewCategoryPanel(new GameController(gameId).getView());
+	}
+	
 	public void handleAcceptButtonClick(int gameId) {
 		model.acceptChallenge(gameId);
+		startGame(gameId);
 	}
 	
 	public void handleRejectButtonClick(int gameId) {
