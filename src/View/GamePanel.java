@@ -51,6 +51,7 @@ public class GamePanel extends JPanel implements Observer{
 		btnSubmit = new JButton("Submit");
 		bottom.add(btnSubmit);
 		txtInput = new JTextField();
+		txtInput.setPreferredSize(new Dimension(100, 20));
 		bottom.add(txtInput);
 		add(bottom, BorderLayout.PAGE_END);
 	}

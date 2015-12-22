@@ -1,9 +1,13 @@
 package Controllers;
 
+import java.awt.event.ActionListener;
+
 import javax.swing.JFrame;
+import javax.swing.text.View;
 
 import Models.ActiveChallenges;
 import Models.ActivePlayers;
+import Utilities.ComponentUtility;
 import View.ChallengeListView;
 import View.ChallengeView;
 import View.PlayerListView;
@@ -31,7 +35,7 @@ public class ChallengeListController {
 	}
 	
 	public void handleAcceptButtonClick(int gameId) {
-		model.acceptChallenge(gameId);
+		//model.acceptChallenge(gameId); //TODO: ...
 		startGame(gameId);
 	}
 	
@@ -39,5 +43,8 @@ public class ChallengeListController {
 		model.rejectChallenge(gameId);
 	}
 	
+	public void setRejectButtonClick(ChallengeView view, ActionListener l) {
+		ComponentUtility.addActionListener(view, "declineButton", l);
+	}
 	
 }

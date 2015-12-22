@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import Controllers.ChallengeListController;
 import Models.Game;
 import Models.GameInfo;
+import Utilities.ComponentUtility;
 
 public class ChallengeListView extends JPanel implements Observer {
 
@@ -20,9 +21,9 @@ public class ChallengeListView extends JPanel implements Observer {
 	public ChallengeListView(ChallengeListController controller) {
 		this.controller = controller;
 		
-		this.setPreferredSize(new Dimension(500,500));
+		setPreferredSize(new Dimension(500,500));
 		
-		this.setBackground(new Color(193,212,255));
+		setBackground(new Color(193,212,255));
 		
 	}
 
@@ -30,7 +31,7 @@ public class ChallengeListView extends JPanel implements Observer {
 		
 		if(challengeViews != null) {
 			for(int i = 0; i < challengeViews.length; i++) {
-				this.remove(challengeViews[i]);
+				remove(challengeViews[i]);
 			}
 		}
 		
@@ -39,10 +40,20 @@ public class ChallengeListView extends JPanel implements Observer {
 		for(int i = 0; i < games.size(); i++) {
 			GameInfo game = games.get(i);
 			challengeViews[i] = new ChallengeView(game.getGameId(), game.getPlayer1().getName(), controller); // TODO add a check to see if the player has already been challenged.
+			final int index = i;
+			ComponentUtility.addActionListener(challengeViews[i], "declineButton", (e) -> rejectButtonClick(game.getGameId(), challengeViews[index]));
+			//controller.setRejectButtonClick(challengeViews[i],  (e) -> rejectButtonClick(game.getGameId(), challengeViews[index]));
 			add(challengeViews[i]);
 		}
 		
 		repaint();
+	}
+	
+	private void rejectButtonClick(int gameId, ChallengeView challengeView) {
+		remove(challengeView);	
+		validate();
+		repaint();
+		controller.handleRejectButtonClick(gameId);
 	}
 	
 	@Override
