@@ -24,9 +24,7 @@ public class ActivePlayers extends Observable{
 
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
 				getActivePlayers();
-				notifyObs();
 			}
 			
 		}, 0L, 1000L);
@@ -45,7 +43,10 @@ public class ActivePlayers extends Observable{
 			}
 		}
 		
+		
 		activePlayers = players;
+		
+		notifyObs();
 	}
 	
 	private void notifyObs() {
