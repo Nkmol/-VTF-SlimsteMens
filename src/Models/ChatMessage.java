@@ -37,11 +37,31 @@ public class ChatMessage {
 
 		public void send() {
 			try {
-			DataManager.getInstance().pushChatMessage(gameId, timestamp, millisec, senderName, message);
+			DataManager.getInstance().pushChatMessage(this);
 			}
 			catch (Exception e) {
 				System.err.println("Error sending chat message: " + e.getMessage());
 			}
+		}
+		
+		public int getGameId() {
+			return gameId;
+		}
+
+		public Timestamp getTimestamp() {
+			return timestamp;
+		}
+
+		public int getMillisec() {
+			return millisec;
+		}
+
+		public String getSenderName() {
+			return senderName;
+		}
+
+		public String getMessage() {
+			return message;
 		}
 	
 }

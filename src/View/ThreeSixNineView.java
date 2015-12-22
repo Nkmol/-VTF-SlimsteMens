@@ -1,5 +1,6 @@
 package View;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -43,29 +44,24 @@ public class ThreeSixNineView extends JPanel implements Observer {
 	
 	public ThreeSixNineView(ThreeSixNine currentRound)
 	{
-		this.currentRound = currentRound;
-		this.questions = currentRound.getQuestions();
-		createRoundOnePanel();
+		/*this.currentRound = currentRound;
+		this.questions = currentRound.getQuestions();*/
+		add(new JLabel("test"));
+		//createRoundOnePanel();
 	}
 
 	
 	private void createRoundOnePanel()
 	{
-		
-		// Frame for test purpose
-		frame = new JFrame();
-		frame.setSize(500, 555);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new MigLayout("", "[470px]", "[1px]"));
 		this.setLayout(new MigLayout());
 	
 		timeRemainingPlayer1 = new JLabel();
 		timeRemainingPlayer1.setText("Time left: " + 33 + " sec");
 		this.add(timeRemainingPlayer1, "wrap");
 		
-		currentQuestion = currentRound.getCurrentQuestion();
-		question = new JLabel();
-		question.setText(currentQuestion.getText());
+		//currentQuestion = currentRound.getCurrentQuestion();
+		question = new JLabel("test question");
+		/*question.setText(currentQuestion.getText());*/
 		this.add(question, "wrap");
 		
 		txtAnswer = new JTextField(40);
@@ -77,11 +73,6 @@ public class ThreeSixNineView extends JPanel implements Observer {
 		
 		btnPass = new JButton(ThreeSixNineView.BTN_PASS);
 		this.add(btnPass);
-		
-		
-		
-		frame.getContentPane().add(this, "cell 0 0,growx,aligny top");
-		frame.setVisible(true);
 	}
 
 	private void setQuestion(Question question2){
@@ -135,7 +126,7 @@ public class ThreeSixNineView extends JPanel implements Observer {
 		ThreeSixNine threesixnine = (ThreeSixNine)arg;
 		
 		// vraag instellen
-		setQuestion(threesixnine.getCurrentQuestion());
+		//setQuestion(threesixnine.getCurrentQuestion());
 		
 		// de punten aanpasssen
 		

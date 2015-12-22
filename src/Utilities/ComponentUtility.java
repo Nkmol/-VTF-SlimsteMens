@@ -49,23 +49,3 @@ public final class ComponentUtility {
 		}
 	}
 }
-
-/*menuComp.addMenuKeyListener(new MenuKeyListener() {
-
-	@Override
-	public void menuKeyPressed(MenuKeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void menuKeyReleased(MenuKeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void menuKeyTyped(MenuKeyEvent arg0) {
-		// TODO Auto-generated method stub
-		l.actionPerformed(new ActionEvent(to, 0, ""));
-	} });*/

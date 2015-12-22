@@ -25,6 +25,29 @@ public enum RoundType {
 		}
 	}
 	
+	public static RoundType fromIndex(int value) {
+		switch (value) {
+		case 1:
+			return ThreeSixNine;
+		case 2:
+			return OpenDoor;
+		case 3:
+			return Puzzle;
+		case 4:
+			return Framed;
+		case 5:
+			return Final;
+		default:
+			return null;
+		}
+	}
+	
+	public static RoundType nextRoundType(RoundType type) {
+		if(type == null) return ThreeSixNine;
+		
+		return fromIndex(type.getIndex() + 1);
+	}
+	
 	public String getValue() {
 		switch (this) {
 		case ThreeSixNine:
@@ -58,5 +81,4 @@ public enum RoundType {
 			return 0;
 		}
 	}
-	
 }

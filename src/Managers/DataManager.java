@@ -1,5 +1,6 @@
 package Managers;
 
+import java.awt.Window.Type;
 import java.sql.*;
 import java.util.ArrayList;
 import Models.*;
@@ -121,6 +122,7 @@ public class DataManager {
 	}
 	
 	public boolean updateGameState(GameState newGameState, int gameId) {
+		getConnection();
 		boolean updated = false;
 		try {
 			String sql = "UPDATE spel SET toestand_type = ? WHERE spel_id = ?";
@@ -139,6 +141,7 @@ public class DataManager {
 	}
 	
 	public boolean gameExistsBetween(String player1, String player2, GameState gameState) {
+		getConnection();
 		boolean gameExists = false;
 		try {
 			String sql = "SELECT * FROM spel "
@@ -173,6 +176,7 @@ public class DataManager {
 	}
 	
 	public ArrayList<GameInfo> getAllGameInfosForPlayer(String name) {
+		getConnection();
 		ArrayList<GameInfo> gameInfos = null;
 		try {
 			String sql = "SELECT * FROM spel WHERE speler1 = ? OR speler2 = ?";
@@ -345,6 +349,83 @@ public class DataManager {
 		return turns;
 	}
 	
+	public boolean pushTurn(Turn turn) {
+		getConnection();
+		boolean turnPushed = false;
+		try {
+			String sql = "INSERT INTO beurt "
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			RoundType roundType = turn.getRoundType();
+			preparedStatement.setInt(1, turn.getGameId());
+			preparedStatement.setString(2, roundType.getValue());
+			preparedStatement.setInt(3, turn.getTurnId());
+			if (roundType == RoundType.ThreeSixNine || roundType == RoundType.Puzzle) 
+				preparedStatement.setNull(4, Types.INTEGER);
+			else 
+				preparedStatement.setInt(4, turn.getQuestion().getId());
+			preparedStatement.setString(5, turn.getPlayer().getName());
+			preparedStatement.setString(6, turn.getTurnState().getValue());
+			preparedStatement.setInt(7, turn.getSecondsEarned());
+			if (roundType != RoundType.Final) 
+				preparedStatement.setNull(8, Types.INTEGER);
+			else 
+				preparedStatement.setInt(8, turn.getSecondsFinalLost());
+			if (preparedStatement.executeUpdate() > 0) {
+				if (roundType == RoundType.ThreeSixNine || roundType == RoundType.Puzzle) {
+					pushSharedQuestion(turn);
+				} else if (roundType != RoundType.ThreeSixNine) {
+					pushPlayerAnswer(turn);
+				}
+				connection.commit();
+			}
+			
+		} catch (SQLException e) {
+			System.err.println("Error pushing turn");
+			System.err.println(e.getMessage());
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {}
+		}
+		
+		return turnPushed;
+	}
+	
+	private boolean pushSharedQuestion(Turn turn) throws SQLException {
+		boolean pushed = false;
+		for (SharedQuestion sharedQuestion : turn.getSharedQuestions()) {
+			String sql = "INSERT INTO deelvraag "
+					+ "VALUES (?, ?, ?, ?, ?, ?)";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, sharedQuestion.getGameId());
+			preparedStatement.setString(2, sharedQuestion.getRoundType().getValue());
+			preparedStatement.setInt(3, sharedQuestion.getTurnId());
+			preparedStatement.setInt(4, sharedQuestion.getIndexNumber());
+			preparedStatement.setInt(5, sharedQuestion.getQuestionId());
+			preparedStatement.setString(6, sharedQuestion.getAnswer());
+			preparedStatement.executeUpdate();
+		}
+		pushed = true;
+		return pushed;
+	}
+	
+	private boolean pushPlayerAnswer(Turn turn) throws SQLException {
+		boolean pushed = false;
+		for (PlayerAnswer playerAnswer : turn.getPlayerAnswers()) {
+			String sql = "INSERT INTO spelerantwoord VALUES (?, ?, ?, ?, ?, ?)";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, playerAnswer.getGameId());
+			preparedStatement.setString(2, playerAnswer.getRoundType().getValue());
+			preparedStatement.setInt(3, playerAnswer.getTurnId());
+			preparedStatement.setInt(4, playerAnswer.getAnswerId());
+			preparedStatement.setString(5, playerAnswer.getAnswer());
+			preparedStatement.setInt(6, playerAnswer.getMoment());
+			preparedStatement.executeUpdate();
+		}
+		pushed = true;
+		return pushed;
+	}
+	
 	public ArrayList<SharedQuestion> getSharedQuestions(Turn turn) {
 		ArrayList<SharedQuestion> sharedQuestions = null;
 		try {
@@ -364,14 +445,14 @@ public class DataManager {
 		return sharedQuestions;
 	}
 	
-	public ArrayList<PlayerAnswer> getPlayerAnswers(Turn turn) {
+	public ArrayList<PlayerAnswer> getPlayerAnswers(int gameid, RoundType roundType, int turnid) {
 		ArrayList<PlayerAnswer> playerAnswers = null;
 		try {
 			String sql = "SELECT * FROM spelerantwoord WHERE spel_id = ? AND rondenaam = ? AND beurt_id = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, turn.getGameId());
-			preparedStatement.setString(2, turn.getRoundType().getValue());
-			preparedStatement.setInt(3, turn.getTurnId());
+			preparedStatement.setInt(1, gameid);
+			preparedStatement.setString(2, roundType.getValue());
+			preparedStatement.setInt(3, turnid);
 			ResultSet data = preparedStatement.executeQuery();
 			playerAnswers = new ArrayList<>();
 			while (data.next())
@@ -477,16 +558,16 @@ public class DataManager {
 		}
 	}
 	
-	public boolean pushChatMessage(int gameId, Timestamp timestamp, int millisec, String senderName, String message) {
+	public boolean pushChatMessage(ChatMessage chatMessage) {
 		try {
 			String sql = "insert into chatregel (spel_id, tijdstip, millisec, account_naam_zender, bericht)"
 					+ " values (?,?,?,?,?)";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, gameId);
-			preparedStatement.setTimestamp(2, timestamp);
-			preparedStatement.setInt(3, millisec);
-			preparedStatement.setString(4, senderName);
-			preparedStatement.setString(5, message);
+			preparedStatement.setInt(1, chatMessage.getGameId());
+			preparedStatement.setTimestamp(2, chatMessage.getTimestamp());
+			preparedStatement.setInt(3, chatMessage.getMillisec());
+			preparedStatement.setString(4, chatMessage.getSenderName());
+			preparedStatement.setString(5, chatMessage.getMessage());
 			preparedStatement.executeUpdate();
 			connection.commit();
 			return true;
@@ -514,10 +595,12 @@ public class DataManager {
 	
 	public Connection getConnection() {
 		try {
-			System.out.println("Connecting.....");
+			/*if (connection != null)
+				connection.close();*/
+			//System.out.println("Connecting.....");
 			connection = DriverManager.getConnection(dbUrl, username, password);
 			connection.setAutoCommit(false);
-			System.out.println("Connected");
+			//System.out.println("Connected");
 		} catch (SQLException e) {
 			System.err.println("Connection Error: " + e.getMessage());
 		}

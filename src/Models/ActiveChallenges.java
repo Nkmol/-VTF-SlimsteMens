@@ -9,7 +9,7 @@ import Managers.DataManager;
 
 public class ActiveChallenges extends Observable {
 	
-	ArrayList<Game> activeChallenges;
+	ArrayList<GameInfo> activeChallenges;
 	Timer syncTimer;
 	
 	public ActiveChallenges() {
@@ -30,12 +30,12 @@ public class ActiveChallenges extends Observable {
 	
 	private void getChallengesForPlayer() {
 		//TODO: Zorgen dat de datamanger functie niet vastloopt of heel lang gaat duren
-		ArrayList<Game> challenges = DataManager.getInstance().getAllGamesForPlayer(DataManager.getInstance().getCurrentUser().getName());
+		ArrayList<GameInfo> challenges = DataManager.getInstance().getAllGameInfosForPlayer(DataManager.getInstance().getCurrentUser().getName());
 		
-		activeChallenges = new ArrayList<Game>();
+		activeChallenges = new ArrayList<GameInfo>();
 		
 		for(int i = 0; i < challenges.size(); i++) {
-			if(challenges.get(i).getPlayerGame2().getPlayer().getName().equals(DataManager.getInstance().getCurrentUser().getName())) {
+			if(challenges.get(i).getPlayer2().getName().equals(DataManager.getInstance().getCurrentUser().getName())) {
 				if(challenges.get(i).getGameState() == GameState.Invited) {
 					activeChallenges.add(challenges.get(i));
 				}

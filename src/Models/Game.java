@@ -98,7 +98,12 @@ public class Game extends Observable {
 		return currentRound;
 	}
 	
-	public void setCurrentRound(Round newRound) {
-		currentRound = newRound;
+	public void setCurrentRound(Round round) {		
+		//TODO: add to Rounds<>
+		currentRound = round;	
+	}
+	
+	public void nextRound() {
+		currentRound = Round.createRound(RoundType.nextRoundType(currentRound.getRoundType()), this);
 	}
 }
