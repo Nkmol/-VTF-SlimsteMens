@@ -22,7 +22,7 @@ public class DataManager {
 	}
 	
 	public static DataManager getInstance() {
-		if(instance != null) 
+		if(instance == null) 
 			instance = new DataManager();
 		return instance;
 	}
@@ -140,6 +140,7 @@ public class DataManager {
 	}
 	
 	public boolean gameExistsBetween(String player1, String player2, GameState gameState) {
+		getConnection();
 		boolean gameExists = false;
 		try {
 			String sql = "SELECT * FROM spel "
@@ -174,6 +175,7 @@ public class DataManager {
 	}
 	
 	public ArrayList<GameInfo> getAllGameInfosForPlayer(String name) {
+		getConnection();
 		ArrayList<GameInfo> gameInfos = null;
 		try {
 			String sql = "SELECT * FROM spel WHERE speler1 = ? OR speler2 = ?";
@@ -515,8 +517,8 @@ public class DataManager {
 	
 	public Connection getConnection() {
 		try {
-			if (connection != null)
-				connection.close();
+			/*if (connection != null)
+				connection.close();*/
 			System.out.println("Connecting.....");
 			connection = DriverManager.getConnection(dbUrl, username, password);
 			connection.setAutoCommit(false);
