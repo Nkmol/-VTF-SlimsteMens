@@ -1,5 +1,10 @@
 package Controllers;
 
+import static java.lang.Math.toIntExact;
+
+import java.sql.Timestamp;
+import java.util.Date;
+
 import javax.swing.JPanel;
 
 import Models.Main;
@@ -16,8 +21,16 @@ public class MainController {
 		mainModel = new Main();
 		mainFrame = new MainFrame();
 		
-		//showLogin();
+		showLogin();
+		
+		System.out.println(currentTimeStamp());
 	}
+	
+    public Timestamp currentTimeStamp()
+    {
+	  Date date = new Date();
+	  return new Timestamp(date.getTime());
+    }
 	
 	public void addMenu() {
 		MenuController menu = new MenuController(this);

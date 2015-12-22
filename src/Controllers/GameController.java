@@ -14,6 +14,10 @@ public class GameController {
 	public GameController(int gameId) {
 		model = DataManager.getInstance().getGame(gameId);
 		view = new GamePanel();
+		
+		ChatController chatcontroller = new ChatController(model);
+		
+		
 		model.addObserver(view);
 		model.updateView();
 	}

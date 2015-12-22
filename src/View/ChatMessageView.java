@@ -3,6 +3,7 @@ package View;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -11,17 +12,19 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import Models.ChatMessage;
 import net.miginfocom.swing.MigLayout;
 
-public class ChatPanel extends JPanel implements Observer {
+public class ChatMessageView extends JPanel implements Observer {
 
 	private JFrame frame;
-	private JButton sendMessage;
+	private JButton btnSendMessage;
 	private JTextField messageBox;
 	private JTextArea chatBox;
 	private String currentPlayerUsername;
 
-	public ChatPanel() {
+	public ChatMessageView() {
 		createChatPanel();
 		
 		currentPlayerUsername = "Jamam";
@@ -49,11 +52,11 @@ public class ChatPanel extends JPanel implements Observer {
 		
 		this.add(messageBox);
 
-		sendMessage = new JButton("Send");
-		sendMessage.addActionListener(e -> activateChatboxBehavior());
+		btnSendMessage = new JButton("Send");
+		btnSendMessage.addActionListener(e -> activateChatboxBehavior());
 
 		
-		this.add(sendMessage);
+		this.add(btnSendMessage);
 
 		frame.getContentPane().add(this, "cell 0 0,growx,aligny top");
 		frame.setVisible(true);
@@ -70,11 +73,24 @@ public class ChatPanel extends JPanel implements Observer {
 		messageBox.requestFocusInWindow();
 	}
 	
-	public void paintComponent(Graphics g)
-	{
+	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 	}
 
+	public String getMessage(){
+		return messageBox.getText();
+	}
+	
+	public void updateChatBehavior(ArrayList<ChatMessage> chatMessages)
+	{
+		chatBox.setText(null);
+		
+		for(ChatMessage message: chatMessages){
+			
+		}
+		
+	}
+	
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		// TODO Auto-generated method stub
