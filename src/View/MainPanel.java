@@ -11,10 +11,10 @@ public class MainPanel extends JPanel {
 	
 	public MainPanel() {
 		setLayout(new BorderLayout());
-
+		
 		categoryPanel = new CategoryPanel();
 		sidebarPanel = new JPanel();
-		sidebarPanel.setPreferredSize(new Dimension(100, getHeight()));
+		sidebarPanel.setPreferredSize(new Dimension(150, getHeight()));
 		
 		add(categoryPanel, BorderLayout.CENTER);
 		add(sidebarPanel, BorderLayout.EAST);
@@ -25,7 +25,7 @@ public class MainPanel extends JPanel {
 		
 		this.categoryPanel = new CategoryPanel(categoryPanel); 
 		this.sidebarPanel = sidebarPanel;
-		this.sidebarPanel.setPreferredSize(new Dimension(100, getHeight()));
+		this.sidebarPanel.setPreferredSize(new Dimension(150, getHeight()));
 		
 		add(this.categoryPanel, BorderLayout.CENTER);
 		add(this.sidebarPanel, BorderLayout.EAST);
@@ -39,13 +39,13 @@ public class MainPanel extends JPanel {
 		return categoryPanel.getPanel();
 	}
 	
-	public void setSidebar(JPanel newPanel) {
+	public void setSidebar(ActiveGameListView newPanel) {
 		remove(sidebarPanel);
 		sidebarPanel = newPanel;
 		if (newPanel != null)
 		{
-			this.sidebarPanel.setPreferredSize(new Dimension(100, getHeight()));
-			add(sidebarPanel, BorderLayout.EAST);
+			this.sidebarPanel.setPreferredSize(new Dimension(150, getHeight()));
+			add(newPanel, BorderLayout.EAST); // TODO Temp Oplossing
 		}
 	}
 	

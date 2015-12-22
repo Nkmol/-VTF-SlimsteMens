@@ -9,8 +9,8 @@ import Managers.DataManager;
 
 public class ActiveChallenges extends Observable {
 	
-	ArrayList<GameInfo> activeChallenges;
-	Timer syncTimer;
+	private ArrayList<GameInfo> activeChallenges;
+	private Timer syncTimer;
 	
 	public ActiveChallenges() {
 		startSyncTimer();

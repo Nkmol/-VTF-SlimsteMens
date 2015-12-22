@@ -5,10 +5,6 @@ import javax.swing.JPanel;
 import Models.Main;
 import View.*;
 
-import View.AccountPanel;
-
-import View.Ronde2;
-
 public class MainController {
 
 	private MainFrame mainFrame;
@@ -37,13 +33,20 @@ public class MainController {
 		mainFrame.setContentPane(register.getView());
 		mainFrame.setVisible(true);
 	}
+	
+	public void showActiveGames() {
+		ActiveGameController activeGames = new ActiveGameController(this);
+		SetViewSidebar(activeGames.getView());
+	}
 
+	
+	// TODO niet beginnen met hoofdletters bij functie namen!!!!
 	public void SetViewCategoryPanel(JPanel panel) {
 		mainFrame.getMainPanel().setCategoryPanel(panel);
 		mainFrame.setVisible(true);
 	}
 	
-	public void SetViewSidebar(JPanel panel) {
+	public void SetViewSidebar(ActiveGameListView panel) {
 		mainFrame.getMainPanel().setSidebar(panel);
 		mainFrame.setVisible(true);
 	}
@@ -68,6 +71,7 @@ public class MainController {
 	public void ShowMainPanel() {
 		//TODO: Only instantiate this once, when main screen is shown for the first time.
 		addMenu();
+		showActiveGames();
 		mainFrame.ShowMainPanel();
 		mainFrame.setVisible(true);
 	}
