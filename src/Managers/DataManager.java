@@ -558,16 +558,16 @@ public class DataManager {
 		}
 	}
 	
-	public boolean pushChatMessage(int gameId, Timestamp timestamp, int millisec, String senderName, String message) {
+	public boolean pushChatMessage(ChatMessage chatMessage) {
 		try {
 			String sql = "insert into chatregel (spel_id, tijdstip, millisec, account_naam_zender, bericht)"
 					+ " values (?,?,?,?,?)";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, gameId);
-			preparedStatement.setTimestamp(2, timestamp);
-			preparedStatement.setInt(3, millisec);
-			preparedStatement.setString(4, senderName);
-			preparedStatement.setString(5, message);
+			preparedStatement.setInt(1, chatMessage.getGameId());
+			preparedStatement.setTimestamp(2, chatMessage.getTimestamp());
+			preparedStatement.setInt(3, chatMessage.getMillisec());
+			preparedStatement.setString(4, chatMessage.getSenderName());
+			preparedStatement.setString(5, chatMessage.getMessage());
 			preparedStatement.executeUpdate();
 			connection.commit();
 			return true;
