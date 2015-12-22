@@ -6,6 +6,7 @@ import Managers.DataManager;
 import Models.Game;
 import Models.PlayerAnswer;
 import Models.Round;
+import Models.RoundType;
 import View.GamePanel;
 
 public class GameController {
@@ -19,7 +20,9 @@ public class GameController {
 		model.addObserver(view);
 		model.updateView();
 		
-		Utilities.ComponentUtility.addActionListener(view, "btnSubmit", (e) -> Submit_Click());
+		//ActionListeners
+		//Utilities.ComponentUtility.addActionListener(view, "btnSubmit", (e) -> Submit_Click());
+		//Utilities.ComponentUtility.addActionListener(view, "btnPass", (e) -> Pass_Click());
 	}
 	
 	public void Submit_Click() {
@@ -29,11 +32,26 @@ public class GameController {
 		currentRound.getCurrentTurn().addPlayerAnswer(new PlayerAnswer(answerId, view.txtInput.getText(), currentRound.getCurrentTurn().getTime()));
 	}
 	
+	public void Pass_Click() {
+		//TODO Next player
+	}
+	
 	public void setRoundView(JPanel round) {
 		view.setRound(round);
 	}
 	
 	public GamePanel getView() {
 		return view;
+	}
+	
+	public Game getModel() {
+		return model;
+	}
+
+	public void addRound(RoundType roundType) {
+		//TODO Dynamic
+		ThreeSixNineController threesixnineController = new ThreeSixNineController(model);
+		
+		view.setRound(threesixnineController.getView());
 	}
 }

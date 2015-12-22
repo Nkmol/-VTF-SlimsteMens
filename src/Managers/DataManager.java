@@ -519,10 +519,10 @@ public class DataManager {
 		try {
 			/*if (connection != null)
 				connection.close();*/
-			System.out.println("Connecting.....");
+			//System.out.println("Connecting.....");
 			connection = DriverManager.getConnection(dbUrl, username, password);
 			connection.setAutoCommit(false);
-			System.out.println("Connected");
+			//System.out.println("Connected");
 		} catch (SQLException e) {
 			System.err.println("Connection Error: " + e.getMessage());
 		}

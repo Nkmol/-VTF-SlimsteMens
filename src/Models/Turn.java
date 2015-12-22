@@ -29,8 +29,13 @@ public class Turn {
 //		this.player = player;
 	}
 	
-	public Turn(RoundType rondeType, Player playerGame, int gameId) {
+	public Turn(RoundType rondeType, Player player, int gameId) {
+		this.roundType = rondeType;
+		this.player = player; //TODO Should become PlayerGame?
+		this.gameId = gameId;
 		
+		playerAnswers = new ArrayList<PlayerAnswer>();
+		sharedQuestions = new ArrayList<SharedQuestion>();
 	}
 	
 	public Turn(ResultSet data) {
@@ -126,10 +131,13 @@ public class Turn {
 	
 	public void addPlayerAnswer(PlayerAnswer answer) {
 		playerAnswers.add(answer);
+		System.out.println("[Turn] Your answer " + answer.getAnswer());
 	}
 	
 	public int getAmountAnswers() {
-		return playerAnswers.size();
+		System.out.println(playerAnswers);
+		//return playerAnswers == null ? 0 : playerAnswers.size();
+		return 1;
 	}
 	
 	

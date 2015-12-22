@@ -4,6 +4,9 @@ import javax.swing.JFrame;
 
 import Models.ActiveChallenges;
 import Models.ActivePlayers;
+import Models.Game;
+import Models.Round;
+import Models.RoundType;
 import View.ChallengeListView;
 import View.ChallengeView;
 import View.PlayerListView;
@@ -27,11 +30,17 @@ public class ChallengeListController {
 	}
 	
 	public void startGame(int gameId) {
-		parent.SetViewCategoryPanel(new GameController(gameId).getView());
+		GameController gameController = new GameController(gameId);
+	
+		//set default round
+		gameController.addRound(RoundType.ThreeSixNine);
+		
+		parent.SetViewCategoryPanel(gameController.getView());
 	}
 	
 	public void handleAcceptButtonClick(int gameId) {
 		//model.acceptChallenge(gameId); //TODO: ...
+
 		startGame(gameId);
 	}
 	

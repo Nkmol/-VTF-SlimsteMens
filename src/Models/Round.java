@@ -77,6 +77,7 @@ public abstract class Round extends Observable {
 	}
 	
 	public int generateAnswerId() {
+		System.out.println(currentTurn);
 		return currentTurn.getAmountAnswers() == 0 ? 1 : currentTurn.getTurnId() + 1;
 	}
 	
