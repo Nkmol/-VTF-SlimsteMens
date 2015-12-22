@@ -17,6 +17,8 @@ public class GamePanel extends JPanel implements Observer{
 	
 	private JPanel middle;
 	private JLabel lblPlayer1, lblPlayer2, lblRoundType;
+	public JButton btnSubmit;
+	public JTextField txtInput;
 	
 	public GamePanel() {
 		setLayout(new BorderLayout());
@@ -46,6 +48,10 @@ public class GamePanel extends JPanel implements Observer{
 		
 		JPanel bottom = new JPanel();
 		bottom.setPreferredSize(new Dimension(0, 50));
+		btnSubmit = new JButton("Submit");
+		bottom.add(btnSubmit);
+		txtInput = new JTextField();
+		bottom.add(txtInput);
 		add(bottom, BorderLayout.PAGE_END);
 	}
 	
@@ -64,7 +70,7 @@ public class GamePanel extends JPanel implements Observer{
 		playerGame2 = model.getPlayerGame2();
 		
 		//TODO: Not sure which round i should choose to determ the round
-		lblRoundType.setText(model.getRounds().get(0).getRoundType().toString());
+		//lblRoundType.setText(model.getRounds().get(0).getRoundType().toString()); // TODO fix Exception in thread "AWT-EventQueue-0" java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
 		lblPlayer1.setText(playerGame1.getPlayer().getName() + " : " + playerGame1.getTime());
 		lblPlayer2.setText(playerGame2.getPlayer().getName() + " : " + playerGame2.getTime());
 	}

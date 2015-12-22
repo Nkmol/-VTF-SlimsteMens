@@ -4,6 +4,8 @@ import javax.swing.JPanel;
 
 import Managers.DataManager;
 import Models.Game;
+import Models.PlayerAnswer;
+import Models.Round;
 import View.GamePanel;
 
 public class GameController {
@@ -16,6 +18,15 @@ public class GameController {
 		view = new GamePanel();
 		model.addObserver(view);
 		model.updateView();
+		
+		Utilities.ComponentUtility.addActionListener(view, "btnSubmit", (e) -> Submit_Click());
+	}
+	
+	public void Submit_Click() {
+		Round currentRound = model.getCurrentRound();
+		int answerId = currentRound.generateAnswerId();
+		
+		currentRound.getCurrentTurn().addPlayerAnswer(new PlayerAnswer(answerId, view.txtInput.getText(), currentRound.getCurrentTurn().getTime()));
 	}
 	
 	public void setRoundView(JPanel round) {

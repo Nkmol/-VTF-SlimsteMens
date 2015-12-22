@@ -5,8 +5,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import Managers.DataManager;
+import Utilities.StringUtility;
 
 public class Question {
+	
+	private static final int MinimumAnswerPercentage = 80;
 	
 	private int id;
 	private Round round;
@@ -29,6 +32,21 @@ public class Question {
 			System.err.println("Error initializing quesiton");
 			System.err.println(e.getMessage());
 		}
+	}
+	
+	public boolean isPlayerAnswerCorrect(PlayerAnswer playerAnswer) {
+		
+		for(Answer answer : answers){
+			
+			if (StringUtility.CalculateMatchPercentage(playerAnswer.getAnswer(), answer.getAnswer()) >=  MinimumAnswerPercentage)
+				return true;
+			
+			for (String alternative : answer.getAlternatives())
+				if (StringUtility.CalculateMatchPercentage(playerAnswer.getAnswer(), alternative) >=  MinimumAnswerPercentage)
+					return true;
+		}
+		
+		return false;
 	}
 	
 	public int getId() {

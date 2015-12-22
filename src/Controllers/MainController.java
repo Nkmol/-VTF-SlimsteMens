@@ -7,6 +7,8 @@ import View.*;
 
 import View.AccountPanel;
 
+import View.Ronde2;
+
 public class MainController {
 
 	private MainFrame mainFrame;
