@@ -1,5 +1,6 @@
 package Managers;
 
+import java.awt.Window.Type;
 import java.sql.*;
 import java.util.ArrayList;
 import Models.*;
@@ -346,6 +347,83 @@ public class DataManager {
 			System.err.println("Error fetching turns for game id: " + round.getGame().getId());
 		}
 		return turns;
+	}
+	
+	public boolean pushTurn(Turn turn) {
+		getConnection();
+		boolean turnPushed = false;
+		try {
+			String sql = "INSERT INTO beurt "
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			RoundType roundType = turn.getRoundType();
+			preparedStatement.setInt(1, turn.getGameId());
+			preparedStatement.setString(2, roundType.getValue());
+			preparedStatement.setInt(3, turn.getTurnId());
+			if (roundType == RoundType.ThreeSixNine || roundType == RoundType.Puzzle) 
+				preparedStatement.setNull(4, Types.INTEGER);
+			else 
+				preparedStatement.setInt(4, turn.getQuestion().getId());
+			preparedStatement.setString(5, turn.getPlayer().getName());
+			preparedStatement.setString(6, turn.getTurnState().getValue());
+			preparedStatement.setInt(7, turn.getSecondsEarned());
+			if (roundType != RoundType.Final) 
+				preparedStatement.setNull(8, Types.INTEGER);
+			else 
+				preparedStatement.setInt(8, turn.getSecondsFinalLost());
+			if (preparedStatement.executeUpdate() > 0) {
+				if (roundType == RoundType.ThreeSixNine || roundType == RoundType.Puzzle) {
+					pushSharedQuestion(turn);
+				} else if (roundType != RoundType.ThreeSixNine) {
+					pushPlayerAnswer(turn);
+				}
+				connection.commit();
+			}
+			
+		} catch (SQLException e) {
+			System.err.println("Error pushing turn");
+			System.err.println(e.getMessage());
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {}
+		}
+		
+		return turnPushed;
+	}
+	
+	private boolean pushSharedQuestion(Turn turn) throws SQLException {
+		boolean pushed = false;
+		for (SharedQuestion sharedQuestion : turn.getSharedQuestions()) {
+			String sql = "INSERT INTO deelvraag "
+					+ "VALUES (?, ?, ?, ?, ?, ?)";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, sharedQuestion.getGameId());
+			preparedStatement.setString(2, sharedQuestion.getRoundType().getValue());
+			preparedStatement.setInt(3, sharedQuestion.getTurnId());
+			preparedStatement.setInt(4, sharedQuestion.getIndexNumber());
+			preparedStatement.setInt(5, sharedQuestion.getQuestionId());
+			preparedStatement.setString(6, sharedQuestion.getAnswer());
+			preparedStatement.executeUpdate();
+		}
+		pushed = true;
+		return pushed;
+	}
+	
+	private boolean pushPlayerAnswer(Turn turn) throws SQLException {
+		boolean pushed = false;
+		for (PlayerAnswer playerAnswer : turn.getPlayerAnswers()) {
+			String sql = "INSERT INTO spelerantwoord VALUES (?, ?, ?, ?, ?, ?)";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, playerAnswer.getGameId());
+			preparedStatement.setString(2, playerAnswer.getRoundType().getValue());
+			preparedStatement.setInt(3, playerAnswer.getTurnId());
+			preparedStatement.setInt(4, playerAnswer.getAnswerId());
+			preparedStatement.setString(5, playerAnswer.getAnswer());
+			preparedStatement.setInt(6, playerAnswer.getMoment());
+			preparedStatement.executeUpdate();
+		}
+		pushed = true;
+		return pushed;
 	}
 	
 	public ArrayList<SharedQuestion> getSharedQuestions(Turn turn) {

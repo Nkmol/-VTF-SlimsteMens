@@ -19,7 +19,7 @@ public class Turn {
 	private TimerTask timer;
 	private int time;
 	private int secondsEarnd;
-	private int secondsFinal;
+	private int secondsFinalLost;
 	private ArrayList<SharedQuestion> sharedQuestions;
 	private ArrayList<PlayerAnswer> playerAnswers;
 
@@ -29,8 +29,10 @@ public class Turn {
 //		this.player = player;
 	}
 	
-	public Turn(RoundType rondeType, Player playerGame, int gameId) {
-		
+	public Turn(RoundType roundType, Player player, int gameId) {
+		this.roundType = roundType;
+		this.player = player;
+		this.gameId = gameId;
 	}
 	
 	public Turn(ResultSet data) {
@@ -42,7 +44,7 @@ public class Turn {
 			playerName = data.getString("speler");
 			turnState = TurnState.fromString(data.getString("beurtstatus"));
 			secondsEarnd = data.getInt("sec_verdiend");
-			secondsFinal = data.getInt("sec_finale_af");
+			secondsFinalLost = data.getInt("sec_finale_af");
 			sharedQuestions = DataManager.getInstance().getSharedQuestions(this);
 			//TODO: turn id
 			playerAnswers = DataManager.getInstance().getPlayerAnswers(gameId, roundType, turnId);
@@ -64,6 +66,10 @@ public class Turn {
 		return turnId;
 	}
 	
+	public void setTurnId(int turnId) {
+		this.turnId = turnId;
+	}
+	
 	public Question getQuestion() {	
 		
 		if (questionId > 0) {
@@ -73,11 +79,16 @@ public class Turn {
 		return null;
 	}
 	
-	public Player getPlater() {
-		if (playerName != null) {
-			return DataManager.getInstance().getPlayer(playerName);
-		}
-		return null;
+	public int getQuestionId() {
+		return questionId;
+	}
+	
+	public void setQuestionId(int questionId) {
+		this.questionId = questionId;
+	}
+	
+	public Player getPlayer() {
+		return player;
 	}
 	
 	public TurnState getTurnState() {
@@ -92,16 +103,32 @@ public class Turn {
 		return secondsEarnd;
 	}
 	
-	public int getSecondsFinal() {
-		return secondsFinal;
+	public void setSecondsEarned(int secondsEarned) {
+		this.secondsEarnd = secondsEarned;
+	}
+	
+	public int getSecondsFinalLost() {
+		return secondsFinalLost;
+	}
+	
+	public void setSecondsFinalLost(int secondsLost) {
+		secondsFinalLost = secondsLost;
 	}
 	
 	public ArrayList<SharedQuestion> getSharedQuestions() {
 		return sharedQuestions;
 	}
 	
+	public void setSharedQuestions(ArrayList<SharedQuestion> sharedQuestions) {
+		this.sharedQuestions = sharedQuestions;
+	}
+	
 	public ArrayList<PlayerAnswer> getPlayerAnswers() {
 		return playerAnswers;
+	}
+	
+	public void setPlayerAnswers(ArrayList<PlayerAnswer> playerAnswers) {
+		this.playerAnswers = playerAnswers;
 	}
 	
 	public void startTimer() {
@@ -118,10 +145,6 @@ public class Turn {
 	
 	public int getTime() {
 		return time;
-	}
-	
-	public void setPlayerAnswers(ArrayList<PlayerAnswer> playerAnswers) {
-		
 	}
 	
 	public void addPlayerAnswer(PlayerAnswer answer) {

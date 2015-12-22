@@ -6,6 +6,7 @@ import Managers.DataManager;
 import Models.Game;
 import Models.PlayerAnswer;
 import Models.Round;
+import Models.Turn;
 import View.GamePanel;
 
 public class GameController {
@@ -26,7 +27,8 @@ public class GameController {
 		Round currentRound = model.getCurrentRound();
 		int answerId = currentRound.generateAnswerId();
 		
-		currentRound.getCurrentTurn().addPlayerAnswer(new PlayerAnswer(answerId, view.txtInput.getText(), currentRound.getCurrentTurn().getTime()));
+		Turn currentTurn = currentRound.getCurrentTurn();
+		currentRound.getCurrentTurn().addPlayerAnswer(new PlayerAnswer(currentTurn,answerId, view.txtInput.getText(), currentTurn.getTime()));
 	}
 	
 	public void setRoundView(JPanel round) {

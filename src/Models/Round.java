@@ -81,7 +81,7 @@ public abstract class Round extends Observable {
 	}
 	
 	public void updateAnswer(String answer) {
-		getCurrentTurn().addPlayerAnswer(new PlayerAnswer(game.getId(), answer, generateAnswerId()));
+		getCurrentTurn().addPlayerAnswer(new PlayerAnswer(currentTurn, game.getId(), answer, generateAnswerId()));
 	}
 	
 	public static Round createRound(RoundType type, Game game) {
