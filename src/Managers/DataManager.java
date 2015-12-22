@@ -22,7 +22,7 @@ public class DataManager {
 	}
 	
 	public static DataManager getInstance() {
-		if(instance == null) 
+		if(instance != null) 
 			instance = new DataManager();
 		return instance;
 	}
@@ -121,6 +121,7 @@ public class DataManager {
 	}
 	
 	public boolean updateGameState(GameState newGameState, int gameId) {
+		getConnection();
 		boolean updated = false;
 		try {
 			String sql = "UPDATE spel SET toestand_type = ? WHERE spel_id = ?";
@@ -514,6 +515,8 @@ public class DataManager {
 	
 	public Connection getConnection() {
 		try {
+			if (connection != null)
+				connection.close();
 			System.out.println("Connecting.....");
 			connection = DriverManager.getConnection(dbUrl, username, password);
 			connection.setAutoCommit(false);
