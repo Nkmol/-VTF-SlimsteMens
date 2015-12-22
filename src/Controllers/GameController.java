@@ -36,5 +36,4 @@ public class GameController {
 	public GamePanel getView() {
 		return view;
 	}
-	
 }

@@ -31,7 +31,7 @@ public class ChallengeListController {
 	}
 	
 	public void handleAcceptButtonClick(int gameId) {
-		model.acceptChallenge(gameId);
+		//model.acceptChallenge(gameId); //TODO: ...
 		startGame(gameId);
 	}
 	
