@@ -1,6 +1,7 @@
 package View;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -10,8 +11,11 @@ import java.util.Observer;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 
 import Models.ChatMessage;
 import net.miginfocom.swing.MigLayout;
@@ -44,9 +48,14 @@ public class ChatMessageView extends JPanel implements Observer {
 		chatBox.setFont(new Font("Serif", Font.PLAIN, 15));
 		chatBox.setLineWrap(true);
 		
-		this.add(chatBox, "grow, pushx, wrap");
+		//JScrollPane scroll = new JScrollPane(chatBox);
+	    //scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+	    //this.add(scroll, "wrap");
 
-		messageBox = new JTextField(30);
+		this.add(chatBox, "wrap");
+
+		
+		messageBox = new JTextField(10);
 		messageBox.requestFocusInWindow();
 		
 		

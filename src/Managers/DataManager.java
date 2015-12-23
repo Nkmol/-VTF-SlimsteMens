@@ -580,6 +580,7 @@ public class DataManager {
 	}
 	
 	public ArrayList<ChatMessage> getChatMessages(int gameId) {
+		getConnection();
 		ArrayList<ChatMessage> chatMessages = null;
 		try {
 			String sql = "SELECT * FROM chatregel WHERE spel_id = ?";
