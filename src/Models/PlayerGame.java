@@ -1,15 +1,19 @@
 package Models;
 
+import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class PlayerGame {
+public class PlayerGame extends Observable {
 
-	private int time;
+	public boolean isActive = true;
+	private Game parent;
+	private int time = 1000;
 	private TimerTask timer;
 	private Player player;
 	
-	public PlayerGame(Player player) {
+	public PlayerGame(Player player, Game parent) {
+		this.parent = parent;
 		this.player = player;
 	}
 	
@@ -21,8 +25,14 @@ public class PlayerGame {
 		return time;
 	}
 	
+	public void substractTime(int value) {
+		time -= value;
+
+		parent.updateView();
+	}
+	
 	public void startTimer() {
-		timer = new MyTimer().schedule(() -> time--, 1000);
+		timer = new MyTimer().schedule(() -> substractTime(1), 1000);
 	}
 	
 	public void stopTimer() {

@@ -35,8 +35,7 @@ public class LoginController {
 			
 			// Save logged player to file
 			model.saveName();
-			
-//			pushTestTurn();
+
 			//TODO: Use ScreenManager?
 			
 			// Test value for the category
