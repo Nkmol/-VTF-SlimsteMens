@@ -69,7 +69,5 @@ public class GameController {
 		
 		model.addRound(roundController.getModel());
 		view.setRound(roundController.getView());
-		
-		DataManager.getInstance().pushRound(roundController.getModel());
 	}
 }

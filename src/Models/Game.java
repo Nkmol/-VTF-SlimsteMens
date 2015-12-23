@@ -17,7 +17,7 @@ public class Game extends Observable {
 	
 	private int id;
 	private PlayerGame player1;
-	private PlayerGame player2;
+	private PlayerGame player2; // <-- THIS IS YOU
 	private GameState gameState;
 	private ArrayList<Round> rounds;
 	private Round currentRound;
@@ -43,6 +43,7 @@ public class Game extends Observable {
 			player2 = new PlayerGame(DataManager.getInstance().getPlayer(data.getString("speler2")), this);
 			gameState = GameState.fromString(data.getString("toestand_type"));
 			rounds = DataManager.getInstance().getRounds(this);
+			currentRound = DataManager.getInstance().getLastRoundForGame(this);
 			chatMessages = DataManager.getInstance().getChatMessages(id);
 		} catch (SQLException e) {
 			System.err.println("Error initializing game");
@@ -53,7 +54,7 @@ public class Game extends Observable {
 	}
 	
 	public void start() {
-		this.player1.startTimer();
+		player2.startTimer();
 		startSyncTimer();
 	}
 	
@@ -70,7 +71,16 @@ public class Game extends Observable {
 	
 	private void checkTurn() {
 		Turn lastTurn = DataManager.getInstance().getLastTurnForGame(id);
-		//if(lastTurn.getPlayer().getName() != )
+		Player currentPlayer = DataManager.getInstance().getCurrentUser();
+		
+		System.out.println("[game@" + id + "]" + lastTurn.getTurnState());
+		
+		if(lastTurn.getPlayerName() != currentPlayer.getName() && lastTurn.getTurnState() != TurnState.Busy) {
+			System.out.println("your turn");
+		}
+		else {
+			System.out.println("other turn");
+		}
 	}
 	
 	public void updateView() {
@@ -139,6 +149,8 @@ public class Game extends Observable {
 	public void addRound(Round model) {
 		rounds.add(model);
 		setCurrentRound(model);
+		
+		DataManager.getInstance().pushRound(getCurrentRound());
 		
 		setChanged();
 		notifyObservers(this);

@@ -73,9 +73,8 @@ public class GamePanel extends JPanel implements Observer{
 		playerGame2 = model.getPlayerGame2();
 		
 		//TODO: Not sure which round i should choose to determ the round
-		
-		System.out.println(model.getCurrentRound());
-		if(model.getRounds().size() > 0 && model.getCurrentRound() != null) 
+	
+		if(model.getRounds().size() > 0) 
 			lblRoundType.setText(model.getCurrentRound().getRoundType().toString()); // TODO fix Exception in thread "AWT-EventQueue-0" java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
 		lblPlayer1.setText(playerGame1.getPlayer().getName() + " : " + playerGame1.getTime());
 		lblPlayer2.setText(playerGame2.getPlayer().getName() + " : " + playerGame2.getTime());
