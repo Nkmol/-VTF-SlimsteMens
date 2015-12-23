@@ -306,29 +306,57 @@ public class DataManager {
 			rounds = new ArrayList<>();
 			while (data.next()) {
 				roundType = RoundType.fromString(data.getString("rondenaam"));
-				switch (roundType) {
-				case ThreeSixNine:	
-					round = new ThreeSixNine(data, game);
-					break;
-				case OpenDoor:
-					round = new OpenDoor(data, game);
-					break;
-				case Puzzle:
-					round = new Puzzle(data, game);
-					break;
-				case Framed:
-					round = new Framed(data, game);
-					break;
-				case Final:
-					round = new Final(data, game);
-					break;
-				default:
-					break;
-				}
+				round = getRoundForRoundType(roundType, data, game);
 				rounds.add(round);
 			}
 		} catch (SQLException e) { }
 		return rounds;
+	}
+	
+	public Round getLastRoundForGame(Game game) {
+		Round round = null;
+		try {
+			String sql = "SELECT * FROM ronde AS r "
+					+ "WHERE rondenaam = "
+					+ "(SELECT rn.type FROM rondenaam AS rn WHERE volgnr = "
+					+ "(SELECT COUNT(spel_id) FROM ronde WHERE spel_id = r.spel_id)) "
+					+ "AND spel_id = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, game.getId());
+			ResultSet data = preparedStatement.executeQuery();
+			if (data.next()) {
+				RoundType roundType = RoundType.fromString(data.getString("rondenaam"));
+				round = getRoundForRoundType(roundType, data, game);
+			}
+		} catch (SQLException e) {
+			System.err.println("Error fetching last round for game id: " + game.getId());
+			System.err.println(e.getMessage());
+		}
+		return round;
+	}
+	
+	private Round getRoundForRoundType(RoundType roundType, ResultSet data, Game game) {
+		Round round = null;
+		switch (roundType) {
+		case ThreeSixNine:	
+			round = new ThreeSixNine(data, game);
+			break;
+		case OpenDoor:
+			round = new OpenDoor(data, game);
+			break;
+		case Puzzle:
+			round = new Puzzle(data, game);
+			break;
+		case Framed:
+			round = new Framed(data, game);
+			break;
+		case Final:
+			round = new Final(data, game);
+			break;
+		default:
+			break;
+		}
+		return round;
 	}
 	
 	public ArrayList<Turn> getTurns(Round round) {
