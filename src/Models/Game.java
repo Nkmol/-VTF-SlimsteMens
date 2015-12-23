@@ -3,6 +3,7 @@ package Models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -78,14 +79,23 @@ public class Game extends Observable {
 	}
 	
 	public static boolean isPlayerAnswerCorrect(PlayerAnswer player, Answer answer) {
-		
-		if (StringUtility.CalculateMatchPercentage(player.getAnswer(), answer.getAnswer()) >=  MinimumAnswerPercentage)
+		return IsPlayerAnswerCorrect(player.getAnswer(), answer);
+	}
+	
+	public static boolean IsPlayerAnswerCorrect(String playerAnswer, Answer answer) {
+		if (StringUtility.CalculateMatchPercentage(playerAnswer, answer.getAnswer()) >=  MinimumAnswerPercentage)
 			return true;
-		
 		for (String alternative : answer.getAlternatives())
-			if (StringUtility.CalculateMatchPercentage(player.getAnswer(), alternative) >=  MinimumAnswerPercentage)
+			if (StringUtility.CalculateMatchPercentage(playerAnswer, alternative) >=  MinimumAnswerPercentage)
 				return true;
-		
+		return false;
+	}
+	
+	public static boolean IsPlayerAnswerCorrect(String playerAnswer, Collection<Answer> answers) {
+		for (Answer answer : answers) {
+			if (IsPlayerAnswerCorrect(playerAnswer, answer))
+				return true;
+		}
 		return false;
 	}
 	
