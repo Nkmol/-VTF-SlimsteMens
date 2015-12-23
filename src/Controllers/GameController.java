@@ -43,6 +43,7 @@ public class GameController {
 	
 	public void Pass_Click() {
 		model.getCurrentRound().nextTurn(TurnState.Pass);
+		model.getPlayerGame1().stopTimer();
 	}
 	
 	public void setRoundView(JPanel round) {
@@ -68,5 +69,7 @@ public class GameController {
 		
 		model.addRound(roundController.getModel());
 		view.setRound(roundController.getView());
+		
+		DataManager.getInstance().pushRound(roundController.getModel());
 	}
 }
