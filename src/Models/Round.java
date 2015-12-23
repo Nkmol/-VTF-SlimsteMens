@@ -105,5 +105,5 @@ public abstract class Round extends Observable {
 		}
 	}
 	
-	public abstract void onSubmit();
+	public abstract void onSubmit(String answer);
 }

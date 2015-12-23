@@ -13,7 +13,7 @@ public class Puzzle extends Round {
 	}
 
 	@Override
-	public void onSubmit() {
+	public void onSubmit(String answer) {
 		// TODO Auto-generated method stub
 		
 	}

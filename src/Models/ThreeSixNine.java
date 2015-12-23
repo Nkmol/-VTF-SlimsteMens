@@ -49,7 +49,7 @@ public class ThreeSixNine extends Round {
 	}
 
 	@Override
-	public void onSubmit() {
-		System.out.println("test");
+	public void onSubmit(String answer) {
+		System.out.println("your answers is " + answer);
 	}
 }

@@ -152,7 +152,6 @@ public class Turn {
 	
 	public void addPlayerAnswer(PlayerAnswer answer) {
 		playerAnswers.add(answer);
-		System.out.println("[Turn] Your answer " + answer.getAnswer());
 	}
 	
 	public int getAmountAnswers() {

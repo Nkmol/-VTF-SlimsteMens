@@ -38,7 +38,7 @@ public class GameController {
 		Turn currentTurn = currentRound.getCurrentTurn();
 		currentRound.getCurrentTurn().addPlayerAnswer(new PlayerAnswer(currentTurn,answerId, view.txtInput.getText(), currentTurn.getTime()));
 		
-		currentRound.onSubmit();
+		currentRound.onSubmit(view.txtInput.getText());
 	}
 	
 	public void Pass_Click() {
