@@ -22,18 +22,21 @@ public class Game extends Observable {
 	
 	public Game(int gameId, Player player1, Player player2, GameState gameState) {
 		this.id = gameId;
-		this.player1 = new PlayerGame(player1);
-		this.player2 = new PlayerGame(player2);
+		this.player1 = new PlayerGame(player1, this);
+		this.player2 = new PlayerGame(player2, this);
+		
 		this.gameState = gameState;
 		rounds = DataManager.getInstance().getRounds(this);
 		chatMessages = DataManager.getInstance().getChatMessages(id);
+		
+		this.player1.startTimer();
 	}
 	
 	public Game(ResultSet data) {
 		try {
 			id = data.getInt("spel_id");
-			player1 = new PlayerGame(DataManager.getInstance().getPlayer(data.getString("speler1")));
-			player2 = new PlayerGame(DataManager.getInstance().getPlayer(data.getString("speler2")));
+			player1 = new PlayerGame(DataManager.getInstance().getPlayer(data.getString("speler1")), this);
+			player2 = new PlayerGame(DataManager.getInstance().getPlayer(data.getString("speler2")), this);
 			gameState = GameState.fromString(data.getString("toestand_type"));
 			rounds = DataManager.getInstance().getRounds(this);
 			chatMessages = DataManager.getInstance().getChatMessages(id);
@@ -41,11 +44,33 @@ public class Game extends Observable {
 			System.err.println("Error initializing game");
 			System.err.println(e.getMessage());
 		}
+		
+		this.player1.startTimer();
 	}
 	
 	public void updateView() {
 		setChanged();
 		notifyObservers(this);
+	}
+	
+	
+	public Player toggleCurrentPlayer() {
+		if(player1.isActive) {
+			player2.isActive = true;
+			player1.isActive = false;
+			player1.stopTimer();
+			player2.startTimer();
+			
+			return player2.getPlayer();
+		}
+		else {
+			player2.isActive = false;
+			player1.isActive = true;
+			player2.stopTimer();
+			player1.startTimer();
+			
+			return player1.getPlayer();
+		}
 	}
 	
 	public static boolean isPlayerAnswerCorrect(PlayerAnswer player, Answer answer) {
@@ -95,5 +120,13 @@ public class Game extends Observable {
 	
 	public void nextRound() {
 		currentRound = Round.createRound(RoundType.nextRoundType(currentRound.getRoundType()), this);
+	}
+
+	public void addRound(Round model) {
+		rounds.add(model);
+		setCurrentRound(model);
+		
+		setChanged();
+		notifyObservers(this);
 	}
 }

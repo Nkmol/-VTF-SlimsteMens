@@ -26,8 +26,8 @@ public class GameController {
 		model.updateView();
 		
 		//ActionListeners
-		//Utilities.ComponentUtility.addActionListener(view, "btnSubmit", (e) -> Submit_Click());
-		//Utilities.ComponentUtility.addActionListener(view, "btnPass", (e) -> Pass_Click());
+		Utilities.ComponentUtility.addActionListener(view, "btnSubmit", (e) -> Submit_Click());
+		Utilities.ComponentUtility.addActionListener(view, "btnPass", (e) -> Pass_Click());
 	}
 	
 	public void Submit_Click() {
@@ -36,10 +36,12 @@ public class GameController {
 		
 		Turn currentTurn = currentRound.getCurrentTurn();
 		currentRound.getCurrentTurn().addPlayerAnswer(new PlayerAnswer(currentTurn,answerId, view.txtInput.getText(), currentTurn.getTime()));
+		
+		currentRound.onSubmit();
 	}
 	
 	public void Pass_Click() {
-		//TODO Next player
+		model.getCurrentRound().nextTurn();
 	}
 	
 	public void setRoundView(JPanel round) {
@@ -57,7 +59,7 @@ public class GameController {
 	public void addRound(RoundType roundType) {
 		//TODO Dynamic
 		ThreeSixNineController threesixnineController = new ThreeSixNineController(model);
-		
+		model.addRound(threesixnineController.getModel());
 		view.setRound(threesixnineController.getView());
 	}
 }
