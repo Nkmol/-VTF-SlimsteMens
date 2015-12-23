@@ -58,9 +58,15 @@ public class GameController {
 	}
 
 	public void addRound(RoundType roundType) {
-		//TODO Dynamic
-		ThreeSixNineController threesixnineController = new ThreeSixNineController(model);
-		model.addRound(threesixnineController.getModel());
-		view.setRound(threesixnineController.getView());
+		RoundController roundController = null;
+		
+		switch(roundType) {
+			case ThreeSixNine:
+				roundController = new ThreeSixNineController(model);
+				//TODO add other controllers
+		}
+		
+		model.addRound(roundController.getModel());
+		view.setRound(roundController.getView());
 	}
 }
