@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Observable;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import Managers.DataManager;
 import Utilities.StringUtility;
@@ -19,6 +21,7 @@ public class Game extends Observable {
 	private ArrayList<Round> rounds;
 	private Round currentRound;
 	private ArrayList<ChatMessage> chatMessages;
+	private Timer syncTimer;
 	
 	public Game(int gameId, Player player1, Player player2, GameState gameState) {
 		this.id = gameId;
@@ -29,7 +32,7 @@ public class Game extends Observable {
 		rounds = DataManager.getInstance().getRounds(this);
 		chatMessages = DataManager.getInstance().getChatMessages(id);
 		
-		this.player1.startTimer();
+		start();
 	}
 	
 	public Game(ResultSet data) {
@@ -45,7 +48,28 @@ public class Game extends Observable {
 			System.err.println(e.getMessage());
 		}
 		
+		start();
+	}
+	
+	public void start() {
 		this.player1.startTimer();
+		startSyncTimer();
+	}
+	
+	private void startSyncTimer() {
+		syncTimer = new Timer();
+		syncTimer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				checkTurn();
+			}
+			
+		}, 0L, 1000L);
+	}
+	
+	private void checkTurn() {
+		Turn lastTurn = DataManager.getInstance().getLastTurnForGame(id);
+		//if(lastTurn.getPlayer().getName() != )
 	}
 	
 	public void updateView() {

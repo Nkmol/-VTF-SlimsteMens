@@ -23,9 +23,9 @@ public abstract class Round extends Observable {
 	public Round(ResultSet data, Game game) {
 		try {
 			roundType = RoundType.fromString(data.getString("rondenaam"));
-			questions = DataManager.getInstance().getQuestions(this);
+			//questions = DataManager.getInstance().getQuestions(this);
 			this.game = game;
-			turns = DataManager.getInstance().getTurns(this);
+			//turns = DataManager.getInstance().getTurns(this);
 		} catch (SQLException e) {
 			System.err.println("Error initializing round");
 		}
