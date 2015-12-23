@@ -30,6 +30,7 @@ public class DataManager {
 	public boolean signIn(String name, String password) {
 		boolean loggedIn = false;
 		try {
+			getConnection();
 			String sql = "SELECT * FROM account AS a "
 					+ "INNER JOIN accountrol AS ar on a.naam = ar.account_naam "
 					+ "WHERE a.naam = ? AND a.wachtwoord = ? LIMIT 1";
@@ -44,6 +45,12 @@ public class DataManager {
 		} catch (SQLException e) {
 			System.err.println("Error fetching password for user: " + name);
 			System.err.println(e.getMessage());
+		} finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
 		}
 		return loggedIn;
 	}
@@ -51,6 +58,7 @@ public class DataManager {
 	public boolean changeUserPassword(String name, String newPassword) {
 		boolean updated = false;
 		try {
+			getConnection();
 			String sql = "UPDATE account set wachtwoord = ? WHERE naam = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, newPassword);
@@ -62,6 +70,12 @@ public class DataManager {
 		} catch (SQLException e) {
 			System.err.println("Error changing password for user: " + name);
 			System.err.println(e.getMessage());
+		} finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
 		}
 		return updated;
 	}
@@ -73,6 +87,7 @@ public class DataManager {
 	public ArrayList<Player> getAllPlayers() {
 		ArrayList<Player> players = null;
 		try {
+			getConnection();
 			Statement statement = connection.createStatement();
 			ResultSet data = statement.executeQuery("SELECT * from account as a "
 					+ "INNER JOIN accountrol AS ar ON a.naam = ar.account_naam");
@@ -80,12 +95,20 @@ public class DataManager {
 			while(data.next()) 
 				players.add(new Player(data));
 		} catch (SQLException e) { }
+		finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
+		}
 		return players;
 	}
 	
 	public ArrayList<CompetitionRankItem> getCompetitionRank() {
 		ArrayList<CompetitionRankItem> competitionRank = null;
 		try {
+			getConnection();
 			String sql = "SELECT * FROM competitiestand ORDER BY (aantal_gewonnen_spellen / aantal_verloren_spellen)";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			ResultSet data = preparedStatement.executeQuery();
@@ -94,6 +117,12 @@ public class DataManager {
 				competitionRank.add(new CompetitionRankItem(data));
 		} catch (SQLException e) {
 			System.err.println("Error fetching competition rank");
+		} finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
 		}
 		return competitionRank;
 	}
@@ -101,6 +130,7 @@ public class DataManager {
 	public boolean pushNewGame(Player player1, Player player2) {
 		boolean pushed = false;
 		try {
+			getConnection();
 			String sql = "INSERT INTO spel (speler1, speler2, toestand_type) VALUES (?,?,?)";
 			PreparedStatement gameStatement = connection.prepareStatement(sql);
 			gameStatement.setString(1, player1.getName());
@@ -116,14 +146,20 @@ public class DataManager {
 			try {
 				connection.rollback();
 			} catch (SQLException e1) {	}
+		} finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
 		}
 		return pushed;
 	}
 	
 	public boolean updateGameState(GameState newGameState, int gameId) {
-		getConnection();
 		boolean updated = false;
 		try {
+			getConnection();
 			String sql = "UPDATE spel SET toestand_type = ? WHERE spel_id = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, newGameState.getValue());
@@ -135,14 +171,20 @@ public class DataManager {
 		} catch (SQLException e) {
 			System.err.println("Error updating game with id: " + gameId);
 			System.err.println(e.getMessage());
+		} finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
 		}
 		return updated;
 	}
 	
 	public boolean gameExistsBetween(String player1, String player2, GameState gameState) {
-		getConnection();
 		boolean gameExists = false;
 		try {
+			getConnection();
 			String sql = "SELECT * FROM spel "
 					+ "WHERE speler1 = ? AND speler2 = ? AND toestand_type = ? LIMIT 1";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -155,6 +197,12 @@ public class DataManager {
 		} catch (SQLException e) {
 			System.err.println("Error checking game");
 			System.err.println(e.getMessage());
+		} finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
 		}
 		return gameExists;
 	}
@@ -162,6 +210,7 @@ public class DataManager {
 	public ArrayList<Game> getAllGamesForPlayer(String name) {
 		ArrayList<Game> games = null;
 		try {
+			getConnection();
 			String sql = "SELECT * FROM spel WHERE speler1 = ? OR speler2 = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, name);
@@ -171,13 +220,20 @@ public class DataManager {
 			while(data.next()) 
 				games.add(new Game(data));
 		} catch (SQLException e) { }
+		finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
+		}
 		return games;
 	}
 	
 	public ArrayList<GameInfo> getAllGameInfosForPlayer(String name) {
-		getConnection();
 		ArrayList<GameInfo> gameInfos = null;
 		try {
+			getConnection();
 			String sql = "SELECT * FROM spel WHERE speler1 = ? OR speler2 = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, name);
@@ -187,12 +243,20 @@ public class DataManager {
 			while(data.next()) 
 				gameInfos.add(new GameInfo(data));
 		} catch (SQLException e) { }
+		finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
+		}
 		return gameInfos;
 	}
 	
 	public ArrayList<GameScore> getGameScoresForPlayer(String playerName) {
 		ArrayList<GameScore> gameScores = null;
 		try {
+			getConnection();
 			String sql = "SELECT * FROM score WHERE speler1 = ? OR speler2 = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, playerName);
@@ -204,6 +268,12 @@ public class DataManager {
 		} catch (SQLException e) {
 			System.err.println("Erroring fetching games score for player: " + playerName);
 			System.err.println(e.getMessage());
+		} finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
 		}
 		return gameScores;
 	}
@@ -211,6 +281,7 @@ public class DataManager {
 	public GameScore getGameScore(int gameId) {
 		GameScore gameScore = null;
 		try {
+			getConnection();
 			String sql = "SELECT * FROM score WHERE spel_id = ? LIMIT 1";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, gameId);
@@ -220,14 +291,21 @@ public class DataManager {
 		} catch (SQLException e) {
 			System.err.println("Error fetching game score for game id: " + gameId);
 			System.err.println(e.getMessage());
+		} finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
 		}
 		return gameScore;
 	}
 	
 	public Game getGame(int gameId) {
 		Game game = null;
-		String sql = "SELECT * FROM spel WHERE spel_id = ?";
 		try {
+			getConnection();
+			String sql = "SELECT * FROM spel WHERE spel_id = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, gameId);
 			ResultSet data = preparedStatement.executeQuery();
@@ -236,6 +314,12 @@ public class DataManager {
 		} catch (SQLException e) {
 			System.err.println("Error fetching game with id: " + gameId);
 			System.err.println(e.getMessage());
+		} finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
 		}
 		return game;
 	}
@@ -243,6 +327,7 @@ public class DataManager {
 	public Round getRound(Game game, RoundType roundType) {
 		Round round = null;
 		try{
+			getConnection();
 			String sql = "SELECT * FROM ronde WHERE spel_id = ? and rondenaam = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, game.getId());
@@ -270,12 +355,20 @@ public class DataManager {
 				}
 			}
 		} catch (SQLException e) { }
+		finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
+		}
 		return round;
 	}
 	
 	public boolean pushRound(Round round) {
 		boolean pushed = false;
 		try {
+			getConnection();
 			String sql = "INSERT INTO ronde VALUES (?, ?)";
 			PreparedStatement roundStatement = connection.prepareStatement(sql);
 			roundStatement.setInt(1, round.getGame().getId());
@@ -290,6 +383,12 @@ public class DataManager {
 			try {
 				connection.rollback();
 			} catch (SQLException e1) { }
+		} finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
 		}
 		return pushed;
 	}
@@ -297,6 +396,7 @@ public class DataManager {
 	public ArrayList<Round> getRounds(Game game) {
 		ArrayList<Round> rounds = null;
 		try{
+			getConnection();
 			String sql = "SELECT * FROM ronde WHERE spel_id = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, game.getId());
@@ -310,12 +410,20 @@ public class DataManager {
 				rounds.add(round);
 			}
 		} catch (SQLException e) { }
+		finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
+		}
 		return rounds;
 	}
 	
 	public Round getLastRoundForGame(Game game) {
 		Round round = null;
 		try {
+			getConnection();
 			String sql = "SELECT * FROM ronde AS r "
 					+ "WHERE rondenaam = "
 					+ "(SELECT rn.type FROM rondenaam AS rn WHERE volgnr = "
@@ -331,6 +439,12 @@ public class DataManager {
 		} catch (SQLException e) {
 			System.err.println("Error fetching last round for game id: " + game.getId());
 			System.err.println(e.getMessage());
+		} finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
 		}
 		return round;
 	}
@@ -362,6 +476,7 @@ public class DataManager {
 	public ArrayList<Turn> getTurns(Round round) {
 		ArrayList<Turn> turns = null;
 		try {
+			getConnection();
 			String sql = "SELECT * FROM beurt WHERE spel_id = ? AND rondenaam = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, round.getGame().getId());
@@ -372,6 +487,12 @@ public class DataManager {
 				turns.add(new Turn(data));
 		} catch (SQLException e) {
 			System.err.println("Error fetching turns for game id: " + round.getGame().getId());
+		} finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
 		}
 		return turns;
 	}
@@ -379,6 +500,7 @@ public class DataManager {
 	public Turn getLastTurnForGame(int gameId) {
 		Turn turn = null;
 		try {
+			getConnection();
 			String sql = "SELECT b.* FROM ronde AS r"
 					+ " INNER JOIN rondenaam AS rn ON"
 					+ " (SELECT COUNT(spel_id) FROM ronde WHERE spel_id = r.spel_id AND r.rondenaam = rn.type) = rn.volgnr"
@@ -392,14 +514,20 @@ public class DataManager {
 		} catch (SQLException e) {
 			System.err.println("Error fetching last turn for game id: " + gameId);
 			System.err.println(e.getMessage());
+		} finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
 		}
 		return turn;
 	}
 	
 	public boolean pushTurn(Turn turn) {
-		getConnection();
 		boolean turnPushed = false;
 		try {
+			getConnection();
 			String sql = "INSERT INTO beurt "
 					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -433,6 +561,12 @@ public class DataManager {
 			try {
 				connection.rollback();
 			} catch (SQLException e1) {}
+		} finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
 		}
 		
 		return turnPushed;
@@ -476,6 +610,7 @@ public class DataManager {
 	public ArrayList<SharedQuestion> getSharedQuestions(Turn turn) {
 		ArrayList<SharedQuestion> sharedQuestions = null;
 		try {
+			getConnection();
 			String sql = "SELECT * FROM deelvraag WHERE spel_id = ? AND rondenaam = ? AND beurt_id = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, turn.getGameId());
@@ -488,6 +623,12 @@ public class DataManager {
 		} catch (SQLException e) {
 			System.err.println("Error fetching shared questions");
 			System.err.println(e.getMessage());
+		} finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
 		}
 		return sharedQuestions;
 	}
@@ -495,6 +636,7 @@ public class DataManager {
 	public ArrayList<PlayerAnswer> getPlayerAnswers(int gameid, RoundType roundType, int turnid) {
 		ArrayList<PlayerAnswer> playerAnswers = null;
 		try {
+			getConnection();
 			String sql = "SELECT * FROM spelerantwoord WHERE spel_id = ? AND rondenaam = ? AND beurt_id = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, gameid);
@@ -507,6 +649,12 @@ public class DataManager {
 		} catch (SQLException e) {
 			System.err.println("Error fetching player answers");
 			System.err.println(e.getMessage());
+		} finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
 		}
 		return playerAnswers;
 	}
@@ -514,6 +662,7 @@ public class DataManager {
 	public ArrayList<Question> getQuestions(Round round) {
 		ArrayList<Question> questions = null;
 		try {
+			getConnection();
 			String sql = "SELECT * FROM vraag WHERE rondenaam = ? ORDER BY RAND()";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, round.getRoundType().getValue());
@@ -524,6 +673,12 @@ public class DataManager {
 		} catch (SQLException e) {
 			System.err.println("Error fetching questions for round: " + round.getRoundType().getValue());
 			System.err.println(e.getMessage());
+		} finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
 		}
 		return questions;
 	}
@@ -531,6 +686,7 @@ public class DataManager {
 	public int numberOfTimesQuestionAskedTo(String playerName, int questionId) {
 		int amountOfTimes = 0;
 		try {
+			getConnection();
 			String sql = "SELECT COUNT(speler) AS aantal "
 					+ "FROM speler_vraag_aantal WHERE speler = ? AND vraag_id = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -542,6 +698,12 @@ public class DataManager {
 		} catch (SQLException e) {
 			System.err.println("Error checking amount of times the question asked to a player");
 			System.err.println(e.getMessage());
+		} finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
 		}
 		return amountOfTimes;
 	}
@@ -549,6 +711,7 @@ public class DataManager {
 	public ArrayList<Answer> getAnswers(int questionId) {
 		ArrayList<Answer> answers = null;
 		try {
+			getConnection();
 			String sql = "SELECT * FROM sleutel WHERE vraag_id = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, questionId);
@@ -559,6 +722,12 @@ public class DataManager {
 		} catch (SQLException e) {
 			System.err.println("Error fetching answers for question id: " + questionId);
 			System.err.println(e.getMessage());
+		} finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
 		}
 		return answers;
 	}
@@ -566,6 +735,7 @@ public class DataManager {
 	public ArrayList<String> getAlternatives(int questionId, String answer) {
 		ArrayList<String> alternatives = null;
 		try {
+			getConnection();
 			String sql = "SELECT * FROM alternatief WHERE vraag_id = ? AND antwoord = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, questionId);
@@ -577,6 +747,12 @@ public class DataManager {
 		} catch (SQLException e) {
 			System.err.println("Error fetching alternatives for question id: " + questionId);
 			System.err.println(e.getMessage());
+		} finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
 		}
 		return alternatives;
 	}
@@ -584,6 +760,7 @@ public class DataManager {
 	public Player getPlayer(String playerName) {
 		Player player = null;
 		try {
+			getConnection();
 			String sql = "SELECT * from account as a "
 					+ "INNER JOIN accountrol AS ar ON a.naam = ar.account_naam "
 					+ "WHERE a.naam = ?";
@@ -595,12 +772,19 @@ public class DataManager {
 		} catch (SQLException e) {
 			System.err.println("Error fetching player with id: " + playerName);
 			System.err.println(e.getMessage());
+		} finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
 		}
 		return player;
 	}
 	
 	public boolean registerUser(String name, String password, Role role) {
 		try {
+			getConnection();
 			String sql = "insert into account (naam, wachtwoord) values (?,?)";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, name);
@@ -620,11 +804,18 @@ public class DataManager {
 			try { connection.rollback(); } 
 			catch (SQLException e1) { System.err.println("Error rolling back " + e1.getMessage()); }
 			return false;
+		} finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
 		}
 	}
 	
 	public boolean pushChatMessage(ChatMessage chatMessage) {
 		try {
+			getConnection();
 			String sql = "insert into chatregel (spel_id, tijdstip, millisec, account_naam_zender, bericht)"
 					+ " values (?,?,?,?,?)";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -641,12 +832,19 @@ public class DataManager {
 			try { connection.rollback(); } 
 			catch (SQLException e1) { System.err.println("Error rolling back " + e1.getMessage()); }
 			return false;
+		} finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
 		}
 	}
 	
 	public ArrayList<ChatMessage> getChatMessages(int gameId) {
 		ArrayList<ChatMessage> chatMessages = null;
 		try {
+			getConnection();
 			String sql = "SELECT * FROM chatregel WHERE spel_id = ?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, gameId);
@@ -655,6 +853,13 @@ public class DataManager {
 			while(data.next()) 
 				chatMessages.add(new ChatMessage(data));
 		} catch (SQLException e) { }
+		finally {
+			if (connection != null){
+				try {
+					connection.close();
+				} catch (SQLException e) {}
+			}
+		}
 		return chatMessages;
 	}
 	
