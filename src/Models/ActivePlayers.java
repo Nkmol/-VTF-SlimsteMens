@@ -9,10 +9,8 @@ import Managers.DataManager;
 
 public class ActivePlayers extends Observable{
 	
-	ArrayList<ChallengedPlayer> activePlayers;
-	Timer syncTimer;
-	private static String TESTCURRENTUSERNAME = "Test";
-	private static Player TESTCURRENTUSER = new Player("Test", Role.Player);
+	private ArrayList<ChallengedPlayer> activePlayers;
+	private Timer syncTimer;
 	
 	public ActivePlayers() {
 		startSyncTimer();

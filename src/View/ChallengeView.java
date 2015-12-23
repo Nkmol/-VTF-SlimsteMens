@@ -22,6 +22,7 @@ public class ChallengeView extends JPanel {
 
 	ChallengeListController controller;
 	private int gameId;
+	public JButton declineButton;
 	
 	public ChallengeView(int gameId, String name, ChallengeListController controller) {
 		
@@ -62,7 +63,7 @@ public class ChallengeView extends JPanel {
 		
 		add(acceptButton, gridBagConstraintsAccept);
 		
-		JButton declineButton = new JButton();
+		declineButton = new JButton();
 		declineButton.setText("Decline");
 		declineButton.setBackground(Color.RED);
 		acceptButton.setBounds(300, 150, 100, 50);
@@ -98,6 +99,6 @@ public class ChallengeView extends JPanel {
 	}
 	
 	private void rejectChallenge() {
-		controller.handleRejectButtonClick(gameId);
+		//controller.handleRejectButtonClick(gameId);
 	}
 }
