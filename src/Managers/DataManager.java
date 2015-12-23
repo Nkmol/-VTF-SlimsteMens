@@ -481,6 +481,24 @@ public class DataManager {
 		return questions;
 	}
 	
+	public int numberOfTimesQuestionAskedTo(String playerName, int questionId) {
+		int amountOfTimes = 0;
+		try {
+			String sql = "SELECT COUNT(speler) AS aantal "
+					+ "FROM speler_vraag_aantal WHERE speler = ? AND vraag_id = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, playerName);
+			preparedStatement.setInt(2, questionId);
+			ResultSet data = preparedStatement.executeQuery();
+			if (data.next())
+				amountOfTimes = data.getInt("aantal");
+		} catch (SQLException e) {
+			System.err.println("Error checking amount of times the question asked to a player");
+			System.err.println(e.getMessage());
+		}
+		return amountOfTimes;
+	}
+	
 	public ArrayList<Answer> getAnswers(int questionId) {
 		ArrayList<Answer> answers = null;
 		try {
