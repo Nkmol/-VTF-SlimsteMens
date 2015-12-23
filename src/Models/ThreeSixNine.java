@@ -2,15 +2,18 @@ package Models;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Observable;
 
 public class ThreeSixNine extends Round {
 
+	private final static int AMOUNT_QUESTIONS = 9,
+							 BONUS_ITERATION = 3;
+	private ArrayList<Question> questions;
 	private Question currentQuestion;
 	
 	public ThreeSixNine(Game game) {
 		super(game);
 		
+		roundType = RoundType.ThreeSixNine;
 		//TODO Push to database
 		setCurrrentTurn(new Turn(roundType, game.getPlayerGame2().getPlayer(), game.getId()));
 	}
@@ -43,5 +46,10 @@ public class ThreeSixNine extends Round {
 	
 	public void setCurrentQuestion(int index){
 		this.currentQuestion = this.getQuestions().get(index);
+	}
+
+	@Override
+	public void onSubmit() {
+		System.out.println("test");
 	}
 }

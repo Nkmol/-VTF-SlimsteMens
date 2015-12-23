@@ -67,17 +67,20 @@ public abstract class Round extends Observable {
     public int getTurnAmount() {
     	return turns.size();
     }
-
-	public void createTurn() {
-		Turn turn = new Turn(getRoundType(), DataManager.getInstance().getCurrentUser(), game.getId());
+	
+	public void nextTurn(TurnState turnState) {
+		Player player = game.toggleCurrentPlayer();
+		
+		Turn turn = new Turn(getRoundType(), player, game.getId());
+		turn.setTurnState(turnState);
 		//TODO: setQuestionId
 		
 		//TODO: Push turn
+		DataManager.getInstance().pushTurn(turn);
 		setCurrrentTurn(turn);
 	}
 	
 	public int generateAnswerId() {
-		System.out.println(currentTurn);
 		return currentTurn.getAmountAnswers() == 0 ? 1 : currentTurn.getTurnId() + 1;
 	}
 	
@@ -101,4 +104,6 @@ public abstract class Round extends Observable {
 			return null;
 		}
 	}
+	
+	public abstract void onSubmit();
 }

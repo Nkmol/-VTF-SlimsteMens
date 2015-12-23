@@ -3,10 +3,12 @@ package Models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Date;
+import java.util.Observable;
 
 import Managers.DataManager;
 
-public class ChatMessage {
+public class ChatMessage extends Observable {
 
 		private int gameId;
 		private Timestamp timestamp;
@@ -14,13 +16,23 @@ public class ChatMessage {
 		private String senderName;
 		private String message;
 		
-		public ChatMessage(int gameId, Timestamp timestamp, int millisec, String senderName, String message) {
+		public ChatMessage(int gameId, String senderName, String message) {
 			this.gameId = gameId;
-			this.timestamp = timestamp;
-			this.millisec = millisec;
+			this.timestamp = currentTimeStamp();
+			this.millisec = currentTimeMillis();
 			this.senderName = senderName;
 			this.message = message;
 		}
+		
+		public int currentTimeMillis() {
+		    return (int) (System.currentTimeMillis() % Integer.MAX_VALUE);
+		}
+		
+	    public Timestamp currentTimeStamp()
+	    {
+		  Date date = new Date();
+		  return new Timestamp(date.getTime());
+	    }
 		
 		public ChatMessage(ResultSet data) {
 			try {
@@ -37,12 +49,13 @@ public class ChatMessage {
 
 		public void send() {
 			try {
-			DataManager.getInstance().pushChatMessage(this);
+				DataManager.getInstance().pushChatMessage(this);
 			}
 			catch (Exception e) {
 				System.err.println("Error sending chat message: " + e.getMessage());
 			}
 		}
+		
 		
 		public int getGameId() {
 			return gameId;

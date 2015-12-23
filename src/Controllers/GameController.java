@@ -8,6 +8,7 @@ import Models.PlayerAnswer;
 import Models.Round;
 import Models.RoundType;
 import Models.Turn;
+import Models.TurnState;
 import View.GamePanel;
 
 public class GameController {
@@ -18,12 +19,16 @@ public class GameController {
 	public GameController(int gameId) {
 		model = DataManager.getInstance().getGame(gameId);
 		view = new GamePanel();
+		
+		ChatController chatcontroller = new ChatController(model);
+		view.setChatPanel(chatcontroller.returnView());
+		
 		model.addObserver(view);
 		model.updateView();
 		
 		//ActionListeners
-		//Utilities.ComponentUtility.addActionListener(view, "btnSubmit", (e) -> Submit_Click());
-		//Utilities.ComponentUtility.addActionListener(view, "btnPass", (e) -> Pass_Click());
+		Utilities.ComponentUtility.addActionListener(view, "btnSubmit", (e) -> Submit_Click());
+		Utilities.ComponentUtility.addActionListener(view, "btnPass", (e) -> Pass_Click());
 	}
 	
 	public void Submit_Click() {
@@ -32,10 +37,12 @@ public class GameController {
 		
 		Turn currentTurn = currentRound.getCurrentTurn();
 		currentRound.getCurrentTurn().addPlayerAnswer(new PlayerAnswer(currentTurn,answerId, view.txtInput.getText(), currentTurn.getTime()));
+		
+		currentRound.onSubmit();
 	}
 	
 	public void Pass_Click() {
-		//TODO Next player
+		model.getCurrentRound().nextTurn(TurnState.Pass);
 	}
 	
 	public void setRoundView(JPanel round) {
@@ -51,9 +58,15 @@ public class GameController {
 	}
 
 	public void addRound(RoundType roundType) {
-		//TODO Dynamic
-		ThreeSixNineController threesixnineController = new ThreeSixNineController(model);
+		RoundController roundController = null;
 		
-		view.setRound(threesixnineController.getView());
+		switch(roundType) {
+			case ThreeSixNine:
+				roundController = new ThreeSixNineController(model);
+				//TODO add other controllers
+		}
+		
+		model.addRound(roundController.getModel());
+		view.setRound(roundController.getView());
 	}
 }

@@ -42,9 +42,10 @@ public class GamePanel extends JPanel implements Observer{
 		middle = new JPanel();
 		add(middle, BorderLayout.CENTER);
 		
-		JPanel chat = new JPanel();
-		chat.setPreferredSize(new Dimension(80, 0));
-		add(chat, BorderLayout.LINE_END);
+		// CHAT PART
+		//JPanel chat = new JPanel();
+		//chat.setPreferredSize(new Dimension(80, 0));
+		//add(chat, BorderLayout.LINE_END);
 		
 		JPanel bottom = new JPanel();
 		bottom.setPreferredSize(new Dimension(0, 50));
@@ -72,9 +73,18 @@ public class GamePanel extends JPanel implements Observer{
 		playerGame2 = model.getPlayerGame2();
 		
 		//TODO: Not sure which round i should choose to determ the round
-		//lblRoundType.setText(model.getRounds().get(0).getRoundType().toString()); // TODO fix Exception in thread "AWT-EventQueue-0" java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
-		//lblPlayer1.setText(playerGame1.getPlayer().getName() + " : " + playerGame1.getTime());
-		//lblPlayer2.setText(playerGame2.getPlayer().getName() + " : " + playerGame2.getTime());
+		
+		if(model.getRounds().size() > 0) 
+			lblRoundType.setText(model.getCurrentRound().getRoundType().toString()); // TODO fix Exception in thread "AWT-EventQueue-0" java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
+		lblPlayer1.setText(playerGame1.getPlayer().getName() + " : " + playerGame1.getTime());
+		lblPlayer2.setText(playerGame2.getPlayer().getName() + " : " + playerGame2.getTime());
+	}
+	
+	public void setChatPanel(ChatMessageView chatPanel){
+		JPanel chat = chatPanel;
+		chat.setPreferredSize(new Dimension(200, 200));
+		chat.setBackground(Color.yellow);
+		add(chat, BorderLayout.LINE_END);
 	}
 	
 }
