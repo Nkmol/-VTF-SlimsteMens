@@ -1,6 +1,5 @@
 package Managers;
 
-import java.awt.Window.Type;
 import java.sql.*;
 import java.util.ArrayList;
 import Models.*;
@@ -347,6 +346,26 @@ public class DataManager {
 			System.err.println("Error fetching turns for game id: " + round.getGame().getId());
 		}
 		return turns;
+	}
+	
+	public Turn getLastTurnForGame(int gameId) {
+		Turn turn = null;
+		try {
+			String sql = "SELECT b.* FROM ronde AS r"
+					+ " INNER JOIN rondenaam AS rn ON"
+					+ " (SELECT COUNT(spel_id) FROM ronde WHERE spel_id = r.spel_id AND r.rondenaam = rn.type) = rn.volgnr"
+					+ " INNER JOIN beurt AS b ON b.spel_id = r.spel_id AND r.rondenaam = b.rondenaam"
+					+ " WHERE r.spel_id = ? ORDER BY b.beurt_id DESC LIMIT 1";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, gameId);
+			ResultSet data = preparedStatement.executeQuery();
+			if (data.next())
+				turn = new Turn(data);
+		} catch (SQLException e) {
+			System.err.println("Error fetching last turn for game id: " + gameId);
+			System.err.println(e.getMessage());
+		}
+		return turn;
 	}
 	
 	public boolean pushTurn(Turn turn) {
