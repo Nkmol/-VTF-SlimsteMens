@@ -8,7 +8,7 @@ public class MyTimer {
 
   public TimerTask schedule(final Runnable r, long delay) {
      final TimerTask task = new TimerTask() { public void run() { r.run(); }};
-     t.schedule(task, delay);
+     t.schedule(task, delay, 1000);
      return task;
   }
 }

@@ -80,7 +80,7 @@ public class PlayerView extends JPanel {
 
 		challengeButton.setEnabled(enabled);
 
-		//249, 191, 147
+		// 135, 171, 255
 		setBackground(new Color(135,171,255));
 	}
 	

@@ -5,7 +5,7 @@ import Models.ThreeSixNine;
 import Utilities.ComponentUtility;
 import View.ThreeSixNineView;
 
-public class ThreeSixNineController {
+public class ThreeSixNineController implements RoundController {
 
 	private ThreeSixNine model;
 	private ThreeSixNineView view;
@@ -17,13 +17,16 @@ public class ThreeSixNineController {
 		model.addObserver(view);
 		model.updateView();
 	}
-	
-	public ThreeSixNineView getView(){
+
+	@Override
+	public ThreeSixNineView getView() {
+		// TODO Auto-generated method stub
 		return view;
 	}
-	
-	public ThreeSixNine getModel(){
+
+	@Override
+	public ThreeSixNine getModel() {
+		// TODO Auto-generated method stub
 		return model;
 	}
-	
 }

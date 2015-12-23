@@ -1,6 +1,5 @@
 package Managers;
 
-import java.awt.Window.Type;
 import java.sql.*;
 import java.util.ArrayList;
 import Models.*;
@@ -349,6 +348,26 @@ public class DataManager {
 		return turns;
 	}
 	
+	public Turn getLastTurnForGame(int gameId) {
+		Turn turn = null;
+		try {
+			String sql = "SELECT b.* FROM ronde AS r"
+					+ " INNER JOIN rondenaam AS rn ON"
+					+ " (SELECT COUNT(spel_id) FROM ronde WHERE spel_id = r.spel_id AND r.rondenaam = rn.type) = rn.volgnr"
+					+ " INNER JOIN beurt AS b ON b.spel_id = r.spel_id AND r.rondenaam = b.rondenaam"
+					+ " WHERE r.spel_id = ? ORDER BY b.beurt_id DESC LIMIT 1";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, gameId);
+			ResultSet data = preparedStatement.executeQuery();
+			if (data.next())
+				turn = new Turn(data);
+		} catch (SQLException e) {
+			System.err.println("Error fetching last turn for game id: " + gameId);
+			System.err.println(e.getMessage());
+		}
+		return turn;
+	}
+	
 	public boolean pushTurn(Turn turn) {
 		getConnection();
 		boolean turnPushed = false;
@@ -479,6 +498,24 @@ public class DataManager {
 			System.err.println(e.getMessage());
 		}
 		return questions;
+	}
+	
+	public int numberOfTimesQuestionAskedTo(String playerName, int questionId) {
+		int amountOfTimes = 0;
+		try {
+			String sql = "SELECT COUNT(speler) AS aantal "
+					+ "FROM speler_vraag_aantal WHERE speler = ? AND vraag_id = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, playerName);
+			preparedStatement.setInt(2, questionId);
+			ResultSet data = preparedStatement.executeQuery();
+			if (data.next())
+				amountOfTimes = data.getInt("aantal");
+		} catch (SQLException e) {
+			System.err.println("Error checking amount of times the question asked to a player");
+			System.err.println(e.getMessage());
+		}
+		return amountOfTimes;
 	}
 	
 	public ArrayList<Answer> getAnswers(int questionId) {
