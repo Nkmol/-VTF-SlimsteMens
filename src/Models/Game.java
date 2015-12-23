@@ -54,26 +54,6 @@ public class Game extends Observable {
 		notifyObservers(this);
 	}
 	
-	
-	public Player toggleCurrentPlayer() {
-		if(player1.isActive) {
-			player2.isActive = true;
-			player1.isActive = false;
-			player1.stopTimer();
-			player2.startTimer();
-			
-			return player2.getPlayer();
-		}
-		else {
-			player2.isActive = false;
-			player1.isActive = true;
-			player2.stopTimer();
-			player1.startTimer();
-			
-			return player1.getPlayer();
-		}
-	}
-	
 	public static boolean isPlayerAnswerCorrect(PlayerAnswer player, Answer answer) {
 		return IsPlayerAnswerCorrect(player.getAnswer(), answer);
 	}

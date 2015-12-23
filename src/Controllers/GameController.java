@@ -38,11 +38,12 @@ public class GameController {
 		Turn currentTurn = currentRound.getCurrentTurn();
 		currentRound.getCurrentTurn().addPlayerAnswer(new PlayerAnswer(currentTurn,answerId, view.txtInput.getText(), currentTurn.getTime()));
 		
-		currentRound.onSubmit();
+		currentRound.onSubmit(view.txtInput.getText());
 	}
 	
 	public void Pass_Click() {
 		model.getCurrentRound().nextTurn(TurnState.Pass);
+		model.getPlayerGame1().stopTimer();
 	}
 	
 	public void setRoundView(JPanel round) {
@@ -68,5 +69,7 @@ public class GameController {
 		
 		model.addRound(roundController.getModel());
 		view.setRound(roundController.getView());
+		
+		DataManager.getInstance().pushRound(roundController.getModel());
 	}
 }

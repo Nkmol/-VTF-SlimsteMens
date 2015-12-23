@@ -1,10 +1,13 @@
 package Controllers;
 
+import javax.swing.JPanel;
+
+import Models.Round;
 import Models.ThreeSixNine;
 import View.ThreeSixNineView;
 
 public interface RoundController {
 	
-	public ThreeSixNineView getView();
-	public ThreeSixNine getModel();
+	public JPanel getView();
+	public Round getModel();
 }

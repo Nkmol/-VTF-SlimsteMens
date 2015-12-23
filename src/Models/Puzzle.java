@@ -116,9 +116,4 @@ public class Puzzle extends Round {
 		// TODO Auto-generated method stub
 		
 	}
-	
-	// TODO: Delete method
-	public void OnSubmit() {
-		
-	}
 }
