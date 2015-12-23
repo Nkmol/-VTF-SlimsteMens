@@ -88,10 +88,9 @@ public class Game extends Observable {
 		return currentRound;
 	}
 	
-	public void setCurrentRound() {		
-		//TODO: Change to init
-		if(rounds == null)
-			currentRound = new ThreeSixNine(this);	
+	public void setCurrentRound(Round round) {		
+		//TODO: add to Rounds<>
+		currentRound = round;	
 	}
 	
 	public void nextRound() {

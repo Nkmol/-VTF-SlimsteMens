@@ -1,13 +1,12 @@
 package Controllers;
 
-import java.awt.event.ActionListener;
-
 import javax.swing.JFrame;
-import javax.swing.text.View;
 
 import Models.ActiveChallenges;
 import Models.ActivePlayers;
-import Utilities.ComponentUtility;
+import Models.Game;
+import Models.Round;
+import Models.RoundType;
 import View.ChallengeListView;
 import View.ChallengeView;
 import View.PlayerListView;
@@ -31,11 +30,17 @@ public class ChallengeListController {
 	}
 	
 	public void startGame(int gameId) {
-		parent.SetViewCategoryPanel(new GameController(gameId).getView());
+		GameController gameController = new GameController(gameId);
+	
+		//set default round
+		gameController.addRound(RoundType.ThreeSixNine);
+		
+		parent.SetViewCategoryPanel(gameController.getView());
 	}
 	
 	public void handleAcceptButtonClick(int gameId) {
 		//model.acceptChallenge(gameId); //TODO: ...
+
 		startGame(gameId);
 	}
 	
@@ -43,8 +48,5 @@ public class ChallengeListController {
 		model.rejectChallenge(gameId);
 	}
 	
-	public void setRejectButtonClick(ChallengeView view, ActionListener l) {
-		ComponentUtility.addActionListener(view, "declineButton", l);
-	}
 	
 }

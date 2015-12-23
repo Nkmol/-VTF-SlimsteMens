@@ -348,6 +348,103 @@ public class DataManager {
 		return turns;
 	}
 	
+	public Turn getLastTurnForGame(int gameId) {
+		Turn turn = null;
+		try {
+			String sql = "SELECT b.* FROM ronde AS r"
+					+ " INNER JOIN rondenaam AS rn ON"
+					+ " (SELECT COUNT(spel_id) FROM ronde WHERE spel_id = r.spel_id AND r.rondenaam = rn.type) = rn.volgnr"
+					+ " INNER JOIN beurt AS b ON b.spel_id = r.spel_id AND r.rondenaam = b.rondenaam"
+					+ " WHERE r.spel_id = ? ORDER BY b.beurt_id DESC LIMIT 1";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, gameId);
+			ResultSet data = preparedStatement.executeQuery();
+			if (data.next())
+				turn = new Turn(data);
+		} catch (SQLException e) {
+			System.err.println("Error fetching last turn for game id: " + gameId);
+			System.err.println(e.getMessage());
+		}
+		return turn;
+	}
+	
+	public boolean pushTurn(Turn turn) {
+		getConnection();
+		boolean turnPushed = false;
+		try {
+			String sql = "INSERT INTO beurt "
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			RoundType roundType = turn.getRoundType();
+			preparedStatement.setInt(1, turn.getGameId());
+			preparedStatement.setString(2, roundType.getValue());
+			preparedStatement.setInt(3, turn.getTurnId());
+			if (roundType == RoundType.ThreeSixNine || roundType == RoundType.Puzzle) 
+				preparedStatement.setNull(4, Types.INTEGER);
+			else 
+				preparedStatement.setInt(4, turn.getQuestion().getId());
+			preparedStatement.setString(5, turn.getPlayer().getName());
+			preparedStatement.setString(6, turn.getTurnState().getValue());
+			preparedStatement.setInt(7, turn.getSecondsEarned());
+			if (roundType != RoundType.Final) 
+				preparedStatement.setNull(8, Types.INTEGER);
+			else 
+				preparedStatement.setInt(8, turn.getSecondsFinalLost());
+			if (preparedStatement.executeUpdate() > 0) {
+				if (roundType == RoundType.ThreeSixNine || roundType == RoundType.Puzzle) {
+					pushSharedQuestion(turn);
+				} else if (roundType != RoundType.ThreeSixNine) {
+					pushPlayerAnswer(turn);
+				}
+				connection.commit();
+			}
+			
+		} catch (SQLException e) {
+			System.err.println("Error pushing turn");
+			System.err.println(e.getMessage());
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {}
+		}
+		
+		return turnPushed;
+	}
+	
+	private boolean pushSharedQuestion(Turn turn) throws SQLException {
+		boolean pushed = false;
+		for (SharedQuestion sharedQuestion : turn.getSharedQuestions()) {
+			String sql = "INSERT INTO deelvraag "
+					+ "VALUES (?, ?, ?, ?, ?, ?)";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, sharedQuestion.getGameId());
+			preparedStatement.setString(2, sharedQuestion.getRoundType().getValue());
+			preparedStatement.setInt(3, sharedQuestion.getTurnId());
+			preparedStatement.setInt(4, sharedQuestion.getIndexNumber());
+			preparedStatement.setInt(5, sharedQuestion.getQuestionId());
+			preparedStatement.setString(6, sharedQuestion.getAnswer());
+			preparedStatement.executeUpdate();
+		}
+		pushed = true;
+		return pushed;
+	}
+	
+	private boolean pushPlayerAnswer(Turn turn) throws SQLException {
+		boolean pushed = false;
+		for (PlayerAnswer playerAnswer : turn.getPlayerAnswers()) {
+			String sql = "INSERT INTO spelerantwoord VALUES (?, ?, ?, ?, ?, ?)";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, playerAnswer.getGameId());
+			preparedStatement.setString(2, playerAnswer.getRoundType().getValue());
+			preparedStatement.setInt(3, playerAnswer.getTurnId());
+			preparedStatement.setInt(4, playerAnswer.getAnswerId());
+			preparedStatement.setString(5, playerAnswer.getAnswer());
+			preparedStatement.setInt(6, playerAnswer.getMoment());
+			preparedStatement.executeUpdate();
+		}
+		pushed = true;
+		return pushed;
+	}
+	
 	public ArrayList<SharedQuestion> getSharedQuestions(Turn turn) {
 		ArrayList<SharedQuestion> sharedQuestions = null;
 		try {
@@ -401,6 +498,24 @@ public class DataManager {
 			System.err.println(e.getMessage());
 		}
 		return questions;
+	}
+	
+	public int numberOfTimesQuestionAskedTo(String playerName, int questionId) {
+		int amountOfTimes = 0;
+		try {
+			String sql = "SELECT COUNT(speler) AS aantal "
+					+ "FROM speler_vraag_aantal WHERE speler = ? AND vraag_id = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, playerName);
+			preparedStatement.setInt(2, questionId);
+			ResultSet data = preparedStatement.executeQuery();
+			if (data.next())
+				amountOfTimes = data.getInt("aantal");
+		} catch (SQLException e) {
+			System.err.println("Error checking amount of times the question asked to a player");
+			System.err.println(e.getMessage());
+		}
+		return amountOfTimes;
 	}
 	
 	public ArrayList<Answer> getAnswers(int questionId) {
@@ -480,16 +595,16 @@ public class DataManager {
 		}
 	}
 	
-	public boolean pushChatMessage(int gameId, Timestamp timestamp, int millisec, String senderName, String message) {
+	public boolean pushChatMessage(ChatMessage chatMessage) {
 		try {
 			String sql = "insert into chatregel (spel_id, tijdstip, millisec, account_naam_zender, bericht)"
 					+ " values (?,?,?,?,?)";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, gameId);
-			preparedStatement.setTimestamp(2, timestamp);
-			preparedStatement.setInt(3, millisec);
-			preparedStatement.setString(4, senderName);
-			preparedStatement.setString(5, message);
+			preparedStatement.setInt(1, chatMessage.getGameId());
+			preparedStatement.setTimestamp(2, chatMessage.getTimestamp());
+			preparedStatement.setInt(3, chatMessage.getMillisec());
+			preparedStatement.setString(4, chatMessage.getSenderName());
+			preparedStatement.setString(5, chatMessage.getMessage());
 			preparedStatement.executeUpdate();
 			connection.commit();
 			return true;

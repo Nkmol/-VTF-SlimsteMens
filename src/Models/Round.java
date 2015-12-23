@@ -77,11 +77,12 @@ public abstract class Round extends Observable {
 	}
 	
 	public int generateAnswerId() {
+		System.out.println(currentTurn);
 		return currentTurn.getAmountAnswers() == 0 ? 1 : currentTurn.getTurnId() + 1;
 	}
 	
 	public void updateAnswer(String answer) {
-		getCurrentTurn().addPlayerAnswer(new PlayerAnswer(game.getId(), answer, generateAnswerId()));
+		getCurrentTurn().addPlayerAnswer(new PlayerAnswer(currentTurn, game.getId(), answer, generateAnswerId()));
 	}
 	
 	public static Round createRound(RoundType type, Game game) {

@@ -11,7 +11,8 @@ public class ThreeSixNine extends Round {
 	public ThreeSixNine(Game game) {
 		super(game);
 		
-		currentQuestion = this.getQuestions().get(0);
+		//TODO Push to database
+		setCurrrentTurn(new Turn(roundType, game.getPlayerGame2().getPlayer(), game.getId()));
 	}
 	
 	public ThreeSixNine(ResultSet data, Game game) {
@@ -33,7 +34,6 @@ public class ThreeSixNine extends Round {
 
 			setChanged();
 			notifyObservers();
-
 		}
 	}
 	

@@ -34,8 +34,6 @@ public class ActiveChallenges extends Observable {
 		
 		activeChallenges = new ArrayList<GameInfo>();
 		
-		System.out.print("1");
-		
 		for(int i = 0; i < challenges.size(); i++) {
 			if(challenges.get(i).getPlayer2().getName().equals(DataManager.getInstance().getCurrentUser().getName())) {
 				if(challenges.get(i).getGameState() == GameState.Invited) {
