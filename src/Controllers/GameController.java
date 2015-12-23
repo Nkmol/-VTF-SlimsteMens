@@ -8,6 +8,7 @@ import Models.PlayerAnswer;
 import Models.Round;
 import Models.RoundType;
 import Models.Turn;
+import Models.TurnState;
 import View.GamePanel;
 
 public class GameController {
@@ -41,7 +42,7 @@ public class GameController {
 	}
 	
 	public void Pass_Click() {
-		model.getCurrentRound().nextTurn();
+		model.getCurrentRound().nextTurn(TurnState.Pass);
 	}
 	
 	public void setRoundView(JPanel round) {
