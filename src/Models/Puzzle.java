@@ -112,9 +112,13 @@ public class Puzzle extends Round {
 		return null;
 	}
 
-	@Override
-	public void onSubmit() {
+	public void onSubmit(String str) {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	// TODO: Delete method
+	public void OnSubmit() {
 		
 	}
 }
