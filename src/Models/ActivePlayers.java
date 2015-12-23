@@ -59,5 +59,4 @@ public class ActivePlayers extends Observable{
 		Player player1 = DataManager.getInstance().getCurrentUser();
 		DataManager.getInstance().pushNewGame(player1, player2);
 	}
-	
 }
