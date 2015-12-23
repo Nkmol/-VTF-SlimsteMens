@@ -161,5 +161,8 @@ public class Turn {
 		return 1;
 	}
 	
+	public String getPlayerName() {
+		return playerName;
+	}
 	
 }
