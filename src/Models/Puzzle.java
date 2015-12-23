@@ -111,4 +111,10 @@ public class Puzzle extends Round {
 				return question;
 		return null;
 	}
+
+	@Override
+	public void onSubmit() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -12,4 +12,10 @@ public class OpenDoor extends Round {
 		super(data, game);
 	}
 
+	@Override
+	public void onSubmit() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
