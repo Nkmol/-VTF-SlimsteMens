@@ -56,6 +56,7 @@ public class ChatMessage extends Observable {
 			}
 		}
 		
+		
 		public int getGameId() {
 			return gameId;
 		}

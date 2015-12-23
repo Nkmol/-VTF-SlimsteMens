@@ -3,6 +3,8 @@ package Controllers;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import Managers.DataManager;
 
@@ -21,6 +23,7 @@ public class ChatController {
 	private ChatMessage model;
 	private ChatMessageView view;
 	private Game parent;
+	private Timer timer;
 	
 	public ChatController(Game parent) {
 		
@@ -29,13 +32,14 @@ public class ChatController {
 		
 		ComponentUtility.addActionListener(view, "btnSendMessage", (e) -> btnSendMessage_Press());
 
+		timer = new Timer();
+		timer.schedule(new PerformRepeatedTask(), 5000);
+		
 	}
 	
 	private void btnSendMessage_Press()
 	{
 		System.out.println("test");
-		
-		//model.addObserver(view);
 		
 		Date date = new Date();
 		String playername = DataManager.getInstance().getCurrentUser().getName();
@@ -57,8 +61,18 @@ public class ChatController {
 		
 		view.updateChatBehavior(chatMessages);
 	}
-	
+
 	public ChatMessageView returnView(){
 		return view;
 	}
+	
+
+	class PerformRepeatedTask extends TimerTask {
+	    public void run() {
+	    	updateChatMessages();
+	    }
+	  }
+	
+	
+	
 }

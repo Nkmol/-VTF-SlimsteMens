@@ -63,15 +63,6 @@ public class ChatMessageView extends JPanel implements Observer {
 
 	}
 
-/*	private void activateChatboxBehavior() {
-		if (messageBox.getText().length() < 1) {
-			// do nothing
-		} else {
-			chatBox.append("<" + currentPlayerUsername + ">:  " + messageBox.getText() + "\n");
-			messageBox.setText("");
-		}
-		messageBox.requestFocusInWindow();
-	}*/
 	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
