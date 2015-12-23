@@ -14,6 +14,7 @@ import javax.swing.border.Border;
 
 import Controllers.ActiveGameController;
 import Models.ActiveGameInfo;
+import Utilities.ComponentUtility;
 
 public class ActiveGameListView extends JPanel implements Observer {
 	
@@ -88,8 +89,13 @@ public class ActiveGameListView extends JPanel implements Observer {
 		activeGameViews = new ActiveGameView[activeGames.size()];
 		
 		for(int i = 0; i < activeGames.size(); i++) {
-			activeGameViews[i] = new ActiveGameView(activeGames.get(i).getChallengedPlayer()); // TODO add a check to see if the player has already been challenged.
-			topPanel.add(activeGameViews[i]);
+			activeGameViews[i] = new ActiveGameView(activeGames.get(i).getChallengedPlayer(), activeGames.get(i).getGameId(), controller); // TODO add a check to see if the player has already been challenged.
+			if(activeGames.get(i).isMyTurn()) {
+				topPanel.add(activeGameViews[i]);
+			}
+			else {
+				bottomPanel.add(activeGameViews[i]);
+			}
 		}
 		
 		repaint();

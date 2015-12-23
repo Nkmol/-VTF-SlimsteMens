@@ -11,15 +11,20 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import Controllers.ActiveGameController;
 import Models.Player;
 
 public class ActiveGameView extends JPanel {
 	private JLabel playerNameLabel;
 	public JButton goButton;
 	private Player player;
+	private int gameId;
+	private ActiveGameController controller;
 
-	public ActiveGameView(Player player) {
+	public ActiveGameView(Player player, int gameId, ActiveGameController controller) {
 		this.player = player;
+		this.gameId = gameId;
+		this.controller = controller;
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		setLayout(gridBagLayout);
@@ -43,6 +48,7 @@ public class ActiveGameView extends JPanel {
 		add(playerNameLabel, gridBagConstraintsLabel);
 
 		goButton.setText("Go");
+		goButton.addActionListener((e) -> handleButtonClick());
 
 		GridBagConstraints gridBagConstraintsButton = new GridBagConstraints();
 		gridBagConstraintsButton.gridx = 0;
@@ -53,5 +59,9 @@ public class ActiveGameView extends JPanel {
 
 		// 135, 171, 255
 		setBackground(new Color(135,171,255));
+	}
+	
+	private void handleButtonClick() { // TODO TEMP
+		controller.handleButtonClick(gameId);
 	}
 }

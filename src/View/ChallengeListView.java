@@ -50,7 +50,7 @@ public class ChallengeListView extends JPanel implements Observer {
 	}
 	
 	private void rejectButtonClick(int gameId, ChallengeView challengeView) {
-		remove(challengeView);	
+		remove(challengeView); // TODO check op nullpointers
 		validate();
 		repaint();
 		controller.handleRejectButtonClick(gameId);

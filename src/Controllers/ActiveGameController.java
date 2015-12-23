@@ -3,6 +3,7 @@ package Controllers;
 import Models.ActiveGames;
 import Models.ActivePlayers;
 import Models.Player;
+import Models.RoundType;
 import View.ActiveGameListView;
 import View.PlayerListView;
 
@@ -20,5 +21,18 @@ public class ActiveGameController {
 	
 	public ActiveGameListView getView() {
 		return view;
+	}
+	
+	public void startGame(int gameId) {
+		GameController gameController = new GameController(gameId);
+	
+		//set default round
+		gameController.addRound(RoundType.ThreeSixNine);
+		
+		parent.SetViewCategoryPanel(gameController.getView());
+	}
+	
+	public void handleButtonClick(int gameId) {
+		startGame(gameId);
 	}
 }

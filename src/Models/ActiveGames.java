@@ -38,11 +38,28 @@ public class ActiveGames extends Observable {
 			GameInfo gameInfo = games.get(i);
 			
 			if(gameInfo.getGameState() == GameState.Busy) {
-				if(gameInfo.getPlayer1().getName().equals(currentUser.getName())) {
-					activeGameList.add(new ActiveGameInfo(gameInfo.getPlayer1(), gameInfo.getPlayer2(), gameInfo.getGameId(), true)); // TODO get the current turn
-				}
-				else if(gameInfo.getPlayer2().getName().equals(currentUser.getName())) {
-					activeGameList.add(new ActiveGameInfo(gameInfo.getPlayer2(), gameInfo.getPlayer1(), gameInfo.getGameId(), true)); // TODO get the current turn
+				int gameId = gameInfo.getGameId();	
+				Turn currentTurn = DataManager.getInstance().getLastTurnForGame(gameId);
+				Player player1 = gameInfo.getPlayer1();
+				Player player2 = gameInfo.getPlayer2();
+				
+				if(currentTurn != null) {
+					if(player1.getName().equals(currentUser.getName())) {
+						if(currentTurn.getPlayerName().equals(player1.getName())) {
+							activeGameList.add(new ActiveGameInfo(player1, player2, gameId, true)); // TODO get the current turn
+						}
+						else {
+							activeGameList.add(new ActiveGameInfo(player1, player2, gameId, false)); // TODO get the current turn
+						}
+					}
+					else if(player2.getName().equals(currentUser.getName())) {
+						if(currentTurn.getPlayerName().equals(player2.getName())) {
+							activeGameList.add(new ActiveGameInfo(player2, player1, gameId, true)); // TODO get the current turn
+						}
+						else {
+							activeGameList.add(new ActiveGameInfo(player2, player1, gameId, false)); // TODO get the current turn
+						}
+					}
 				}
 			}
 		}
