@@ -9,9 +9,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.LayerUI;
 
-public class Ronde2 extends JPanel {
+public class BlurTextExample extends JPanel {
 	
-	public Ronde2() {
+	public BlurTextExample() {
 		setBorder(new EmptyBorder(10, 10, 10, 10)); //add padding 
 		JPanel answers[] = new JPanel[4];
 		

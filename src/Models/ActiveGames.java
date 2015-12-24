@@ -30,7 +30,7 @@ public class ActiveGames extends Observable {
 		}, 0L, 1000L);
 	}
 	
-	private void getActiveGames() {
+/*	private void getActiveGames() {
 		ArrayList<GameInfo> games = DataManager.getInstance().getAllGameInfosForPlayer(currentUser.getName()); // TODO make the names for variables better.
 		ArrayList<ActiveGameInfo> activeGameList = new ArrayList<ActiveGameInfo>();
 		
@@ -54,19 +54,41 @@ public class ActiveGames extends Observable {
 					}
 					else if(player2.getName().equals(currentUser.getName())) {
 						if(currentTurn.getPlayerName().equals(player2.getName())) {
-							activeGameList.add(new ActiveGameInfo(player2, player1, gameId, true)); // TODO get the current turn
+							activeGameList.add(new ActiveGameInfo(player1, player2, gameId, true)); // TODO get the current turn
 						}
 						else {
-							activeGameList.add(new ActiveGameInfo(player2, player1, gameId, false)); // TODO get the current turn
+							activeGameList.add(new ActiveGameInfo(player1, player2, gameId, false)); // TODO get the current turn
 						}
 					}
 				}
 			}
 		}
+	}*/
 		
+	private void getActiveGames() {
+		ArrayList<GameInfo> games = DataManager.getInstance().getAllGameInfosForPlayer(currentUser.getName()); // TODO make the names for variables better.
+		ArrayList<ActiveGameInfo> activeGameList = new ArrayList<ActiveGameInfo>();
+		
+		for(int i = 0; i < games.size(); i++) {
+			GameInfo gameInfo = games.get(i);
+			
+			if(gameInfo.getGameState() == GameState.Busy) {
+				int gameId = gameInfo.getGameId();	
+				Player player1 = gameInfo.getPlayer1();
+				Player player2 = gameInfo.getPlayer2(); 
+
+				if(Game.isCurrentPlayerTurn(gameId)) {
+					if(Game.isCurrentUser(player1.getName()))
+						activeGameList.add(new ActiveGameInfo(player1, player2, gameId, true)); // TODO get the current turn
+					else 
+						activeGameList.add(new ActiveGameInfo(player2, player1, gameId, true)); // TODO get the current turn
+				}
+				else
+					activeGameList.add(new ActiveGameInfo(player2, player1, gameId, false));
+			}
+		}
 		
 		activeGames = activeGameList;
-		
 		notifyObs();
 	}
 	

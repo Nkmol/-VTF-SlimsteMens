@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 
 import Managers.DataManager;
 import Models.Game;
+import Models.OpenDoor;
 import Models.PlayerAnswer;
 import Models.Round;
 import Models.RoundType;
@@ -38,11 +39,12 @@ public class GameController {
 		Turn currentTurn = currentRound.getCurrentTurn();
 		currentRound.getCurrentTurn().addPlayerAnswer(new PlayerAnswer(currentTurn,answerId, view.txtInput.getText(), currentTurn.getTime()));
 		
-		currentRound.onSubmit();
+		currentRound.onSubmit(view.txtInput.getText());
 	}
 	
 	public void Pass_Click() {
 		model.getCurrentRound().nextTurn(TurnState.Pass);
+		model.getPlayerGame1().stopTimer();
 	}
 	
 	public void setRoundView(JPanel round) {
@@ -63,6 +65,8 @@ public class GameController {
 		switch(roundType) {
 			case ThreeSixNine:
 				roundController = new ThreeSixNineController(model);
+			case OpenDoor:
+				roundController = new OpenDoorController(model);
 				//TODO add other controllers
 		}
 		

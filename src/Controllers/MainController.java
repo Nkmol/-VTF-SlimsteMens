@@ -7,16 +7,13 @@ import java.util.Date;
 
 import javax.swing.JPanel;
 
-import Models.Main;
 import View.*;
 
 public class MainController {
 
 	private MainFrame mainFrame;
-	private Main mainModel;
 	
 	public MainController() {
-		mainModel = new Main();
 		mainFrame = new MainFrame();
 		
 		showLogin();
@@ -82,6 +79,7 @@ public class MainController {
 	}
 	
 	public void RefreshView() {
+		mainFrame.getContentPane().revalidate();
 		mainFrame.getContentPane().repaint();
 	}
 	

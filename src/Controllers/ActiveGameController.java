@@ -4,9 +4,12 @@ import java.util.ArrayList;
 
 import Managers.DataManager;
 import Models.ActiveGames;
+import Models.ActivePlayers;
+import Models.Player;
 import Models.Round;
 import Models.RoundType;
 import View.ActiveGameListView;
+import View.PlayerListView;
 
 public class ActiveGameController {
 	ActiveGameListView view;
@@ -26,17 +29,18 @@ public class ActiveGameController {
 	
 	public void startGame(int gameId) {
 		GameController gameController = new GameController(gameId);
-	
-		ArrayList<Round> rounds = DataManager.getInstance().getRounds(gameController.getModel());
+
 		
-		for(int i = 0; i < rounds.size(); i++) {
-			//set default round
-			gameController.addRound(rounds.get(i).getRoundType());
-		}
+		//set default round
+		gameController.addRound(RoundType.ThreeSixNine);
+		
+		
+		// TODO TEST PURPOSES FOR FINAL ROUND
+		//gameController.addRound(RoundType.Final);
+		
 		
 		parent.SetViewCategoryPanel(gameController.getView());
 	}
-	
 	
 	public void handleButtonClick(int gameId) {
 		startGame(gameId);

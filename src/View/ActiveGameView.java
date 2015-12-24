@@ -25,16 +25,16 @@ public class ActiveGameView extends JPanel {
 		this.player = player;
 		this.gameId = gameId;
 		this.controller = controller;
-		
+
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		setLayout(gridBagLayout);
 
-		setPreferredSize(new Dimension(145,80));
+		setPreferredSize(new Dimension(145, 80));
 
 		playerNameLabel = new JLabel();
 		goButton = new JButton();
 
-		//goButton.setBorder(BorderFactory.createEmptyBorder());
+		// goButton.setBorder(BorderFactory.createEmptyBorder());
 
 		playerNameLabel.setText(player.getName());
 		playerNameLabel.setFont(new Font("Serif", Font.ITALIC, 15));
@@ -42,7 +42,7 @@ public class ActiveGameView extends JPanel {
 		GridBagConstraints gridBagConstraintsLabel = new GridBagConstraints();
 		gridBagConstraintsLabel.gridx = 0;
 		gridBagConstraintsLabel.gridy = 0;
-		gridBagConstraintsLabel.insets = new Insets(5,5,20,5);
+		gridBagConstraintsLabel.insets = new Insets(5, 5, 20, 5);
 		gridBagConstraintsLabel.fill = GridBagConstraints.HORIZONTAL;
 
 		add(playerNameLabel, gridBagConstraintsLabel);
@@ -58,9 +58,9 @@ public class ActiveGameView extends JPanel {
 		add(goButton, gridBagConstraintsButton);
 
 		// 135, 171, 255
-		setBackground(new Color(135,171,255));
+		setBackground(new Color(135, 171, 255));
 	}
-	
+
 	private void handleButtonClick() { // TODO TEMP
 		controller.handleButtonClick(gameId);
 	}

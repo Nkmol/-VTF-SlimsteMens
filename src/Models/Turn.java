@@ -19,23 +19,16 @@ public class Turn {
 	private TimerTask timer;
 	private int time;
 	private int secondsEarnd;
-	private int secondsFinalLost;
+	private Integer secondsFinalLost;
 	private ArrayList<SharedQuestion> sharedQuestions;
 	private ArrayList<PlayerAnswer> playerAnswers;
-
-	public Turn(RoundType roundType, Player player) {
-//		this.round = round; 
-		this.roundType = roundType;
-//		this.player = player;
-	}
 	
 	public Turn(RoundType rondeType, Player player, int gameId) {
 		this.roundType = rondeType;
 		this.player = player; //TODO Should become PlayerGame?
 		this.gameId = gameId;
 		
-		playerAnswers = new ArrayList<PlayerAnswer>();
-		sharedQuestions = new ArrayList<SharedQuestion>();
+		startTurn();
 	}
 	
 	public Turn(ResultSet data) {
@@ -55,6 +48,11 @@ public class Turn {
 			System.err.println("Error initializing Turn");
 			System.err.println(e.getMessage());
 		}
+	}
+	
+	public void startTurn() {
+		playerAnswers = new ArrayList<PlayerAnswer>();
+		sharedQuestions = new ArrayList<SharedQuestion>();
 	}
 	
 	public int getGameId() {
@@ -106,11 +104,11 @@ public class Turn {
 		return secondsEarnd;
 	}
 	
-	public void setSecondsEarned(int secondsEarned) {
+	public void setSecondsEarned(Integer secondsEarned) {
 		this.secondsEarnd = secondsEarned;
 	}
 	
-	public int getSecondsFinalLost() {
+	public Integer getSecondsFinalLost() {
 		return secondsFinalLost;
 	}
 	
@@ -152,7 +150,6 @@ public class Turn {
 	
 	public void addPlayerAnswer(PlayerAnswer answer) {
 		playerAnswers.add(answer);
-		System.out.println("[Turn] Your answer " + answer.getAnswer());
 	}
 	
 	public int getAmountAnswers() {

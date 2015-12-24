@@ -5,6 +5,7 @@ import java.awt.GridLayout;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 
+@SuppressWarnings("serial")
 public class CategoryPanel extends JPanel {
 	
 	private JPanel currentPane;

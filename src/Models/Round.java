@@ -17,18 +17,25 @@ public abstract class Round extends Observable {
 	protected Game game;
 	
 	public Round(Game game) {
+		startRound();
 		this.game = game;
 	}
 	
 	public Round(ResultSet data, Game game) {
+		startRound();
 		try {
 			roundType = RoundType.fromString(data.getString("rondenaam"));
-			questions = DataManager.getInstance().getQuestions(this);
+			//questions = DataManager.getInstance().getQuestions(this);
 			this.game = game;
-			turns = DataManager.getInstance().getTurns(this);
+			//turns = DataManager.getInstance().getTurns(this);
 		} catch (SQLException e) {
 			System.err.println("Error initializing round");
 		}
+	}
+	
+	public void startRound() {
+		turns = new ArrayList<Turn>();
+		questions = new ArrayList<Question>();
 	}
 	
 	public Game getGame() {
@@ -69,15 +76,19 @@ public abstract class Round extends Observable {
     }
 	
 	public void nextTurn(TurnState turnState) {
-		Player player = game.toggleCurrentPlayer();
-		
-		Turn turn = new Turn(getRoundType(), player, game.getId());
+		Turn turn = new Turn(getRoundType(), DataManager.getInstance().getCurrentUser(), game.getId());
 		turn.setTurnState(turnState);
+		
+		turns.add(turn);
+		turn.setTurnId(turns.size());
+		System.out.println(turn.getTurnId());
 		//TODO: setQuestionId
 		
 		//TODO: Push turn
 		DataManager.getInstance().pushTurn(turn);
-		setCurrrentTurn(turn);
+		
+		
+		//setCurrrentTurn(turn);
 	}
 	
 	public int generateAnswerId() {
@@ -105,5 +116,5 @@ public abstract class Round extends Observable {
 		}
 	}
 	
-	public abstract void onSubmit();
+	public abstract void onSubmit(String answer);
 }
