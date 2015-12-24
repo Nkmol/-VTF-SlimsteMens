@@ -31,6 +31,7 @@ public class ActivePlayers extends Observable{
 	private void getActivePlayers() {
 		ArrayList<Player> playerList = DataManager.getInstance().getAllPlayers();
 		ArrayList<ChallengedPlayer> players = new ArrayList<ChallengedPlayer>();
+		ArrayList<CompetitionRankItem> ranks = new ArrayList<CompetitionRankItem>();
 		
 		for(int i = 0; i < playerList.size(); i++) {
 			if(!playerList.get(i).getName().equals(DataManager.getInstance().getCurrentUser().getName())) {

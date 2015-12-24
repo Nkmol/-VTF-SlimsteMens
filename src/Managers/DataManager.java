@@ -82,7 +82,7 @@ public class DataManager {
 		} catch (SQLException e) { }
 		return players;
 	}
-	
+	  
 	public ArrayList<CompetitionRankItem> getCompetitionRank() {
 		ArrayList<CompetitionRankItem> competitionRank = null;
 		try {
@@ -92,6 +92,21 @@ public class DataManager {
 			competitionRank = new ArrayList<>();
 			while (data.next())
 				competitionRank.add(new CompetitionRankItem(data));
+		} catch (SQLException e) {
+			System.err.println("Error fetching competition rank");
+		}
+		return competitionRank;
+	}
+	 
+	public CompetitionRankItem getCompetitionRankForPlayer(String playerName) {
+		CompetitionRankItem competitionRank = null;
+		try {
+			String sql = "SELECT * FROM competitiestand WHERE speler = ? ORDER BY (aantal_gewonnen_spellen / aantal_verloren_spellen)";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, playerName);
+			ResultSet data = preparedStatement.executeQuery();
+			while (data.next())
+				competitionRank = new CompetitionRankItem(data);
 		} catch (SQLException e) {
 			System.err.println("Error fetching competition rank");
 		}
