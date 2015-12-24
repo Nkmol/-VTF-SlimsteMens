@@ -163,8 +163,13 @@ public class Game extends Observable {
 		setCurrentRound(model);
 		
 		DataManager.getInstance().pushRound(getCurrentRound());
+		DataManager.getInstance().pushTurn(getCurrentRound().getCurrentTurn());
 		
 		setChanged();
 		notifyObservers(this);
+	}
+	
+	public void setRound(Round model) {
+		setCurrentRound(model);
 	}
 }

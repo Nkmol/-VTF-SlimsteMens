@@ -16,9 +16,16 @@ public abstract class Round extends Observable {
 	protected ArrayList<Turn> turns;
 	protected Game game;
 	
-	public Round(Game game) {
+	public Round(Game game, RoundType roundType) {
 		startRound();
 		this.game = game;
+		this.roundType = roundType;
+		
+		//TODO Push to database
+		Turn turn = new Turn(roundType, DataManager.getInstance().getCurrentUser(), game.getId());
+		turn.setTurnState(TurnState.Busy);
+		turn.setTurnId(1);
+		setCurrrentTurn(turn);
 	}
 	
 	public Round(ResultSet data, Game game) {
@@ -75,22 +82,6 @@ public abstract class Round extends Observable {
     	return turns.size();
     }
 	
-	public void nextTurn(TurnState turnState) {
-		Turn turn = new Turn(getRoundType(), DataManager.getInstance().getCurrentUser(), game.getId());
-		turn.setTurnState(turnState);
-		
-		turns.add(turn);
-		turn.setTurnId(turns.size());
-		System.out.println(turn.getTurnId());
-		//TODO: setQuestionId
-		
-		//TODO: Push turn
-		DataManager.getInstance().pushTurn(turn);
-		
-		
-		//setCurrrentTurn(turn);
-	}
-	
 	public int generateAnswerId() {
 		return currentTurn.getAmountAnswers() == 0 ? 1 : currentTurn.getTurnId() + 1;
 	}
@@ -117,4 +108,10 @@ public abstract class Round extends Observable {
 	}
 	
 	public abstract void onSubmit(String answer);
+
+	public void updateCurrentTurn(TurnState pass, int i) {
+		currentTurn.setTurnState(pass);
+		currentTurn.setSecondsEarned(i);
+		DataManager.getInstance().updateTurn(currentTurn);
+	}
 }

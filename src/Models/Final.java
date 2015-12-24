@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 public class Final extends Round {
 
 	public Final(Game game) {
-		super(game);
+		super(game, RoundType.Final);
 	}
 	
 	public Final(ResultSet data, Game game) {

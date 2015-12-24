@@ -32,8 +32,8 @@ public class ActiveGameController {
 
 		
 		//set default round
-		gameController.addRound(RoundType.ThreeSixNine);
-		
+		//gameController.addRound(RoundType.ThreeSixNine);
+		gameController.loadLastRound();
 		
 		// TODO TEST PURPOSES FOR FINAL ROUND
 		//gameController.addRound(RoundType.Final);

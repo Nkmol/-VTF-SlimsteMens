@@ -43,8 +43,8 @@ public class GameController {
 	}
 	
 	public void Pass_Click() {
-		model.getCurrentRound().nextTurn(TurnState.Pass);
-		model.getPlayerGame1().stopTimer();
+		model.getCurrentRound().updateCurrentTurn(TurnState.Pass, 0);
+		//model.getPlayerGame1().stopTimer();
 	}
 	
 	public void setRoundView(JPanel round) {
@@ -58,19 +58,30 @@ public class GameController {
 	public Game getModel() {
 		return model;
 	}
+	
+	public static RoundController getRoundController(RoundType roundType, Game model) {
+		switch(roundType) {
+		case ThreeSixNine:
+			return new ThreeSixNineController(model);
+		case OpenDoor:
+			return new OpenDoorController(model);
+			//TODO add other controllers
+		default:
+			return null;
+		}
+	}
 
 	public void addRound(RoundType roundType) {
-		RoundController roundController = null;
-		
-		switch(roundType) {
-			case ThreeSixNine:
-				roundController = new ThreeSixNineController(model);
-			case OpenDoor:
-				roundController = new OpenDoorController(model);
-				//TODO add other controllers
-		}
+		RoundController roundController = getRoundController(roundType, model);
 		
 		model.addRound(roundController.getModel());
+		view.setRound(roundController.getView());
+	}
+
+	public void loadLastRound() {
+		RoundController roundController = getRoundController(DataManager.getInstance().getLastRoundForGame(model).getRoundType(), model);
+		
+		model.setRound(roundController.getModel());
 		view.setRound(roundController.getView());
 	}
 }
