@@ -11,7 +11,7 @@ import net.miginfocom.swing.MigLayout;
 
 public class MenuBar extends JMenuBar {
 	//public JMenu menuFile, menuAccount, menuHighscrs, menuPlayers, menuChallenges;
-	public JButton menuExit, menuAccount, menuReplays, menuPlayers, menuChallenges;
+	public JButton menuExit, menuAccount, menuReplays, menuPlayers, menuChallenges, menuLogout;
 	//public JMenuItem menuExit;
 	
 	/*
@@ -78,5 +78,12 @@ public class MenuBar extends JMenuBar {
 		menuChallenges.setContentAreaFilled(false);
 		menuChallenges.setMnemonic(KeyEvent.VK_H);
 		add(menuChallenges);
+		
+		menuLogout = new JButton("Logout");
+		menuLogout.setFont(new Font("Serif", Font.ITALIC, 15));
+		//menuChallenges.setBorder(BorderFactory.createEmptyBorder());
+		menuLogout.setContentAreaFilled(false);
+		menuLogout.setMnemonic(KeyEvent.VK_H);
+		add(menuLogout);
 	}
 }

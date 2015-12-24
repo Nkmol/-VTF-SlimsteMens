@@ -41,7 +41,6 @@ public class MainController {
 		SetViewSidebar(activeGames.getView());
 	}
 
-	
 	// TODO niet beginnen met hoofdletters bij functie namen!!!!
 	public void SetViewCategoryPanel(JPanel panel) {
 		mainFrame.getMainPanel().setCategoryPanel(panel);

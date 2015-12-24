@@ -95,6 +95,10 @@ public class DataManager {
 		return user;
 	}
 	
+	public void resetCurrectUser() {
+		user = null;
+	}
+	
 	public ArrayList<Player> getAllPlayers() {
 		ArrayList<Player> players = null;
 		Connection connection = getConnection();

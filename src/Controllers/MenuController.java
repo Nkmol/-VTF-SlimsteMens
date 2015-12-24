@@ -1,6 +1,7 @@
 package Controllers;
 
 import View.MenuBar;
+import Managers.DataManager;
 import Utilities.ComponentUtility;
 
 public class MenuController {
@@ -16,6 +17,7 @@ public class MenuController {
 		ComponentUtility.addActionListener(view, "menuAccount", (e) -> Account_Click());
 		ComponentUtility.addActionListener(view, "menuPlayers", (e) -> Players_Click());
 		ComponentUtility.addActionListener(view, "menuChallenges", (e) -> Challenges_Click());
+		ComponentUtility.addActionListener(view, "menuLogout", (e) -> Players_Click());
 	}
 	
 	private void Challenges_Click() {
@@ -32,6 +34,11 @@ public class MenuController {
 	
 	private void Exit_Click() {
 		System.exit(0);
+	}
+	
+	private void Logout_Click() {
+		DataManager.getInstance().getCurrentUser();
+		parent.showLogin();
 	}
 	
 	public MenuBar getView() {
