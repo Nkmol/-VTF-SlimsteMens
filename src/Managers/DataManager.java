@@ -701,8 +701,10 @@ public class DataManager {
 			preparedStatement.setInt(4, turn.getGameId());
 			preparedStatement.setString(5, turn.getRoundType().getValue());
 			preparedStatement.setInt(6, turn.getTurnId());
-			if (preparedStatement.executeUpdate() > 0) 
+			if (preparedStatement.executeUpdate() > 0) {
 				updated = true;
+				connection.commit();
+			}
 			
 		} catch (SQLException e) {
 			System.err.println("Error updating turn with id : " + turn.getTurnId());
@@ -734,8 +736,10 @@ public class DataManager {
 				preparedStatement.setInt(4, sharedQuestion.getIndexNumber());
 				preparedStatement.setInt(5, sharedQuestion.getQuestionId());
 				preparedStatement.setString(6, sharedQuestion.getAnswer());
-				preparedStatement.executeUpdate();
-				pushed = true;
+				if (preparedStatement.executeUpdate() > 0) {
+					pushed = true;
+					connection.commit();
+				}
 			}
 		}catch (SQLException e) {
 			// TODO: handle exception

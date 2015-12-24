@@ -58,6 +58,7 @@ public class ThreeSixNine extends Round {
 	public void onSubmit(String answer) {
 		System.out.println("your answers is " + answer);
 		int index = (currentTurn.getSharedQuestions() != null) ? currentTurn.getSharedQuestions().size() + 1 : 1;
+		currentTurn.setQuestionId(currentTurn.getCurrentQuestion().getId());
 		currentTurn.addSharedQuestion(new SharedQuestion(currentTurn, index, answer));
 		if (currentTurn.getCurrentQuestion().isPlayerAnswerCorrect(answer)) 
 			currentTurn.setTurnState(TurnState.Correct);

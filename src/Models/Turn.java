@@ -28,7 +28,7 @@ public class Turn {
 	
 	public Turn(RoundType rondeType, Player player, int gameId) {
 		this.roundType = rondeType;
-		this.player = player; //TODO Should become PlayerGame?
+		this.player = player;
 		this.gameId = gameId;
 		
 		startTurn();
