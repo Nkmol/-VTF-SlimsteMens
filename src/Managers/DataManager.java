@@ -3,6 +3,8 @@ package Managers;
 import java.sql.*;
 import java.util.ArrayList;
 
+import org.omg.CORBA.FloatSeqHelper;
+
 import Models.*;
 
 public class DataManager {
@@ -627,7 +629,7 @@ public class DataManager {
 				if (roundType == RoundType.ThreeSixNine || roundType == RoundType.Puzzle) {
 					pushSharedQuestion(turn);
 				} else if (roundType != RoundType.ThreeSixNine) {
-					pushPlayerAnswer(turn);
+					pushPlayerAnswer(turn); //TODO delete from here 
 				}
 				connection.commit();
 			}
@@ -650,7 +652,43 @@ public class DataManager {
 		return turnPushed;
 	}
 	
-	private boolean pushSharedQuestion(Turn turn) throws SQLException {
+	public boolean updateTurn(Turn turn) {
+		boolean updated = false;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		try {
+			String sql = "update beurt set "
+					+ "beurtstatus = ?, sec_verdiend = ?, sec_finale_af = ? "
+					+ "where spel_id = ? and rondenaam = ? and beurt_id = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, turn.getTurnState().getValue());
+			preparedStatement.setInt(2, turn.getSecondsEarned());
+			if (turn.getSecondsFinalLost() != null) 
+				preparedStatement.setInt(3, turn.getSecondsFinalLost());
+			else 
+				preparedStatement.setNull(3, Types.INTEGER);
+			preparedStatement.setInt(4, turn.getGameId());
+			preparedStatement.setString(5, turn.getRoundType().getValue());
+			preparedStatement.setInt(6, turn.getTurnId());
+			if (preparedStatement.executeUpdate() > 0) 
+				updated = true;
+			
+		} catch (SQLException e) {
+			System.err.println("Error updating turn with id : " + turn.getTurnId());
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		
+		return updated;
+	}
+	
+	public boolean pushSharedQuestion(Turn turn) throws SQLException {
 		boolean pushed = false;
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;
@@ -681,7 +719,7 @@ public class DataManager {
 		return pushed;
 	}
 	
-	private boolean pushPlayerAnswer(Turn turn) throws SQLException {
+	public boolean pushPlayerAnswer(Turn turn) throws SQLException {
 		boolean pushed = false;
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;

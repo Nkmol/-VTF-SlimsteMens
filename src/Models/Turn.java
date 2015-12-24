@@ -19,7 +19,7 @@ public class Turn {
 	private TimerTask timer;
 	private int time;
 	private int secondsEarnd;
-	private int secondsFinalLost;
+	private Integer secondsFinalLost;
 	private ArrayList<SharedQuestion> sharedQuestions;
 	private ArrayList<PlayerAnswer> playerAnswers;
 	
@@ -104,11 +104,11 @@ public class Turn {
 		return secondsEarnd;
 	}
 	
-	public void setSecondsEarned(int secondsEarned) {
+	public void setSecondsEarned(Integer secondsEarned) {
 		this.secondsEarnd = secondsEarned;
 	}
 	
-	public int getSecondsFinalLost() {
+	public Integer getSecondsFinalLost() {
 		return secondsFinalLost;
 	}
 	
