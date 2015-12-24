@@ -83,8 +83,12 @@ public class ActiveGames extends Observable {
 					else 
 						activeGameList.add(new ActiveGameInfo(player2, player1, gameId, true)); // TODO get the current turn
 				}
-				else
-					activeGameList.add(new ActiveGameInfo(player2, player1, gameId, false));
+				else {
+					if(Game.isCurrentUser(player1.getName()))
+						activeGameList.add(new ActiveGameInfo(player1, player2, gameId, false));
+					else
+						activeGameList.add(new ActiveGameInfo(player2, player1, gameId, false));
+				}
 			}
 		}
 		
