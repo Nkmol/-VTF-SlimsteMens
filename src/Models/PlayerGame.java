@@ -6,9 +6,9 @@ import java.util.TimerTask;
 
 public class PlayerGame extends Observable {
 
-	public boolean isActive = true;
+	public boolean isActive = false;
 	private Game parent;
-	private int time = 1000;
+	private int time = 0;
 	private TimerTask timer;
 	private Player player;
 	
