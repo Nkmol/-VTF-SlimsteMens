@@ -31,7 +31,6 @@ public class PlayerListView extends JPanel implements Observer{
 		container.setPreferredSize(new Dimension(0,0));
 		
 		JScrollPane scroll = new JScrollPane(container, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		//scroll.add(container, BorderLayout.CENTER);
 		add(scroll, BorderLayout.CENTER);
 		
 	}
