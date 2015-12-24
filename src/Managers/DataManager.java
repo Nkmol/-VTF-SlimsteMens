@@ -871,6 +871,34 @@ public class DataManager {
 		return questions;
 	}
 	
+	public Question getQuestionForId(int id) {
+		Question question = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT * FROM vraag WHERE vraag_id = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, id);
+			data = preparedStatement.executeQuery();
+			if (data.next()) 
+				question = new Question(data);
+		} catch(SQLException e) {
+			System.err.println("Error while fetching the question with id: " + id);
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		return question;
+	}
+	
 	public int numberOfTimesQuestionAskedTo(String playerName, int questionId) {
 		int amountOfTimes = 0;
 		Connection connection = getConnection();

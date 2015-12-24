@@ -34,6 +34,11 @@ public class MainController {
 		mainFrame.setVisible(true);
 	}
 	
+	public void setRound(JPanel view) {
+		mainFrame.setContentPane(view);
+		mainFrame.setVisible(true);
+	}
+	
 	public void showRegister() {
 		RegisterController register = new RegisterController(this);
 		mainFrame.setContentPane(register.getView());

@@ -28,7 +28,7 @@ public class ActiveGameController {
 	}
 	
 	public void startGame(int gameId) {
-		GameController gameController = new GameController(gameId);
+		GameController gameController = new GameController(gameId, parent);
 
 		
 		//set default round
@@ -39,7 +39,8 @@ public class ActiveGameController {
 		//gameController.addRound(RoundType.Final);
 		
 		
-		parent.SetViewCategoryPanel(gameController.getView());
+//		parent.SetViewCategoryPanel(gameController.getView());
+		parent.setRound(gameController.getView());
 	}
 	
 	public void handleButtonClick(int gameId) {

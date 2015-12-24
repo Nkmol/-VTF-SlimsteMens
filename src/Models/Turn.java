@@ -4,6 +4,7 @@ import java.util.TimerTask;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import Managers.DataManager;
 
@@ -22,6 +23,8 @@ public class Turn {
 	private Integer secondsFinalLost;
 	private ArrayList<SharedQuestion> sharedQuestions;
 	private ArrayList<PlayerAnswer> playerAnswers;
+	private Question currentQuestion;
+	private Question skippedQuestion; //TODO: fuck dit
 	
 	public Turn(RoundType rondeType, Player player, int gameId) {
 		this.roundType = rondeType;
@@ -80,6 +83,20 @@ public class Turn {
 		return null;
 	}
 	
+	public Question getCurrentQuestion(){
+		return currentQuestion;
+	}
+	
+//	public void setCurrentQuestion(int index){
+//		this.currentQuestion = this.getQuestions().get(index);
+//	}
+	
+	public void setCurrentQuestion(ArrayList<Question> questions) {
+		Random random = new Random();
+		int randomNumber = random.nextInt(questions.size());
+		currentQuestion = questions.get(randomNumber-1);
+	}
+	
 	public int getQuestionId() {
 		return questionId;
 	}
@@ -122,6 +139,13 @@ public class Turn {
 	
 	public void setSharedQuestions(ArrayList<SharedQuestion> sharedQuestions) {
 		this.sharedQuestions = sharedQuestions;
+	}
+	
+	public void addSharedQuestion(SharedQuestion sharedQuestion) {
+		if (sharedQuestions == null)
+			sharedQuestions = new ArrayList<>();
+		
+		sharedQuestions.add(sharedQuestion);
 	}
 	
 	public ArrayList<PlayerAnswer> getPlayerAnswers() {
