@@ -153,9 +153,7 @@ public class Turn {
 	}
 	
 	public int getAmountAnswers() {
-		System.out.println(playerAnswers);
-		//return playerAnswers == null ? 0 : playerAnswers.size();
-		return 1;
+		return playerAnswers == null ? 0 : playerAnswers.size();
 	}
 	
 	public String getPlayerName() {
