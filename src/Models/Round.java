@@ -78,9 +78,10 @@ public abstract class Round extends Observable {
 	public void nextTurn(TurnState turnState) {
 		Turn turn = new Turn(getRoundType(), DataManager.getInstance().getCurrentUser(), game.getId());
 		turn.setTurnState(turnState);
-		turns.add(turn);
 		
+		turns.add(turn);
 		turn.setTurnId(turns.size());
+		System.out.println(turn.getTurnId());
 		//TODO: setQuestionId
 		
 		//TODO: Push turn

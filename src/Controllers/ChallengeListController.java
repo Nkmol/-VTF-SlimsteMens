@@ -39,7 +39,7 @@ public class ChallengeListController {
 	}
 	
 	public void handleAcceptButtonClick(int gameId) {
-		//model.acceptChallenge(gameId); //TODO: ...
+		model.acceptChallenge(gameId);
 
 		startGame(gameId);
 		System.out.println(gameId);

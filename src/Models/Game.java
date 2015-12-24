@@ -16,8 +16,8 @@ public class Game extends Observable {
 	private static final int MinimumAnswerPercentage = 80;
 	
 	private int id;
-	private PlayerGame player1;
-	private PlayerGame player2; // <-- THIS IS YOU
+	private PlayerGame playerGame1; // <-- THIS IS YOU
+	private PlayerGame playerGame2; 
 	private GameState gameState;
 	private ArrayList<Round> rounds;
 	private Round currentRound;
@@ -26,8 +26,8 @@ public class Game extends Observable {
 	
 	public Game(int gameId, Player player1, Player player2, GameState gameState) {
 		this.id = gameId;
-		this.player1 = new PlayerGame(player1, this);
-		this.player2 = new PlayerGame(player2, this);
+		this.playerGame1 = new PlayerGame(player1, this);
+		this.playerGame2 = new PlayerGame(player2, this);
 		
 		this.gameState = gameState;
 		rounds = DataManager.getInstance().getRounds(this);
@@ -39,8 +39,8 @@ public class Game extends Observable {
 	public Game(ResultSet data) {
 		try {
 			id = data.getInt("spel_id");
-			player1 = new PlayerGame(DataManager.getInstance().getPlayer(data.getString("speler1")), this);
-			player2 = new PlayerGame(DataManager.getInstance().getPlayer(data.getString("speler2")), this);
+			playerGame1 = new PlayerGame(DataManager.getInstance().getPlayer(data.getString("speler1")), this);
+			playerGame2 = new PlayerGame(DataManager.getInstance().getPlayer(data.getString("speler2")), this);
 			gameState = GameState.fromString(data.getString("toestand_type"));
 			rounds = DataManager.getInstance().getRounds(this);
 			currentRound = DataManager.getInstance().getLastRoundForGame(this);
@@ -54,11 +54,12 @@ public class Game extends Observable {
 	}
 	
 	public void start() {
-		player2.startTimer();
+		playerGame1.startTimer();
 		startSyncTimer();
 	}
 	
 	private void startSyncTimer() {
+		System.out.println("test");
 		syncTimer = new Timer();
 		syncTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
@@ -70,20 +71,28 @@ public class Game extends Observable {
 	}
 	
 	private void checkTurn() {
-		if(currentRound.getTurns().size() > 0) {
-			Turn lastTurn = DataManager.getInstance().getLastTurnForGame(id);
-			Player currentPlayer = DataManager.getInstance().getCurrentUser();
-			
-			//System.out.println("[game@" + id + "]" + lastTurn.getTurnState());
-			
-			if(lastTurn.getPlayerName() != currentPlayer.getName() && lastTurn.getTurnState() != TurnState.Busy) {
-				player2.startTimer();
-				//System.out.println("your turn");
-			}
-			else {
-				//System.out.println("other turn");
-			}
+		Player player = isCurrentPlayerTurn(id) ? playerGame1.getPlayer() : playerGame2.getPlayer();
+
+		if(isCurrentUser(player.getName()))
+			playerGame1.startTimer();
+	}
+	
+	public static boolean isCurrentUser(String playerName) {
+		return playerName.equals(DataManager.getInstance().getCurrentUser().getName());
+	}
+	
+	public static boolean isCurrentPlayerTurn(int gameId) {
+		Turn lastTurn = DataManager.getInstance().getLastTurnForGame(gameId);
+		if(lastTurn != null) {
+			if(!isCurrentUser(lastTurn.getPlayerName()) && lastTurn.getTurnState() != TurnState.Busy) 
+				return true;
+			else if(isCurrentUser(lastTurn.getPlayerName()) && lastTurn.getTurnState() == TurnState.Busy)
+				return true;
+			else 
+				return false; 
 		}
+		
+		return false;	
 	}
 	
 	public void updateView() {
@@ -117,11 +126,11 @@ public class Game extends Observable {
 	}
 	
 	public PlayerGame getPlayerGame1() {
-		return player1;
+		return playerGame1;
 	}
 	
 	public PlayerGame getPlayerGame2() {
-		return player2;
+		return playerGame2;
 	}
 	
 	public GameState getGameState() {
