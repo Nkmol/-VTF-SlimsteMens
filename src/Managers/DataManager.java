@@ -121,7 +121,7 @@ public class DataManager {
 		}
 		return players;
 	}
-	
+	  
 	public ArrayList<CompetitionRankItem> getCompetitionRank() {
 		ArrayList<CompetitionRankItem> competitionRank = null;
 		Connection connection = getConnection();
@@ -148,7 +148,34 @@ public class DataManager {
 		}
 		return competitionRank;
 	}
-
+	 
+	public CompetitionRankItem getCompetitionRankForPlayer(String playerName) {
+		CompetitionRankItem competitionRank = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT * FROM competitiestand WHERE speler = ? ORDER BY (aantal_gewonnen_spellen / aantal_verloren_spellen)";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, playerName);
+			data = preparedStatement.executeQuery();
+			while (data.next())
+				competitionRank = new CompetitionRankItem(data);
+		} catch (SQLException e) {
+			System.err.println("Error fetching competition rank");
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		return competitionRank;
+	}
+	
 	public boolean pushNewGame(Player player1, Player player2) {
 		boolean pushed = false;
 		Connection connection = getConnection();

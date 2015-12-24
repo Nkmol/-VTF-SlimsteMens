@@ -1,11 +1,9 @@
 package View;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.awt.Insets;
 import java.io.File;
 import java.io.IOException;
 
@@ -17,27 +15,215 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import Controllers.PlayerListController;
-import Managers.DataManager;
+import Models.CompetitionRankItem;
 import Models.Player;
-import Models.Role;
 
 public class PlayerView extends JPanel {
 	private JLabel playerNameLabel;
 	private JButton challengeButton;
 	private Player player;
+	private CompetitionRankItem rank;
 	private PlayerListController controller;
 
-	public PlayerView(Player player, Boolean enabled, PlayerListController controller) {
-
+	public PlayerView(Player player, CompetitionRankItem rank, Boolean enabled, PlayerListController controller) {
 		this.player = player;
+		this.rank = rank;
 		this.controller = controller;
 		
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		setLayout(gridBagLayout);
+		// Main Layout
+		BorderLayout layout = new BorderLayout();
+		setLayout(layout);
 
-		setPreferredSize(new Dimension(100,100));
+		setPreferredSize(new Dimension(400,70));
+		
+		// Left and Right Layout
+		JPanel leftView = new JPanel();
+		leftView.setLayout(new BorderLayout());	
+		
+		JPanel rightView = new JPanel();
+		rightView.setLayout(new BorderLayout());
+		
+		add(leftView, BorderLayout.CENTER);
+		add(rightView, BorderLayout.EAST);
+		
+		// Left Layout
+		JPanel leftLeftView = new JPanel();
+		leftLeftView.setLayout(new BorderLayout());
+		JPanel leftRightView = new JPanel();
+		leftRightView.setLayout(new BorderLayout());
+		
+		leftView.add(leftLeftView, BorderLayout.CENTER);
+		leftView.add(leftRightView, BorderLayout.EAST);
+		
+		// Right Layout
+		JPanel rightLeftView = new JPanel();
+		rightLeftView.setLayout(new BorderLayout());
+		JPanel rightRightView = new JPanel();
+		rightRightView.setLayout(new BorderLayout());
+		
+		rightView.add(rightLeftView, BorderLayout.WEST);
+		rightView.add(rightRightView, BorderLayout.EAST);
+		
+		// Content
+		JPanel nameView = createNameView();
+		leftLeftView.add(nameView, BorderLayout.CENTER);
+		
+		JPanel totalGamesView = createTotalGamesView();
+		leftRightView.add(totalGamesView, BorderLayout.WEST);
+		
+		JPanel winsView = createWinsView();
+		leftRightView.add(winsView, BorderLayout.EAST);
+		
+		JPanel losesView = createLosesView();
+		rightLeftView.add(losesView, BorderLayout.WEST);
+		
+		JPanel timeLeftView = createTimeLeftView();
+		rightLeftView.add(timeLeftView, BorderLayout.EAST);
+		
+		JPanel buttonView = createButtonView(enabled);
+		rightRightView.add(buttonView, BorderLayout.CENTER);		
 
+		// 135, 171, 255
+		setBackground(new Color(135,171,255));
+	}
+	
+	
+	private JPanel createNameView() {
+		JPanel nameView = new JPanel();
+		nameView.setLayout(new BorderLayout());
+		
+		JPanel nameTitleView = new JPanel();
+		nameTitleView.setBackground(new Color(47,109,255));
+		
+		JLabel playerNameTitleLabel = new JLabel();
+		playerNameTitleLabel.setText("Name");
+		playerNameTitleLabel.setFont(new Font("Serif", Font.ITALIC, 15));
+		nameTitleView.add(playerNameTitleLabel);
+		
+		JPanel nameContentView = new JPanel();
+		nameContentView.setBackground(new Color(135,171,255));
+		
 		playerNameLabel = new JLabel();
+		playerNameLabel.setText(player.getName());
+		playerNameLabel.setFont(new Font("Serif", Font.ITALIC, 15));
+		nameContentView.add(playerNameLabel);	
+		
+		nameView.add(nameTitleView, BorderLayout.NORTH);
+		nameView.add(nameContentView, BorderLayout.CENTER);
+		
+		return nameView;
+	}
+	
+	private JPanel createTotalGamesView() {
+		JPanel totalGamesView = new JPanel();
+		totalGamesView.setLayout(new BorderLayout());
+		
+		JPanel totalGamesTitleView = new JPanel();
+		totalGamesTitleView.setBackground(new Color(47,109,255));
+		
+		JLabel totalGamesTitleLabel = new JLabel();
+		totalGamesTitleLabel.setText("Total games");
+		totalGamesTitleLabel.setFont(new Font("Serif", Font.ITALIC, 15));
+		totalGamesTitleView.add(totalGamesTitleLabel);
+		
+		JPanel totalGamesContentView = new JPanel();
+		totalGamesContentView.setBackground(new Color(135,171,255));
+		
+		JLabel totalGamesLabel = new JLabel();
+		totalGamesLabel.setText(String.valueOf(rank.getAmountPlayedGames()));
+		totalGamesLabel.setFont(new Font("Serif", Font.ITALIC, 15));
+		totalGamesContentView.add(totalGamesLabel);	
+		
+		totalGamesView.add(totalGamesTitleView, BorderLayout.NORTH);
+		totalGamesView.add(totalGamesContentView, BorderLayout.CENTER);
+		
+		return totalGamesView;
+	}
+	
+	private JPanel createWinsView() {	
+		JPanel winsView = new JPanel();
+		winsView.setLayout(new BorderLayout());
+		
+		JPanel winsTitleView = new JPanel();
+		winsTitleView.setBackground(new Color(47,109,255));
+		
+		JLabel winsTitleLabel = new JLabel();
+		winsTitleLabel.setText("Wins");
+		winsTitleLabel.setFont(new Font("Serif", Font.ITALIC, 15));
+		winsTitleView.add(winsTitleLabel);
+		
+		JPanel winsContentView = new JPanel();
+		winsContentView.setBackground(new Color(135,171,255));
+		
+		JLabel winsLabel = new JLabel();
+		winsLabel.setText(String.valueOf(rank.getAmountGamesWon()));
+		winsLabel.setFont(new Font("Serif", Font.ITALIC, 15));
+		winsContentView.add(winsLabel);	
+		
+		winsView.add(winsTitleView, BorderLayout.NORTH);
+		winsView.add(winsContentView, BorderLayout.CENTER);
+		
+		return winsView;
+	}
+	
+	private JPanel createLosesView() {
+		JPanel losesView = new JPanel();
+		losesView.setLayout(new BorderLayout());
+		
+		JPanel losesTitleView = new JPanel();
+		losesTitleView.setBackground(new Color(47,109,255));
+		
+		JLabel losesTitleLabel = new JLabel();
+		losesTitleLabel.setText("Loses");
+		losesTitleLabel.setFont(new Font("Serif", Font.ITALIC, 15));
+		losesTitleView.add(losesTitleLabel);
+		
+		JPanel losesContentView = new JPanel();
+		losesContentView.setBackground(new Color(135,171,255));
+		
+		JLabel losesLabel = new JLabel();
+		losesLabel.setText(String.valueOf(rank.getAmountGamesLost()));
+		losesLabel.setFont(new Font("Serif", Font.ITALIC, 15));
+		losesContentView.add(losesLabel);	
+		
+		losesView.add(losesTitleView, BorderLayout.NORTH);
+		losesView.add(losesContentView, BorderLayout.CENTER);
+		
+		return losesView;
+	}
+	
+	private JPanel createTimeLeftView() {
+		JPanel timeLeftView = new JPanel();
+		timeLeftView.setLayout(new BorderLayout());
+		
+		JPanel timeLeftTitleView = new JPanel();
+		timeLeftTitleView.setBackground(new Color(47,109,255));
+		
+		JLabel timeLeftTitleLabel = new JLabel();
+		timeLeftTitleLabel.setText("Time left");
+		timeLeftTitleLabel.setFont(new Font("Serif", Font.ITALIC, 15));
+		timeLeftTitleView.add(timeLeftTitleLabel);
+		
+		JPanel timeLeftContentView = new JPanel();
+		timeLeftContentView.setBackground(new Color(135,171,255));
+		
+		JLabel timeLeftLabel = new JLabel();
+		timeLeftLabel.setText(String.valueOf(rank.getAverageSecondsLeft()));
+		timeLeftLabel.setFont(new Font("Serif", Font.ITALIC, 15));
+		timeLeftContentView.add(timeLeftLabel);	
+		
+		timeLeftView.add(timeLeftTitleView, BorderLayout.NORTH);
+		timeLeftView.add(timeLeftContentView, BorderLayout.CENTER);
+		
+		return timeLeftView;
+	}
+	
+	private JPanel createButtonView(Boolean enabled) {
+		JPanel buttonView = new JPanel();
+		buttonView.setLayout(new BorderLayout());
+		
+		buttonView.setBackground(new Color(47,109,255));
+		
 		challengeButton = new JButton();
 
 		try {
@@ -53,35 +239,13 @@ public class PlayerView extends JPanel {
 
 		challengeButton.setBorder(BorderFactory.createEmptyBorder());
 		challengeButton.setContentAreaFilled(false);
-
-		
 		challengeButton.addActionListener(e -> handleButtonClick());
-
-
-		playerNameLabel.setText(player.getName());
-		playerNameLabel.setFont(new Font("Serif", Font.ITALIC, 15));
-
-		GridBagConstraints gridBagConstraintsLabel = new GridBagConstraints();
-		gridBagConstraintsLabel.gridx = 0;
-		gridBagConstraintsLabel.gridy = 0;
-		gridBagConstraintsLabel.insets = new Insets(5,5,20,5);
-		gridBagConstraintsLabel.fill = GridBagConstraints.HORIZONTAL;
-
-		add(playerNameLabel, gridBagConstraintsLabel);
-
 		challengeButton.setText("");
-
-		GridBagConstraints gridBagConstraintsButton = new GridBagConstraints();
-		gridBagConstraintsButton.gridx = 0;
-		gridBagConstraintsButton.gridy = 1;
-		gridBagConstraintsButton.fill = GridBagConstraints.HORIZONTAL;
-
-		add(challengeButton, gridBagConstraintsButton);
-
 		challengeButton.setEnabled(enabled);
-
-		// 135, 171, 255
-		setBackground(new Color(135,171,255));
+		
+		buttonView.add(challengeButton, BorderLayout.SOUTH);
+		
+		return buttonView;
 	}
 	
 	private void handleButtonClick() {
