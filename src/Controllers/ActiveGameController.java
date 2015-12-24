@@ -27,7 +27,12 @@ public class ActiveGameController {
 		GameController gameController = new GameController(gameId);
 	
 		//set default round
-		gameController.addRound(RoundType.ThreeSixNine);
+		//gameController.addRound(RoundType.ThreeSixNine);
+		
+		
+		// TODO TEST PURPOSES FOR FINAL ROUND
+		gameController.addRound(RoundType.Final);
+		
 		
 		parent.SetViewCategoryPanel(gameController.getView());
 	}

@@ -36,23 +36,19 @@ public class ChatMessageView extends JPanel implements Observer {
 
 	private void createChatPanel() {
 		
-		//frame = new JFrame();
-		//frame.setSize(500, 555);
-		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//frame.setResizable(false);
-		//frame.getContentPane().setLayout(new MigLayout("", "[470px]", "[1px]"));
-		//this.setLayout(new MigLayout());
+		
+		this.setLayout(new MigLayout());
 		
 		chatBox = new JTextArea();
 		chatBox.setEditable(false);
 		chatBox.setFont(new Font("Serif", Font.PLAIN, 15));
 		chatBox.setLineWrap(true);
 		
-		//JScrollPane scroll = new JScrollPane(chatBox);
-	    //scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-	    //this.add(scroll, "wrap");
+		JScrollPane scroll = new JScrollPane(chatBox);
+	    scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+	    this.add(scroll, "wrap");
 
-		this.add(chatBox, "wrap");
+		//this.add(chatBox, "wrap");
 
 		
 		messageBox = new JTextField(10);
@@ -62,13 +58,8 @@ public class ChatMessageView extends JPanel implements Observer {
 		this.add(messageBox);
 
 		btnSendMessage = new JButton("Send");
-		//btnSendMessage.addActionListener(e -> activateChatboxBehavior());
-
 		
 		this.add(btnSendMessage);
-
-		//frame.getContentPane().add(this, "cell 0 0,growx,aligny top");
-		//frame.setVisible(true);
 
 	}
 
