@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 
 import Managers.DataManager;
 import Models.Game;
+import Models.OpenDoor;
 import Models.PlayerAnswer;
 import Models.Round;
 import Models.RoundType;
@@ -64,6 +65,8 @@ public class GameController {
 		switch(roundType) {
 			case ThreeSixNine:
 				roundController = new ThreeSixNineController(model);
+			case OpenDoor:
+				roundController = new OpenDoorController(model);
 				//TODO add other controllers
 		}
 		

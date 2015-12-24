@@ -7,7 +7,7 @@ public class ThreeSixNine extends Round {
 
 	private final static int AMOUNT_QUESTIONS = 9,
 							 BONUS_ITERATION = 3;
-	private ArrayList<Question> questions;
+	private ArrayList<Question> questions; //TODO: round already has questions array list
 	private Question currentQuestion;
 	
 	public ThreeSixNine(Game game) {
