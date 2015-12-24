@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 public class Framed extends Round {
 
 	public Framed(Game game) {
-		super(game);	
+		super(game, RoundType.Framed);	
 	}
 	
 	public Framed(ResultSet data, Game game) {

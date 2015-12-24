@@ -22,7 +22,7 @@ public class Puzzle extends Round {
 	private ArrayList<Answer> PossibleAnswers;
 	
 	public Puzzle(Game game) {
-		super(game);
+		super(game, RoundType.Puzzle);
 		PossibleAnswers = new ArrayList<>();
 		CurrentSharedQuestion = 0;
 	}

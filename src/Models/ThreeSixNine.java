@@ -11,11 +11,7 @@ public class ThreeSixNine extends Round {
 	private Question currentQuestion;
 	
 	public ThreeSixNine(Game game) {
-		super(game);
-		
-		roundType = RoundType.ThreeSixNine;
-		//TODO Push to database
-		setCurrrentTurn(new Turn(roundType, game.getPlayerGame2().getPlayer(), game.getId()));
+		super(game, RoundType.ThreeSixNine);
 	}
 	
 	public ThreeSixNine(ResultSet data, Game game) {
