@@ -24,6 +24,10 @@ public class MainController {
 		mainFrame.setJMenuBar(menu.getView());
 	}
 	
+	public void deleteMenu() {
+		mainFrame.setJMenuBar(null);
+	}
+	
 	public void showLogin() {
 		LoginController login = new LoginController(this);
 		mainFrame.setContentPane(login.getView());
