@@ -32,10 +32,14 @@ public class PlayerGame extends Observable {
 	}
 	
 	public void startTimer() {
-		timer = new MyTimer().schedule(() -> substractTime(1), 1000);
+		if(!isActive) {
+			isActive = true;
+			timer = new MyTimer().schedule(() -> substractTime(1), 1000);
+		}
 	}
 	
 	public void stopTimer() {
+		isActive = false;
 		timer.cancel();
 	}
 }

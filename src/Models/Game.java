@@ -33,7 +33,7 @@ public class Game extends Observable {
 		rounds = DataManager.getInstance().getRounds(this);
 		chatMessages = DataManager.getInstance().getChatMessages(id);
 		
-		start();
+		start(); 
 	}
 	
 	public Game(ResultSet data) {
@@ -76,6 +76,7 @@ public class Game extends Observable {
 		System.out.println("[game@" + id + "]" + lastTurn.getTurnState());
 		
 		if(lastTurn.getPlayerName() != currentPlayer.getName() && lastTurn.getTurnState() != TurnState.Busy) {
+			player2.startTimer();
 			System.out.println("your turn");
 		}
 		else {
