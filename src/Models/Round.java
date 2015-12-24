@@ -17,10 +17,12 @@ public abstract class Round extends Observable {
 	protected Game game;
 	
 	public Round(Game game) {
+		startRound();
 		this.game = game;
 	}
 	
 	public Round(ResultSet data, Game game) {
+		startRound();
 		try {
 			roundType = RoundType.fromString(data.getString("rondenaam"));
 			//questions = DataManager.getInstance().getQuestions(this);
@@ -29,6 +31,11 @@ public abstract class Round extends Observable {
 		} catch (SQLException e) {
 			System.err.println("Error initializing round");
 		}
+	}
+	
+	public void startRound() {
+		turns = new ArrayList<Turn>();
+		questions = new ArrayList<Question>();
 	}
 	
 	public Game getGame() {

@@ -70,17 +70,19 @@ public class Game extends Observable {
 	}
 	
 	private void checkTurn() {
-		Turn lastTurn = DataManager.getInstance().getLastTurnForGame(id);
-		Player currentPlayer = DataManager.getInstance().getCurrentUser();
-		
-		System.out.println("[game@" + id + "]" + lastTurn.getTurnState());
-		
-		if(lastTurn.getPlayerName() != currentPlayer.getName() && lastTurn.getTurnState() != TurnState.Busy) {
-			player2.startTimer();
-			System.out.println("your turn");
-		}
-		else {
-			System.out.println("other turn");
+		if(currentRound.getTurns().size() > 0) {
+			Turn lastTurn = DataManager.getInstance().getLastTurnForGame(id);
+			Player currentPlayer = DataManager.getInstance().getCurrentUser();
+			
+			//System.out.println("[game@" + id + "]" + lastTurn.getTurnState());
+			
+			if(lastTurn.getPlayerName() != currentPlayer.getName() && lastTurn.getTurnState() != TurnState.Busy) {
+				player2.startTimer();
+				//System.out.println("your turn");
+			}
+			else {
+				//System.out.println("other turn");
+			}
 		}
 	}
 	
