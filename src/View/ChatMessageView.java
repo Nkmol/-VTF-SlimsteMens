@@ -1,6 +1,7 @@
 package View;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -10,8 +11,11 @@ import java.util.Observer;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 
 import Models.ChatMessage;
 import net.miginfocom.swing.MigLayout;
@@ -32,34 +36,32 @@ public class ChatMessageView extends JPanel implements Observer {
 
 	private void createChatPanel() {
 		
-		//frame = new JFrame();
-		//frame.setSize(500, 555);
-		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//frame.setResizable(false);
-		//frame.getContentPane().setLayout(new MigLayout("", "[470px]", "[1px]"));
+		
 		//this.setLayout(new MigLayout());
 		
-		chatBox = new JTextArea();
+		chatBox = new JTextArea(17,16);
 		chatBox.setEditable(false);
 		chatBox.setFont(new Font("Serif", Font.PLAIN, 15));
 		chatBox.setLineWrap(true);
-		
-		this.add(chatBox, "grow, pushx, wrap");
 
-		messageBox = new JTextField(30);
+		
+		JScrollPane scroll = new JScrollPane(chatBox);
+	    //scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+	    
+		this.add(scroll, BorderLayout.NORTH);
+
+		//this.add(chatBox, "wrap");
+
+		
+		messageBox = new JTextField(10);
 		messageBox.requestFocusInWindow();
 		
 		
-		this.add(messageBox);
+		this.add(messageBox, BorderLayout.SOUTH);
 
 		btnSendMessage = new JButton("Send");
-		//btnSendMessage.addActionListener(e -> activateChatboxBehavior());
-
 		
 		this.add(btnSendMessage);
-
-		//frame.getContentPane().add(this, "cell 0 0,growx,aligny top");
-		//frame.setVisible(true);
 
 	}
 

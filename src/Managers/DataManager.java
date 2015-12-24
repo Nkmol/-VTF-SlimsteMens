@@ -985,6 +985,7 @@ public class DataManager {
 	}
 	
 	public ArrayList<ChatMessage> getChatMessages(int gameId) {
+		getConnection();
 		ArrayList<ChatMessage> chatMessages = null;
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;

@@ -31,12 +31,13 @@ public class RoundFinalPanel extends JPanel implements Observer {
 	private void constructFinalRound() {
 		// TODO Auto-generated method stub
 		
-		frame = new JFrame();
+		//frame = new JFrame();
 		//frame.setBounds(100, 100, 500, 500);
-		frame.setSize(500, 555);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//frame.setSize(500, 555);
+		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//frame.setResizable(false);
-		frame.getContentPane().setLayout(new MigLayout("", "[470px]", "[1px]"));
+		//frame.getContentPane().setLayout(new MigLayout("", "[470px]", "[1px]"));
+		
 		this.setLayout(new MigLayout());
 		
 		timeremaining = new JLabel();
