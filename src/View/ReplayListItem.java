@@ -1,6 +1,7 @@
 package View;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -25,7 +26,9 @@ public class ReplayListItem extends JPanel {
 	    HoverBorder = BorderFactory.createLineBorder(Color.RED,2);
 		
 		setBorder(DefaultBorder);
+		setPreferredSize(new Dimension(getWidth(), 50));
 		setLayout(new GridLayout(2, 2, 0, 0));
+		setToolTipText("Klik om het verloop van deze match te zien.");
 	}
 	
 	public ReplayListItem(GameScore gameScore) {		

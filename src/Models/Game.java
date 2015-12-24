@@ -3,7 +3,10 @@ package Models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Observable;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import Managers.DataManager;
 import Utilities.StringUtility;
@@ -14,11 +17,12 @@ public class Game extends Observable {
 	
 	private int id;
 	private PlayerGame player1;
-	private PlayerGame player2;
+	private PlayerGame player2; // <-- THIS IS YOU
 	private GameState gameState;
 	private ArrayList<Round> rounds;
 	private Round currentRound;
 	private ArrayList<ChatMessage> chatMessages;
+	private Timer syncTimer;
 	
 	public Game(int gameId, Player player1, Player player2, GameState gameState) {
 		this.id = gameId;
@@ -29,7 +33,7 @@ public class Game extends Observable {
 		rounds = DataManager.getInstance().getRounds(this);
 		chatMessages = DataManager.getInstance().getChatMessages(id);
 		
-		this.player1.startTimer();
+		start(); 
 	}
 	
 	public Game(ResultSet data) {
@@ -39,13 +43,47 @@ public class Game extends Observable {
 			player2 = new PlayerGame(DataManager.getInstance().getPlayer(data.getString("speler2")), this);
 			gameState = GameState.fromString(data.getString("toestand_type"));
 			rounds = DataManager.getInstance().getRounds(this);
+			currentRound = DataManager.getInstance().getLastRoundForGame(this);
 			chatMessages = DataManager.getInstance().getChatMessages(id);
 		} catch (SQLException e) {
 			System.err.println("Error initializing game");
 			System.err.println(e.getMessage());
 		}
 		
-		this.player1.startTimer();
+		start();
+	}
+	
+	public void start() {
+		player2.startTimer();
+		startSyncTimer();
+	}
+	
+	private void startSyncTimer() {
+		syncTimer = new Timer();
+		syncTimer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				checkTurn();
+			}
+			
+		}, 0L, 1000L);
+	}
+	
+	private void checkTurn() {
+		if(currentRound.getTurns().size() > 0) {
+			Turn lastTurn = DataManager.getInstance().getLastTurnForGame(id);
+			Player currentPlayer = DataManager.getInstance().getCurrentUser();
+			
+			//System.out.println("[game@" + id + "]" + lastTurn.getTurnState());
+			
+			if(lastTurn.getPlayerName() != currentPlayer.getName() && lastTurn.getTurnState() != TurnState.Busy) {
+				player2.startTimer();
+				//System.out.println("your turn");
+			}
+			else {
+				//System.out.println("other turn");
+			}
+		}
 	}
 	
 	public void updateView() {
@@ -54,14 +92,23 @@ public class Game extends Observable {
 	}
 	
 	public static boolean isPlayerAnswerCorrect(PlayerAnswer player, Answer answer) {
-		
-		if (StringUtility.CalculateMatchPercentage(player.getAnswer(), answer.getAnswer()) >=  MinimumAnswerPercentage)
+		return IsPlayerAnswerCorrect(player.getAnswer(), answer);
+	}
+	
+	public static boolean IsPlayerAnswerCorrect(String playerAnswer, Answer answer) {
+		if (StringUtility.CalculateMatchPercentage(playerAnswer, answer.getAnswer()) >=  MinimumAnswerPercentage)
 			return true;
-		
 		for (String alternative : answer.getAlternatives())
-			if (StringUtility.CalculateMatchPercentage(player.getAnswer(), alternative) >=  MinimumAnswerPercentage)
+			if (StringUtility.CalculateMatchPercentage(playerAnswer, alternative) >=  MinimumAnswerPercentage)
 				return true;
-		
+		return false;
+	}
+	
+	public static boolean IsPlayerAnswerCorrect(String playerAnswer, Collection<Answer> answers) {
+		for (Answer answer : answers) {
+			if (IsPlayerAnswerCorrect(playerAnswer, answer))
+				return true;
+		}
 		return false;
 	}
 	
@@ -105,6 +152,8 @@ public class Game extends Observable {
 	public void addRound(Round model) {
 		rounds.add(model);
 		setCurrentRound(model);
+		
+		DataManager.getInstance().pushRound(getCurrentRound());
 		
 		setChanged();
 		notifyObservers(this);

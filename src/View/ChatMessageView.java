@@ -37,16 +37,18 @@ public class ChatMessageView extends JPanel implements Observer {
 	private void createChatPanel() {
 		
 		
-		this.setLayout(new MigLayout());
+		//this.setLayout(new MigLayout());
 		
-		chatBox = new JTextArea();
+		chatBox = new JTextArea(17,16);
 		chatBox.setEditable(false);
 		chatBox.setFont(new Font("Serif", Font.PLAIN, 15));
 		chatBox.setLineWrap(true);
+
 		
 		JScrollPane scroll = new JScrollPane(chatBox);
-	    scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-	    this.add(scroll, "wrap");
+	    //scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+	    
+		this.add(scroll, BorderLayout.NORTH);
 
 		//this.add(chatBox, "wrap");
 
@@ -55,7 +57,7 @@ public class ChatMessageView extends JPanel implements Observer {
 		messageBox.requestFocusInWindow();
 		
 		
-		this.add(messageBox);
+		this.add(messageBox, BorderLayout.SOUTH);
 
 		btnSendMessage = new JButton("Send");
 		
