@@ -25,6 +25,10 @@ public class PlayerGame extends Observable {
 		return time;
 	}
 	
+	public void addTime(int time) {
+		this.time += time; // TODO: check if this works
+	}
+	
 	public void substractTime(int value) {
 		time -= value;
 

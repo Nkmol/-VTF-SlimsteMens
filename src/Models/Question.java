@@ -34,6 +34,18 @@ public class Question {
 		}
 	}
 	
+	public Question(ResultSet data) {
+		try {
+			id = data.getInt("vraag_id");
+			//TODO: try to get the round 
+			text = data.getString("vraagtekst");
+			answers = DataManager.getInstance().getAnswers(id);
+		} catch (SQLException e) {
+			System.err.println("Error initializing quesiton");
+			System.err.println(e.getMessage());
+		}
+	}
+	
 	public boolean isPlayerAnswerCorrect(PlayerAnswer playerAnswer) {
 		
 		for(Answer answer : answers){
@@ -43,6 +55,20 @@ public class Question {
 			
 			for (String alternative : answer.getAlternatives())
 				if (StringUtility.CalculateMatchPercentage(playerAnswer.getAnswer(), alternative) >=  MinimumAnswerPercentage)
+					return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean isPlayerAnswerCorrect(String answerString) {
+		for(Answer answer : answers){
+			
+			if (StringUtility.CalculateMatchPercentage(answerString, answer.getAnswer()) >=  MinimumAnswerPercentage)
+				return true;
+			
+			for (String alternative : answer.getAlternatives())
+				if (StringUtility.CalculateMatchPercentage(answerString, alternative) >=  MinimumAnswerPercentage)
 					return true;
 		}
 		

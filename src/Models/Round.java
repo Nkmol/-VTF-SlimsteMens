@@ -12,6 +12,7 @@ public abstract class Round extends Observable {
 
 	protected RoundType roundType;
 	protected ArrayList<Question> questions;
+	protected Question skippedQuestion;
 	protected Turn currentTurn;
 	protected ArrayList<Turn> turns;
 	protected Game game;
@@ -59,6 +60,14 @@ public abstract class Round extends Observable {
 	
 	public ArrayList<Turn> getTurns() {
 		return turns;
+	}
+	
+	public Question getSkippedQuestion() {
+		return skippedQuestion;
+	}
+	
+	public void setSkippedQuestion(Question question) {
+		skippedQuestion = question;
 	}
 	
 	public void refreshTurn() {

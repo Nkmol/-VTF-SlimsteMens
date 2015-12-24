@@ -42,8 +42,7 @@ public class MainPanel extends JPanel {
 	public void setSidebar(ActiveGameListView newPanel) {
 		remove(sidebarPanel);
 		sidebarPanel = newPanel;
-		if (newPanel != null)
-		{
+		if (newPanel != null) {
 			this.sidebarPanel.setPreferredSize(new Dimension(150, getHeight()));
 			add(newPanel, BorderLayout.EAST); // TODO Temp Oplossing
 		}

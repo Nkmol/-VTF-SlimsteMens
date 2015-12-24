@@ -40,6 +40,7 @@ public class GamePanel extends JPanel implements Observer{
 		// [End] Top view 
 		
 		middle = new JPanel();
+		middle.setLayout(new BorderLayout());
 		add(middle, BorderLayout.CENTER);
 		
 		// CHAT PART

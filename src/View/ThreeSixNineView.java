@@ -1,6 +1,8 @@
 package View;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -10,7 +12,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 
 import Controllers.ThreeSixNineController;
 import Models.Question;
@@ -19,21 +23,40 @@ import net.miginfocom.swing.MigLayout;
 
 public class ThreeSixNineView extends JPanel implements Observer {
 
-	public ThreeSixNineView(ThreeSixNine currentRound)
-	{
+	JTextArea questionTextArea;
+	
+	public ThreeSixNineView(ThreeSixNine currentRound) {
 		createRoundOnePanel();
 	}
 	
-	private void createRoundOnePanel()
-	{
-		this.setLayout(new MigLayout());
-
+	private void createRoundOnePanel() {
+		setLayout(new BorderLayout());
+		questionTextArea = new JTextArea();
+		textAreaProperties(questionTextArea);
+		JPanel container = new JPanel();
+		container.setLayout(new BorderLayout());
+		container.add(questionTextArea, BorderLayout.CENTER);
+		add(container, BorderLayout.NORTH);
+	}
+	
+	private JTextArea textAreaProperties(JTextArea textArea) {
+	    textArea.setEditable(false);  
+	    textArea.setCursor(null);  
+	    textArea.setOpaque(false);  
+	    textArea.setFocusable(false);
+	    textArea.setLineWrap(true);
+	    textArea.setWrapStyleWord(true);
+	    return textArea;
 	}
 	
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
 		ThreeSixNine threesixnine = (ThreeSixNine)arg;
+		if (threesixnine.getSkippedQuestion() != null) 
+			questionTextArea.setText(threesixnine.getSkippedQuestion().getText());
+		else if (threesixnine.getCurrentTurn().getCurrentQuestion() != null) 
+			questionTextArea.setText(threesixnine.getCurrentTurn().getCurrentQuestion().getText());
 		
 	}
 }
