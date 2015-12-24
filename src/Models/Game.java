@@ -22,7 +22,6 @@ public class Game extends Observable {
 	private ArrayList<Round> rounds;
 	private Round currentRound;
 	private ArrayList<ChatMessage> chatMessages;
-	private Timer syncTimer;
 	
 	public Game(int gameId, Player player1, Player player2, GameState gameState) {
 		this.id = gameId;
@@ -54,27 +53,20 @@ public class Game extends Observable {
 	}
 	
 	public void start() {
-		playerGame1.startTimer();
-		startSyncTimer();
-	}
-	
-	private void startSyncTimer() {
-		System.out.println("test");
-		syncTimer = new Timer();
-		syncTimer.scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				checkTurn();
-			}
-			
-		}, 0L, 1000L);
+		checkTurn();
+		//startSyncTimer(); TODO: Kick player out of game when not his turn anymore
 	}
 	
 	private void checkTurn() {
-		Player player = isCurrentPlayerTurn(id) ? playerGame1.getPlayer() : playerGame2.getPlayer();
-
-		if(isCurrentUser(player.getName()))
+		boolean currentPlayerTurn = isCurrentPlayerTurn(id);
+		Player currrentPlayer = DataManager.getInstance().getCurrentUser();
+		
+		System.out.println(isCurrentUser(playerGame1.getPlayer().getName()));
+		
+		if(isCurrentUser(playerGame1.getPlayer().getName()) && currentPlayerTurn)
 			playerGame1.startTimer();
+		else if(isCurrentUser(playerGame2.getPlayer().getName()) && currentPlayerTurn)
+			playerGame2.startTimer();
 	}
 	
 	public static boolean isCurrentUser(String playerName) {

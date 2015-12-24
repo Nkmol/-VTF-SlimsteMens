@@ -33,7 +33,7 @@ public class ActiveGameController {
 		
 		//set default round
 		//gameController.addRound(RoundType.ThreeSixNine);
-		gameController.loadLastRound();
+		gameController.loadLastRound(); //TODO: Disable button if opponent
 		
 		// TODO TEST PURPOSES FOR FINAL ROUND
 		//gameController.addRound(RoundType.Final);
