@@ -10,7 +10,8 @@ import Managers.DataManager;
 public class ThreeSixNine extends Round {
 
 	private final static int AMOUNT_QUESTIONS = 9,
-							 BONUS_ITERATION = 3;
+							 BONUS_ITERATION = 3,
+							 POINTS_QUESTION = 20;
 	
 	public ThreeSixNine(Game game) {
 		super(game, RoundType.ThreeSixNine);
@@ -33,19 +34,6 @@ public class ThreeSixNine extends Round {
 		notifyObservers();
 	}
 	
-//	public void setNewQuestion(){
-//		// Get the view to update question with a new question
-//		int current = this.getQuestions().indexOf(currentQuestion);
-//		
-//		if(this.getQuestions().get(current + 1) != null){
-//
-//			setCurrentQuestion(++current);
-//
-//			setChanged();
-//			notifyObservers();
-//		}
-//	}
-	
 	public Question getSkippedQuestion() {
 		return skippedQuestion;
 	}
@@ -60,8 +48,11 @@ public class ThreeSixNine extends Round {
 		int index = (currentTurn.getSharedQuestions() != null) ? currentTurn.getSharedQuestions().size() + 1 : 1;
 		currentTurn.setQuestionId(currentTurn.getCurrentQuestion().getId());
 		currentTurn.addSharedQuestion(new SharedQuestion(currentTurn, index, answer));
-		if (currentTurn.getCurrentQuestion().isPlayerAnswerCorrect(answer)) 
+		//currentTurn.time
+		if (currentTurn.getCurrentQuestion().isPlayerAnswerCorrect(answer)) {
 			currentTurn.setTurnState(TurnState.Correct);
+
+		}
 		else 
 			currentTurn.setTurnState(TurnState.Wrong);
 		DataManager.getInstance().updateTurn(currentTurn);

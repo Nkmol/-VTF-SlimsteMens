@@ -16,8 +16,8 @@ public class Game extends Observable {
 	private static final int MinimumAnswerPercentage = 80;
 	
 	private int id;
-	private PlayerGame playerGame1; // <-- THIS IS YOU
-	private PlayerGame playerGame2; 
+	private Player player1; // <-- THIS IS YOU
+	private Player player2; 
 	private GameState gameState;
 	private ArrayList<Round> rounds;
 	private Round currentRound;
@@ -25,8 +25,8 @@ public class Game extends Observable {
 	
 	public Game(int gameId, Player player1, Player player2, GameState gameState) {
 		this.id = gameId;
-		this.playerGame1 = new PlayerGame(player1, this);
-		this.playerGame2 = new PlayerGame(player2, this);
+		this.player1 = player1;
+		this.player2 = player2;
 		
 		this.gameState = gameState;
 		rounds = DataManager.getInstance().getRounds(this);
@@ -38,8 +38,8 @@ public class Game extends Observable {
 	public Game(ResultSet data) {
 		try {
 			id = data.getInt("spel_id");
-			playerGame1 = new PlayerGame(DataManager.getInstance().getPlayer(data.getString("speler1")), this);
-			playerGame2 = new PlayerGame(DataManager.getInstance().getPlayer(data.getString("speler2")), this);
+			player1 = DataManager.getInstance().getPlayer(data.getString("speler1"));
+			player2 = DataManager.getInstance().getPlayer(data.getString("speler2"));
 			gameState = GameState.fromString(data.getString("toestand_type"));
 			rounds = DataManager.getInstance().getRounds(this);
 			currentRound = DataManager.getInstance().getLastRoundForGame(this);
@@ -53,21 +53,19 @@ public class Game extends Observable {
 	}
 	
 	public void start() {
-		checkTurn();
+		//checkTurn(); //TODO: current turn is already determed from active games
 		//startSyncTimer(); TODO: Kick player out of game when not his turn anymore
 	}
 	
-	private void checkTurn() {
+/*	private void checkTurn() {
 		boolean currentPlayerTurn = isCurrentPlayerTurn(id);
 		Player currrentPlayer = DataManager.getInstance().getCurrentUser();
 		
-		System.out.println(isCurrentUser(playerGame1.getPlayer().getName()));
-		
-		if(isCurrentUser(playerGame1.getPlayer().getName()) && currentPlayerTurn)
+		if(isCurrentUser(player1.getName()) && currentPlayerTurn)
 			playerGame1.startTimer();
 		else if(isCurrentUser(playerGame2.getPlayer().getName()) && currentPlayerTurn)
 			playerGame2.startTimer();
-	}
+	}*/
 	
 	public static boolean isCurrentUser(String playerName) {
 		return playerName.equals(DataManager.getInstance().getCurrentUser().getName());
@@ -117,12 +115,12 @@ public class Game extends Observable {
 		return id;
 	}
 	
-	public PlayerGame getPlayerGame1() {
-		return playerGame1;
+	public Player getPlayer1() {
+		return player1;
 	}
 	
-	public PlayerGame getPlayerGame2() {
-		return playerGame2;
+	public Player getPlayer2() {
+		return player2;
 	}
 	
 	public GameState getGameState() {

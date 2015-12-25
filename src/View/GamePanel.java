@@ -11,6 +11,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import Models.Game;
+import Models.Player;
 import Models.PlayerGame;
 import Models.Round;
 
@@ -69,21 +70,32 @@ public class GamePanel extends JPanel implements Observer{
 	public void update(Observable arg0, Object arg1) {
 		Game model = (Game)arg1;
 		
-		PlayerGame playerGame1, playerGame2;
-		playerGame1 = model.getPlayerGame1();
-		playerGame2 = model.getPlayerGame2();
+		Player player1, player2;
+		player1 = model.getPlayer1();
+		player2 = model.getPlayer2();
 		
 
 		if(model.getRounds().size() > 0) 
-			lblRoundType.setText(model.getCurrentRound().getRoundType().toString()); // TODO fix Exception in thread "AWT-EventQueue-0" java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
-		lblPlayer1.setText(playerGame1.getPlayer().getName() + " : " + playerGame1.getTime());
-		lblPlayer2.setText(playerGame2.getPlayer().getName() + " : " + playerGame2.getTime());
+			lblRoundType.setText(model.getCurrentRound().getRoundType().toString());
+		
+		System.out.println(model.getCurrentRound());
+		System.out.println(model.getCurrentRound().getCurrentTurn());
+		if(model.getCurrentRound() != null && model.getCurrentRound().getCurrentTurn() != null) {
+			String strPlayer1 = player1.getName() + " : ";
+			String strPlayer2 = player2.getName() + " : ";
+			if(Game.isCurrentUser(player1.getName()))
+				strPlayer1 += model.getCurrentRound().getCurrentTurn().getTime();
+			else if(Game.isCurrentUser(player2.getName()))
+				strPlayer2 += model.getCurrentRound().getCurrentTurn().getTime();
+			
+			lblPlayer1.setText(strPlayer1); // TODO show total time from all turns for a player
+			lblPlayer2.setText(strPlayer2);
+		}
 	}
 	
 	public void setChatPanel(ChatMessageView chatPanel){
 		JPanel chat = chatPanel;
 		chat.setPreferredSize(new Dimension(200, 200));
-		chat.setBackground(Color.yellow);
 		add(chat, BorderLayout.LINE_END);
 	}
 	

@@ -23,7 +23,7 @@ public abstract class Round extends Observable {
 		this.roundType = roundType;
 		
 		//TODO Push to database
-		Turn turn = new Turn(roundType, DataManager.getInstance().getCurrentUser(), game.getId());
+		Turn turn = new Turn(roundType, DataManager.getInstance().getCurrentUser(), this);
 		turn.setTurnState(TurnState.Busy);
 		turn.setTurnId(1);
 		setCurrrentTurn(turn);

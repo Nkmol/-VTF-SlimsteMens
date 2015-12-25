@@ -15,7 +15,6 @@ public class ThreeSixNineController implements RoundController {
 		model = new ThreeSixNine(parent);
 		view = new ThreeSixNineView(model);
 		model.addObserver(view);
-		model.updateView();
 	}
 
 	@Override

@@ -25,11 +25,13 @@ public class Turn {
 	private ArrayList<PlayerAnswer> playerAnswers;
 	private Question currentQuestion;
 	private Question skippedQuestion; //TODO: fuck dit
+	private Round parent;
 	
-	public Turn(RoundType rondeType, Player player, int gameId) {
+	public Turn(RoundType rondeType, Player player, Round parent) {
 		this.roundType = rondeType;
 		this.player = player;
-		this.gameId = gameId;
+		this.parent = parent;
+		this.gameId = parent.getGame().getId();
 		
 		startTurn();
 	}
@@ -56,6 +58,8 @@ public class Turn {
 	public void startTurn() {
 		playerAnswers = new ArrayList<PlayerAnswer>();
 		sharedQuestions = new ArrayList<SharedQuestion>();
+		
+		startTimer();
 	}
 	
 	public int getGameId() {
@@ -87,9 +91,6 @@ public class Turn {
 		return currentQuestion;
 	}
 	
-//	public void setCurrentQuestion(int index){
-//		this.currentQuestion = this.getQuestions().get(index);
-//	}
 	
 	public void setCurrentQuestion(ArrayList<Question> questions) {
 		Random random = new Random();
@@ -156,8 +157,18 @@ public class Turn {
 		this.playerAnswers = playerAnswers;
 	}
 	
+	public void addTime(int value) {
+		time += value;
+	}
+	
+	public void substractTime(int value) {
+		time -= value;
+		
+		parent.getGame().updateView();
+	}
+	
 	public void startTimer() {
-		timer = new MyTimer().schedule(() -> time--, 1000);
+		timer = new MyTimer().schedule(() -> substractTime(1), 1000);
 	}
 	
 	public void stopTimer() {

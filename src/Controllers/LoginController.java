@@ -45,7 +45,7 @@ public class LoginController {
 		}
 	}
 	
-	private void pushTestTurn() {
+/*	private void pushTestTurn() {
 		Player currentUser = DataManager.getInstance().getCurrentUser();
 		System.out.println(currentUser);
 		
@@ -66,7 +66,7 @@ public class LoginController {
 		testTurn.setPlayerAnswers(playerAnswers);
 		
 		DataManager.getInstance().pushTurn(testTurn);
-	}
+	}*/
 	
 	private void btnReg_Press() {
 		parent.showRegister();

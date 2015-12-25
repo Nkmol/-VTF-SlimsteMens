@@ -2,6 +2,8 @@ package Models;
 
 import java.sql.ResultSet;
 
+import Managers.DataManager;
+
 public class OpenDoor extends Round {
 
 	Question currentQuestion;
@@ -10,7 +12,7 @@ public class OpenDoor extends Round {
 		super(game, RoundType.OpenDoor);
 		
 		roundType = RoundType.OpenDoor;
-		setCurrrentTurn(new Turn(roundType, game.getPlayerGame2().getPlayer(), game.getId()));
+		setCurrrentTurn(new Turn(roundType, DataManager.getInstance().getCurrentUser(), this));
 	}
 	
 	public OpenDoor(ResultSet data, Game game) {
