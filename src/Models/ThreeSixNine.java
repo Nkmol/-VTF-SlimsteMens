@@ -15,12 +15,18 @@ public class ThreeSixNine extends Round {
 	
 	public ThreeSixNine(Game game) {
 		super(game, RoundType.ThreeSixNine);
-		questions = DataManager.getInstance().getQuestions(this);
-		currentTurn.setCurrentQuestion(questions);
+		init();
 	}
 	
 	public ThreeSixNine(ResultSet data, Game game) {
 		super(data, game);
+		init();
+	}
+	
+	public void init() {
+		questions = DataManager.getInstance().getQuestions(this);
+		System.out.println(questions);
+		currentTurn.setCurrentQuestion(questions);
 	}
 	
 	public Question getSkippedQuestion() {
@@ -34,21 +40,9 @@ public class ThreeSixNine extends Round {
 	@Override
 	public void onSubmit(String answer) {
 		System.out.println("your answers is " + answer);
-		int index = (currentTurn.getSharedQuestions() != null) ? currentTurn.getSharedQuestions().size() + 1 : 1;
-		currentTurn.setQuestionId(currentTurn.getCurrentQuestion().getId());
-		currentTurn.addSharedQuestion(new SharedQuestion(currentTurn, index, answer));
-		if (currentTurn.getCurrentQuestion().isPlayerAnswerCorrect(answer)) {
-			currentTurn.setTurnState(TurnState.Correct);
-			currentTurn.addTime(POINTS_QUESTION); // TODO: How do i get for each question?
-		}
+		if (currentTurn.getCurrentQuestion().isPlayerAnswerCorrect(answer)) 
+			Turn.pushTurn(currentTurn, TurnState.Correct, answer);
 		else 
-			currentTurn.setTurnState(TurnState.Wrong);
-		DataManager.getInstance().updateTurn(currentTurn);
-		try {
-			DataManager.getInstance().pushSharedQuestion(currentTurn);
-		} catch (SQLException e) {
-			System.err.println("Error pushing shared question");
-			System.err.println(e.getMessage());
-		}
+			Turn.pushTurn(currentTurn, TurnState.Wrong, answer);
 	}
 }

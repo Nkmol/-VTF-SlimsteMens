@@ -77,8 +77,6 @@ public class GamePanel extends JPanel implements Observer{
 
 		lblRoundType.setText(model.getCurrentRound().getRoundType().toString());
 		
-		System.out.println(model.getCurrentRound());
-		System.out.println(model.getCurrentRound().getCurrentTurn());
 		if(model.getCurrentRound() != null && model.getCurrentRound().getCurrentTurn() != null) {
 			String strPlayer1 = player1.getName() + " : ";
 			String strPlayer2 = player2.getName() + " : ";

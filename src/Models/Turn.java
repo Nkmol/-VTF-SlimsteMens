@@ -35,27 +35,16 @@ public class Turn {
 	}
 	
 	public Turn(ResultSet data) { //TODO dont use this constructor anymore -> Conficts with ActiveGame as it has no rounds/games to init
-		try {
-			gameId = data.getInt("spel_id");
-			roundType = RoundType.fromString(data.getString("rondenaam"));
-			turnId = data.getInt("beurt_id");
-			questionId = data.getInt("vraag_id");
-			playerName = data.getString("speler");
-			turnState = TurnState.fromString(data.getString("beurtstatus"));
-			secondsEarnd = data.getInt("sec_verdiend");
-			secondsFinalLost = data.getInt("sec_finale_af");
-			sharedQuestions = DataManager.getInstance().getSharedQuestions(this);
-			//TODO: turn id
-			playerAnswers = DataManager.getInstance().getPlayerAnswers(gameId, roundType, turnId);
-		} catch (SQLException e) {
-			System.err.println("Error initializing Turn");
-			System.err.println(e.getMessage());
-		}
+		readResultSet(data);
 	}
 	
 	public Turn(ResultSet data, Round parent) { //TODO parent should already be made, so better to already use it right away?
+		this.parent = parent;
+		readResultSet(data);
+	}
+	
+	private void readResultSet(ResultSet data) {
 		try {
-			this.parent = parent;
 			gameId = data.getInt("spel_id");
 			roundType = RoundType.fromString(data.getString("rondenaam"));
 			turnId = data.getInt("beurt_id");
@@ -109,7 +98,7 @@ public class Turn {
 		return currentQuestion;
 	}
 	
-	
+	//TODO move this to database
 	public void setCurrentQuestion(ArrayList<Question> questions) {
 		Random random = new Random();
 		int randomNumber = random.nextInt(questions.size());
@@ -211,6 +200,25 @@ public class Turn {
 	
 	public String getPlayerName() {
 		return playerName;
+	}
+	
+	public static void pushTurn(Turn turn, TurnState turnState, String answer) {
+		//SharedQuestion
+		if(turn.roundType == RoundType.ThreeSixNine || turn.roundType == RoundType.Puzzle) {
+			int index = turn.getSharedQuestions() != null ? turn.getSharedQuestions().size() + 1 : 1;
+			
+			turn.setQuestionId(turn.getCurrentQuestion().getId());
+			turn.addSharedQuestion(new SharedQuestion(turn, index, answer));
+			turn.setTurnState(turnState);
+			
+			DataManager.getInstance().updateTurn(turn);
+			try {
+				DataManager.getInstance().pushSharedQuestion(turn);
+			} catch (SQLException e) {
+				System.err.println("Error pushing shared question");
+				System.err.println(e.getMessage());
+			}
+		}
 	}
 	
 }

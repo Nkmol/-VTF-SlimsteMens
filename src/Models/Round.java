@@ -22,11 +22,7 @@ public abstract class Round extends Observable {
 		this.game = game;
 		this.roundType = roundType;
 		
-		//TODO Push to database
-		Turn turn = new Turn(roundType, DataManager.getInstance().getCurrentUser(), this);
-		turn.setTurnState(TurnState.Busy);
-		turn.setTurnId(1);
-		setCurrrentTurn(turn);
+		currentTurn = initNewTurn(this);
 		
 		currentTurn.startTimer();
 	}
@@ -35,7 +31,7 @@ public abstract class Round extends Observable {
 		//startRound();
 		try {
 			roundType = RoundType.fromString(data.getString("rondenaam"));
-			//questions = DataManager.getInstance().getQuestions(this);
+			questions = DataManager.getInstance().getQuestions(this);
 			this.game = game;
 			//turns = DataManager.getInstance().getTurns(this);
 			//currentTurn = DataManager.getInstance().getLastTurnForGame(game.getId());
@@ -43,7 +39,7 @@ public abstract class Round extends Observable {
 		} catch (SQLException e) {
 			System.err.println("Error initializing round");
 		}
-		
+
 		currentTurn.startTimer();
 	}
 	

@@ -39,8 +39,6 @@ public class ChatController {
 	
 	private void btnSendMessage_Press()
 	{
-		System.out.println("test");
-		
 		Date date = new Date();
 		String playername = DataManager.getInstance().getCurrentUser().getName();
 		
