@@ -35,6 +35,7 @@ public class MainController {
 	}
 	
 	public void setRound(JPanel view) {
+		deleteMenu();
 		mainFrame.setContentPane(view);
 		mainFrame.setVisible(true);
 	}
