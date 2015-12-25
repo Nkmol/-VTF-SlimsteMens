@@ -48,10 +48,9 @@ public class ThreeSixNine extends Round {
 		int index = (currentTurn.getSharedQuestions() != null) ? currentTurn.getSharedQuestions().size() + 1 : 1;
 		currentTurn.setQuestionId(currentTurn.getCurrentQuestion().getId());
 		currentTurn.addSharedQuestion(new SharedQuestion(currentTurn, index, answer));
-		//currentTurn.time
 		if (currentTurn.getCurrentQuestion().isPlayerAnswerCorrect(answer)) {
 			currentTurn.setTurnState(TurnState.Correct);
-
+			currentTurn.addTime(POINTS_QUESTION); // TODO: How do i get for each question?
 		}
 		else 
 			currentTurn.setTurnState(TurnState.Wrong);
