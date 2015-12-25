@@ -12,7 +12,6 @@ import javax.swing.border.EmptyBorder;
 
 import Models.Game;
 import Models.Player;
-import Models.PlayerGame;
 import Models.Round;
 
 public class GamePanel extends JPanel implements Observer{
@@ -75,8 +74,8 @@ public class GamePanel extends JPanel implements Observer{
 		player2 = model.getPlayer2();
 		
 
-		if(model.getRounds().size() > 0) 
-			lblRoundType.setText(model.getCurrentRound().getRoundType().toString());
+
+		lblRoundType.setText(model.getCurrentRound().getRoundType().toString());
 		
 		System.out.println(model.getCurrentRound());
 		System.out.println(model.getCurrentRound().getCurrentTurn());

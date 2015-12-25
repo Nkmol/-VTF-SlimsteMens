@@ -585,7 +585,7 @@ public class DataManager {
 			data = preparedStatement.executeQuery();
 			turns = new ArrayList<>();
 			while (data.next())
-				turns.add(new Turn(data));
+				turns.add(new Turn(data, round));
 		} catch (SQLException e) {
 			System.err.println("Error fetching turns for game id: " + round.getGame().getId());
 		} finally {
@@ -599,6 +599,39 @@ public class DataManager {
 			} catch(SQLException ex) {} 
 		}
 		return turns;
+	}
+	
+	// TODO Only use this -> Conflicting with Game.isCurrentPlayerTurn(int)
+	public Turn getLastTurnForGame(Round round) {
+		Turn turn = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT b.* FROM ronde AS r"
+					+ " INNER JOIN rondenaam AS rn ON"
+					+ " (SELECT COUNT(spel_id) FROM ronde WHERE spel_id = r.spel_id AND r.rondenaam = rn.type) = rn.volgnr"
+					+ " INNER JOIN beurt AS b ON b.spel_id = r.spel_id AND r.rondenaam = b.rondenaam"
+					+ " WHERE r.spel_id = ? ORDER BY b.beurt_id DESC LIMIT 1";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, round.getGame().getId());
+			data = preparedStatement.executeQuery();
+			if (data.next())
+				turn = new Turn(data, round);
+		} catch (SQLException e) {
+			System.err.println("Error fetching last turn for game id: " + round.getGame().getId());
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		return turn;
 	}
 	
 	public Turn getLastTurnForGame(int gameId) {

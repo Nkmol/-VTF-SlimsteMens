@@ -23,17 +23,6 @@ public class ThreeSixNine extends Round {
 		super(data, game);
 	}
 	
-	public Boolean checkTurn(){
-		// TODO later naar kijken
-		return false;
-	}
-	
-	public void setNewCurrentQuestion() {
-		currentTurn.setCurrentQuestion(questions);
-		setChanged();
-		notifyObservers();
-	}
-	
 	public Question getSkippedQuestion() {
 		return skippedQuestion;
 	}

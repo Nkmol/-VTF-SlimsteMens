@@ -18,7 +18,7 @@ public abstract class Round extends Observable {
 	protected Game game;
 	
 	public Round(Game game, RoundType roundType) {
-		startRound();
+		//startRound();
 		this.game = game;
 		this.roundType = roundType;
 		
@@ -27,18 +27,68 @@ public abstract class Round extends Observable {
 		turn.setTurnState(TurnState.Busy);
 		turn.setTurnId(1);
 		setCurrrentTurn(turn);
+		
+		currentTurn.startTimer();
 	}
 	
 	public Round(ResultSet data, Game game) {
-		startRound();
+		//startRound();
 		try {
 			roundType = RoundType.fromString(data.getString("rondenaam"));
 			//questions = DataManager.getInstance().getQuestions(this);
 			this.game = game;
 			//turns = DataManager.getInstance().getTurns(this);
+			//currentTurn = DataManager.getInstance().getLastTurnForGame(game.getId());
+			currentTurn = initNewTurn(this);
 		} catch (SQLException e) {
 			System.err.println("Error initializing round");
 		}
+		
+		currentTurn.startTimer();
+	}
+	
+	public static Turn initNewTurn(Round round) {
+		//TODO optimalisatie
+		
+		Turn currentTurn = DataManager.getInstance().getLastTurnForGame(round);
+		/*
+		 * When it is the players turn
+		 * AND the last turn is the player
+		 * AND the last turn has the state busy
+		 * RESULT: last turn continues
+		 */
+		if(Game.isCurrentPlayerTurn(round.getGame().getId()) && Game.isCurrentUser(currentTurn.getPlayerName()) && currentTurn.getTurnState() == TurnState.Busy) {
+			System.out.println("continue last turn as it was on TurnState.BUSY");
+			return currentTurn;
+		}
+		/*
+		 * When it is his turn, but TurnState is not BUSY
+		 * RESULT: player has a good answer and may continue with a new turn
+		 * TODO: Is this in every round?
+		 */
+		else if(Game.isCurrentPlayerTurn(round.getGame().getId()) && Game.isCurrentUser(currentTurn.getPlayerName()) && currentTurn.getTurnState() != TurnState.Busy) {
+			System.out.println("continue answering");
+			Turn turn = new Turn(round.getRoundType(), DataManager.getInstance().getCurrentUser(), round);
+			turn.setTurnId(currentTurn.getTurnId() + 1);
+			turn.setTurnState(TurnState.Busy);
+			return turn;
+		}
+		/*
+		 * But when it is not the current player it means the other player had ended its turn
+		 * RESULT it is your first turn
+		 */
+		else if(Game.isCurrentPlayerTurn(round.getGame().getId()) && !Game.isCurrentUser(currentTurn.getPlayerName()) && currentTurn.getTurnState() != TurnState.Busy) {
+			System.out.println("player first turn of round");
+			Turn turn = new Turn(round.getRoundType(), DataManager.getInstance().getCurrentUser(), round);
+			turn.setTurnId(currentTurn.getTurnId() + 1);
+			turn.setTurnState(TurnState.Busy);
+			return turn;
+		}
+		else {
+			System.err.println("error while init new turn");
+			return null;
+		}
+		
 	}
 	
 	public void startRound() {

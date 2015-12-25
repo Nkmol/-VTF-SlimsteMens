@@ -30,16 +30,6 @@ public class ActiveGameController {
 	public void startGame(int gameId) {
 		GameController gameController = new GameController(gameId, parent);
 
-		
-		//set default round
-		//gameController.addRound(RoundType.ThreeSixNine);
-		gameController.loadLastRound(); //TODO: Disable button if opponent
-		
-		// TODO TEST PURPOSES FOR FINAL ROUND
-		//gameController.addRound(RoundType.Final);
-		
-		
-//		parent.SetViewCategoryPanel(gameController.getView());
 		parent.setRound(gameController.getView());
 	}
 	

@@ -13,7 +13,9 @@ import Utilities.StringUtility;
 
 public class Game extends Observable {
 	
-	private static final int MinimumAnswerPercentage = 80;
+	private static final int MinimumAnswerPercentage = 80,
+							 BeginAmountTime = 100;
+	
 	
 	private int id;
 	private Player player1; // <-- THIS IS YOU
@@ -31,8 +33,6 @@ public class Game extends Observable {
 		this.gameState = gameState;
 		rounds = DataManager.getInstance().getRounds(this);
 		chatMessages = DataManager.getInstance().getChatMessages(id);
-		
-		start(); 
 	}
 	
 	public Game(ResultSet data) {
@@ -41,31 +41,14 @@ public class Game extends Observable {
 			player1 = DataManager.getInstance().getPlayer(data.getString("speler1"));
 			player2 = DataManager.getInstance().getPlayer(data.getString("speler2"));
 			gameState = GameState.fromString(data.getString("toestand_type"));
-			rounds = DataManager.getInstance().getRounds(this);
+			//rounds = DataManager.getInstance().getRounds(this); // TODO only needed on replay?
 			currentRound = DataManager.getInstance().getLastRoundForGame(this);
 			chatMessages = DataManager.getInstance().getChatMessages(id);
 		} catch (SQLException e) {
 			System.err.println("Error initializing game");
 			System.err.println(e.getMessage());
 		}
-		
-		start();
 	}
-	
-	public void start() {
-		//checkTurn(); //TODO: current turn is already determed from active games
-		//startSyncTimer(); TODO: Kick player out of game when not his turn anymore
-	}
-	
-/*	private void checkTurn() {
-		boolean currentPlayerTurn = isCurrentPlayerTurn(id);
-		Player currrentPlayer = DataManager.getInstance().getCurrentUser();
-		
-		if(isCurrentUser(player1.getName()) && currentPlayerTurn)
-			playerGame1.startTimer();
-		else if(isCurrentUser(playerGame2.getPlayer().getName()) && currentPlayerTurn)
-			playerGame2.startTimer();
-	}*/
 	
 	public static boolean isCurrentUser(String playerName) {
 		return playerName.equals(DataManager.getInstance().getCurrentUser().getName());

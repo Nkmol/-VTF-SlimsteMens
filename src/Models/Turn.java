@@ -32,12 +32,30 @@ public class Turn {
 		this.player = player;
 		this.parent = parent;
 		this.gameId = parent.getGame().getId();
-		
-		startTurn();
 	}
 	
-	public Turn(ResultSet data) {
+	public Turn(ResultSet data) { //TODO dont use this constructor anymore -> Conficts with ActiveGame as it has no rounds/games to init
 		try {
+			gameId = data.getInt("spel_id");
+			roundType = RoundType.fromString(data.getString("rondenaam"));
+			turnId = data.getInt("beurt_id");
+			questionId = data.getInt("vraag_id");
+			playerName = data.getString("speler");
+			turnState = TurnState.fromString(data.getString("beurtstatus"));
+			secondsEarnd = data.getInt("sec_verdiend");
+			secondsFinalLost = data.getInt("sec_finale_af");
+			sharedQuestions = DataManager.getInstance().getSharedQuestions(this);
+			//TODO: turn id
+			playerAnswers = DataManager.getInstance().getPlayerAnswers(gameId, roundType, turnId);
+		} catch (SQLException e) {
+			System.err.println("Error initializing Turn");
+			System.err.println(e.getMessage());
+		}
+	}
+	
+	public Turn(ResultSet data, Round parent) { //TODO parent should already be made, so better to already use it right away?
+		try {
+			this.parent = parent;
 			gameId = data.getInt("spel_id");
 			roundType = RoundType.fromString(data.getString("rondenaam"));
 			turnId = data.getInt("beurt_id");
