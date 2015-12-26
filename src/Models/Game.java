@@ -132,11 +132,13 @@ public class Game extends Observable {
 	}
 
 	public void addRound(Round model) {
+		if (rounds == null)
+			rounds = new ArrayList<>();
 		rounds.add(model);
 		setCurrentRound(model);
 		
-		DataManager.getInstance().pushRound(getCurrentRound());
-		DataManager.getInstance().pushTurn(getCurrentRound().getCurrentTurn());
+		//DataManager.getInstance().pushRound(getCurrentRound());
+		//DataManager.getInstance().pushTurn(getCurrentRound().getCurrentTurn());
 		
 		setChanged();
 		notifyObservers(this);
