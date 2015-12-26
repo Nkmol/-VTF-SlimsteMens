@@ -759,19 +759,21 @@ public class DataManager {
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
-			for (SharedQuestion sharedQuestion : turn.getSharedQuestions()) {
-				String sql = "INSERT INTO deelvraag "
-						+ "VALUES (?, ?, ?, ?, ?, ?)";
-				preparedStatement = connection.prepareStatement(sql);
-				preparedStatement.setInt(1, sharedQuestion.getGameId());
-				preparedStatement.setString(2, sharedQuestion.getRoundType().getValue());
-				preparedStatement.setInt(3, sharedQuestion.getTurnId());
-				preparedStatement.setInt(4, sharedQuestion.getIndexNumber());
-				preparedStatement.setInt(5, sharedQuestion.getQuestionId());
-				preparedStatement.setString(6, sharedQuestion.getAnswer());
-				if (preparedStatement.executeUpdate() > 0) {
-					pushed = true;
-					connection.commit();
+			if (turn.getSharedQuestions() != null) {
+				for (SharedQuestion sharedQuestion : turn.getSharedQuestions()) {
+					String sql = "INSERT INTO deelvraag "
+							+ "VALUES (?, ?, ?, ?, ?, ?)";
+					preparedStatement = connection.prepareStatement(sql);
+					preparedStatement.setInt(1, sharedQuestion.getGameId());
+					preparedStatement.setString(2, sharedQuestion.getRoundType().getValue());
+					preparedStatement.setInt(3, sharedQuestion.getTurnId());
+					preparedStatement.setInt(4, sharedQuestion.getIndexNumber());
+					preparedStatement.setInt(5, sharedQuestion.getQuestionId());
+					preparedStatement.setString(6, sharedQuestion.getAnswer());
+					if (preparedStatement.executeUpdate() > 0) {
+						pushed = true;
+						connection.commit();
+					}
 				}
 			}
 		}catch (SQLException e) {
@@ -792,17 +794,21 @@ public class DataManager {
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
-			for (PlayerAnswer playerAnswer : turn.getPlayerAnswers()) {
-				String sql = "INSERT INTO spelerantwoord VALUES (?, ?, ?, ?, ?, ?)";
-				preparedStatement = connection.prepareStatement(sql);
-				preparedStatement.setInt(1, playerAnswer.getGameId());
-				preparedStatement.setString(2, playerAnswer.getRoundType().getValue());
-				preparedStatement.setInt(3, playerAnswer.getTurnId());
-				preparedStatement.setInt(4, playerAnswer.getAnswerId());
-				preparedStatement.setString(5, playerAnswer.getAnswer());
-				preparedStatement.setInt(6, playerAnswer.getMoment());
-				preparedStatement.executeUpdate();
-				pushed = true;
+			if (turn.getPlayerAnswers() != null) {
+				for (PlayerAnswer playerAnswer : turn.getPlayerAnswers()) {
+					String sql = "INSERT INTO spelerantwoord VALUES (?, ?, ?, ?, ?, ?)";
+					preparedStatement = connection.prepareStatement(sql);
+					preparedStatement.setInt(1, playerAnswer.getGameId());
+					preparedStatement.setString(2, playerAnswer.getRoundType().getValue());
+					preparedStatement.setInt(3, playerAnswer.getTurnId());
+					preparedStatement.setInt(4, playerAnswer.getAnswerId());
+					preparedStatement.setString(5, playerAnswer.getAnswer());
+					preparedStatement.setInt(6, playerAnswer.getMoment());
+					if (preparedStatement.executeUpdate() > 0) {
+						pushed = true;
+						connection.commit();
+					}
+				}
 			}
 		}
 		catch (SQLException e) { }

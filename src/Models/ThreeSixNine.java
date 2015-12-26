@@ -15,19 +15,19 @@ public class ThreeSixNine extends Round {
 	
 	public ThreeSixNine(Game game) {
 		super(game, RoundType.ThreeSixNine);
-		init();
+//		init();
 	}
 	
 	public ThreeSixNine(ResultSet data, Game game) {
 		super(data, game);
-		init();
+//		init();
 	}
 	
-	public void init() {
-		questions = DataManager.getInstance().getQuestions(this);
-		System.out.println(questions);
-		currentTurn.setCurrentQuestion(questions);
-	}
+//	public void init() {
+//		questions = DataManager.getInstance().getQuestions(this);
+//		System.out.println(questions);
+//		currentTurn.setCurrentQuestion(questions);
+//	}
 	
 	public Question getSkippedQuestion() {
 		return skippedQuestion;

@@ -27,10 +27,10 @@ public class Turn {
 	private Question skippedQuestion; //TODO: fuck dit
 	private Round parent;
 	
-	public Turn(RoundType rondeType, Player player, Round parent) {
+	public Turn(RoundType rondeType, Player player, Round parentRound) {
 		this.roundType = rondeType;
 		this.player = player;
-		this.parent = parent;
+		this.parent = parentRound;
 		this.gameId = parent.getGame().getId();
 	}
 	
