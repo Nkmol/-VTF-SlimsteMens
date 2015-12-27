@@ -12,7 +12,7 @@ public class DataManager {
 //	private static final String dbUrl = "jdbc:mysql://localhost/slimsteMens";
 //	private static final String username = "root";
 //	private static final String password = "root";
-	private static final String dbUrl = "jdbc:mysql://databases.aii.avans.nl/spmol_db2";
+	private static final String dbUrl = "jdbc:mysql://databases.aii.avans.nl:3306/spmol_db2";
 	private static final String username = "spmol";
 	private static final String password = "Ab12345";
 	
@@ -681,7 +681,7 @@ public class DataManager {
 			if (roundType == RoundType.ThreeSixNine || roundType == RoundType.Puzzle) 
 				preparedStatement.setNull(4, Types.INTEGER);
 			else 
-				preparedStatement.setInt(4, turn.getQuestion().getId());
+				preparedStatement.setInt(4, turn.getCurrentQuestion().getId());
 			preparedStatement.setString(5, turn.getPlayer().getName());
 			preparedStatement.setString(6, turn.getTurnState().getValue());
 			preparedStatement.setInt(7, turn.getSecondsEarned());
