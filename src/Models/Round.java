@@ -49,38 +49,50 @@ public abstract class Round extends Observable {
 		
 		Turn currentTurn = DataManager.getInstance().getLastTurnForGame(round);
 		
-		/*
-		 * When it is the players turn
-		 * AND the last turn is the player
-		 * AND the last turn has the state busy
-		 * RESULT: last turn continues
-		 */
-		if(Game.isCurrentPlayerTurn(round.getGame().getId()) && Game.isCurrentUser(currentTurn.getPlayerName()) && currentTurn.getTurnState() == TurnState.Busy) {
-			System.out.println("continue last turn as it was on TurnState.BUSY");
-		}
-		/*
-		 * When it is his turn, but TurnState is not BUSY
-		 * RESULT: player has a good answer and may continue with a new turn
-		 * TODO: Is this in every round?
-		 */
-		else if(Game.isCurrentPlayerTurn(round.getGame().getId()) && Game.isCurrentUser(currentTurn.getPlayerName()) && currentTurn.getTurnState() != TurnState.Busy) {
-			System.out.println("continue answering");
-			Turn turn = new Turn(round.getRoundType(), DataManager.getInstance().getCurrentUser(), round);
-			turn.setTurnId(currentTurn.getTurnId() + 1);
-			turn.setTurnState(TurnState.Busy);
-		}
-		/*
-		 * But when it is not the current player it means the other player had ended its turn
-		 * RESULT it is your first turn
-		 */
-		else if(Game.isCurrentPlayerTurn(round.getGame().getId()) && !Game.isCurrentUser(currentTurn.getPlayerName()) && currentTurn.getTurnState() != TurnState.Busy) {
-			System.out.println("player first turn of round");
-			Turn turn = new Turn(round.getRoundType(), DataManager.getInstance().getCurrentUser(), round);
-			turn.setTurnId(currentTurn.getTurnId() + 1);
-			turn.setTurnState(TurnState.Busy);
-		}
-		else {
-			System.err.println("error while init new turn");
+		// Make sure we have a last turn
+		if (currentTurn != null) {
+			/*
+			 * When it is the players turn
+			 * AND the last turn is the player
+			 * AND the last turn has the state busy
+			 * RESULT: last turn continues
+			 */
+			if(Game.isCurrentPlayerTurn(round.getGame().getId()) && Game.isCurrentUser(currentTurn.getPlayerName()) && currentTurn.getTurnState() == TurnState.Busy) {
+				System.out.println("continue last turn as it was on TurnState.BUSY");
+			}
+			/*
+			 * When it is his turn, but TurnState is not BUSY
+			 * RESULT: player has a good answer and may continue with a new turn
+			 * TODO: Is this in every round?
+			 */
+			else if(Game.isCurrentPlayerTurn(round.getGame().getId()) && Game.isCurrentUser(currentTurn.getPlayerName()) && currentTurn.getTurnState() != TurnState.Busy) {
+				System.out.println("continue answering");
+				Turn turn = new Turn(round.getRoundType(), DataManager.getInstance().getCurrentUser(), round);
+				turn.setTurnId(currentTurn.getTurnId() + 1);
+				turn.setTurnState(TurnState.Busy);
+			}
+			/*
+			 * But when it is not the current player it means the other player had ended its turn
+			 * RESULT it is your first turn
+			 */
+			else if(Game.isCurrentPlayerTurn(round.getGame().getId()) && !Game.isCurrentUser(currentTurn.getPlayerName()) && currentTurn.getTurnState() != TurnState.Busy) {
+				System.out.println("player first turn of round");
+				Turn turn = new Turn(round.getRoundType(), DataManager.getInstance().getCurrentUser(), round);
+				turn.setTurnId(currentTurn.getTurnId() + 1);
+				turn.setTurnState(TurnState.Busy);
+			}
+			else {
+				System.err.println("error while init new turn");
+			}
+		} else {
+			/*
+			 * We don't have a turn so we need to push a new turn to the database
+			 */
+			currentTurn = new Turn(roundType, DataManager.getInstance().getCurrentUser(), this);
+			currentTurn.setTurnState(TurnState.Busy);
+			currentTurn.setTurnId(1);
+			currentTurn.setCurrentQuestion(questions);
+			DataManager.getInstance().pushTurn(currentTurn);
 		}
 		
 		return currentTurn;
