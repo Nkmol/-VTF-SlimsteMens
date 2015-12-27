@@ -33,8 +33,6 @@ public class GameController {
 		Utilities.ComponentUtility.addActionListener(view, "btnPass", (e) -> Pass_Click());
 		
 		loadLastRound();
-		
-		model.updateView();
 	}
 	
 	public void Submit_Click() {
@@ -87,8 +85,10 @@ public class GameController {
 	public void loadLastRound() {
 		Round round = DataManager.getInstance().getLastRoundForGame(model);
 		RoundController roundController = getRoundController(round, model);
-		
+	
 		model.setRound(roundController.getModel());
 		view.setRound(roundController.getView());
+		
+		roundController.getModel().updateView();
 	}
 }
