@@ -1,6 +1,7 @@
 package Controllers;
 
 import Models.Game;
+import Models.Round;
 import Models.ThreeSixNine;
 import Utilities.ComponentUtility;
 import View.ThreeSixNineView;
@@ -13,6 +14,13 @@ public class ThreeSixNineController implements RoundController {
 	public ThreeSixNineController(Game parent) {
 		
 		model = new ThreeSixNine(parent);
+		view = new ThreeSixNineView(model);
+		model.addObserver(view);
+	}
+	
+	public ThreeSixNineController(Game parent, Round round) {
+		
+		model = (ThreeSixNine) round;
 		view = new ThreeSixNineView(model);
 		model.addObserver(view);
 	}

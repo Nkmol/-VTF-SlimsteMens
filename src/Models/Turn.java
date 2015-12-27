@@ -85,15 +85,6 @@ public class Turn {
 		this.turnId = turnId;
 	}
 	
-	public Question getQuestion() {	
-		
-		if (questionId > 0) {
-			//TODO: get question for id
-//			return DataManager.getInstance().getques
-		}
-		return null;
-	}
-	
 	public Question getCurrentQuestion(){
 		return currentQuestion;
 	}
@@ -103,6 +94,8 @@ public class Turn {
 		Random random = new Random();
 		int randomNumber = random.nextInt(questions.size());
 		currentQuestion = questions.get(randomNumber-1);
+		
+		System.out.println(currentQuestion.getText());
 	}
 	
 	public int getQuestionId() {
@@ -143,6 +136,14 @@ public class Turn {
 	
 	public ArrayList<SharedQuestion> getSharedQuestions() {
 		return sharedQuestions;
+	}
+	
+	public Question getSkippedQuestion() {
+		return skippedQuestion;
+	}
+	
+	public void setSkippedQuestion(Question question) {
+		skippedQuestion = question;
 	}
 	
 	public void setSharedQuestions(ArrayList<SharedQuestion> sharedQuestions) {
