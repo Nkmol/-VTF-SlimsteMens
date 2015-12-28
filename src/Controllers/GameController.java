@@ -8,6 +8,7 @@ import Models.OpenDoor;
 import Models.PlayerAnswer;
 import Models.Round;
 import Models.RoundType;
+import Models.ThreeSixNine;
 import Models.Turn;
 import Models.TurnState;
 import View.GamePanel;
@@ -74,16 +75,13 @@ public class GameController {
 			return null;
 		}
 	}
-	
-	public void addRound(RoundType roundType) {
-		/*RoundController roundController = getRoundController(roundType, model);
-		
-		model.addRound(roundController.getModel());
-		view.setRound(roundController.getView());*/
-	}
 
 	public void loadLastRound() {
 		Round round = DataManager.getInstance().getLastRoundForGame(model);
+		
+		if(round == null) 
+			round = new ThreeSixNine(model);
+
 		RoundController roundController = getRoundController(round, model);
 	
 		model.setRound(roundController.getModel());

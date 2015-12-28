@@ -31,9 +31,6 @@ public class ChallengeListController {
 	
 	public void startGame(int gameId) {
 		GameController gameController = new GameController(gameId, parent);
-	
-		//set default round
-		gameController.addRound(RoundType.ThreeSixNine);
 		
 		parent.SetViewCategoryPanel(gameController.getView());
 	}
