@@ -67,7 +67,7 @@ public class GameController {
 		case ThreeSixNine:
 			return new ThreeSixNineController(model);
 		case OpenDoor:
-			return new OpenDoorController(model);
+			//return new OpenDoorController(model);
 			//TODO add other controllers
 		default:
 			return null;
