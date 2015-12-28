@@ -22,7 +22,7 @@ public class ActiveChallenges extends Observable {
 
 			@Override
 			public void run() {
-				getChallengesForPlayer();
+				//getChallengesForPlayer();
 			}
 			
 		}, 0L, 1000L);
@@ -31,10 +31,10 @@ public class ActiveChallenges extends Observable {
 	private void getChallengesForPlayer() {
 		//TODO: Zorgen dat de datamanger functie niet vastloopt of heel lang gaat duren
 		ArrayList<GameInfo> challenges = DataManager.getInstance().getAllGameInfosForPlayer(DataManager.getInstance().getCurrentUser().getName());
-		
 		activeChallenges = new ArrayList<GameInfo>();
 		
 		for(int i = 0; i < challenges.size(); i++) {
+			System.out.println(challenges.get(i).getPlayer1().getName());
 			if(challenges.get(i).getPlayer2().getName().equals(DataManager.getInstance().getCurrentUser().getName())) {
 				if(challenges.get(i).getGameState() == GameState.Invited) {
 					activeChallenges.add(challenges.get(i));

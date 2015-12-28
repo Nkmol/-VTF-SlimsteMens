@@ -1,9 +1,10 @@
 package Managers;
 
+import java.beans.PropertyVetoException;
 import java.sql.*;
 import java.util.ArrayList;
 
-import org.omg.CORBA.FloatSeqHelper;
+import com.mchange.v2.c3p0.*;
 
 import Models.*;
 
@@ -19,9 +20,29 @@ public class DataManager {
 	private static DataManager instance = null;
 //	private Connection connection;
 	private Player user;
+	private ComboPooledDataSource cpds;
 	
 	private DataManager() { 
-//		connection = getConnection();
+		cpds = new ComboPooledDataSource();
+		try {
+			cpds.setDriverClass("com.mysql.jdbc.Driver");
+			cpds.setJdbcUrl(dbUrl);
+			cpds.setUser(username);
+			cpds.setPassword(password);
+			cpds.setMinPoolSize(1);
+			cpds.setMaxPoolSize(30);
+			cpds.setMaxStatements(3); 
+			cpds.setAcquireRetryAttempts(0);
+			cpds.setNumHelperThreads(3);
+			cpds.setAcquireIncrement(1);
+			//cpds.setDebugUnreturnedConnectionStackTraces(true);
+			//cpds.setUnreturnedConnectionTimeout(30);
+			
+			cpds.setAutoCommitOnClose(false);
+		} catch (PropertyVetoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static DataManager getInstance() {
@@ -1125,7 +1146,6 @@ public class DataManager {
 	}
 	
 	public ArrayList<ChatMessage> getChatMessages(int gameId) {
-		getConnection();
 		ArrayList<ChatMessage> chatMessages = null;
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;
@@ -1153,19 +1173,12 @@ public class DataManager {
 	}
 	
 	public Connection getConnection() {
-		Connection connection = null;
 		try {
-			/*if (connection != null)
-				connection.close();*/
-			//System.out.println("Connecting.....");
-				connection = DriverManager.getConnection(dbUrl, username, password);
-				connection.setAutoCommit(false);
-			
-			//System.out.println("Connected");
+			return cpds.getConnection();
 		} catch (SQLException e) {
-			System.err.println("Connection Error: " + e.getMessage());
+			e.printStackTrace();
+			return null;
 		}
-		return connection;
 	}
 	
 }
