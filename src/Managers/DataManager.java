@@ -1,9 +1,10 @@
 package Managers;
 
+import java.beans.PropertyVetoException;
 import java.sql.*;
 import java.util.ArrayList;
 
-import org.omg.CORBA.FloatSeqHelper;
+import com.mchange.v2.c3p0.*;
 
 import Models.*;
 
@@ -12,16 +13,34 @@ public class DataManager {
 //	private static final String dbUrl = "jdbc:mysql://localhost/slimsteMens";
 //	private static final String username = "root";
 //	private static final String password = "root";
-	private static final String dbUrl = "jdbc:mysql://databases.aii.avans.nl/spmol_db2";
+	private static final String dbUrl = "jdbc:mysql://databases.aii.avans.nl:3306/spmol_db2";
 	private static final String username = "spmol";
 	private static final String password = "Ab12345";
 	
 	private static DataManager instance = null;
 //	private Connection connection;
 	private Player user;
+	private ComboPooledDataSource cpds;
 	
 	private DataManager() { 
-//		connection = getConnection();
+		cpds = new ComboPooledDataSource();
+		try {
+			cpds.setDriverClass("com.mysql.jdbc.Driver");
+			cpds.setJdbcUrl(dbUrl);
+			cpds.setUser(username);
+			cpds.setPassword(password);
+			cpds.setMinPoolSize(1);
+			cpds.setMaxPoolSize(30);
+			cpds.setMaxStatements(3); 
+			cpds.setAcquireRetryAttempts(0);
+			cpds.setNumHelperThreads(3);
+			cpds.setAcquireIncrement(1);
+			//cpds.setDebugUnreturnedConnectionStackTraces(true);
+			//cpds.setUnreturnedConnectionTimeout(30);
+		} catch (PropertyVetoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static DataManager getInstance() {
@@ -681,7 +700,7 @@ public class DataManager {
 			if (roundType == RoundType.ThreeSixNine || roundType == RoundType.Puzzle) 
 				preparedStatement.setNull(4, Types.INTEGER);
 			else 
-				preparedStatement.setInt(4, turn.getQuestion().getId());
+				preparedStatement.setInt(4, turn.getCurrentQuestion().getId());
 			preparedStatement.setString(5, turn.getPlayer().getName());
 			preparedStatement.setString(6, turn.getTurnState().getValue());
 			preparedStatement.setInt(7, turn.getSecondsEarned());
@@ -759,19 +778,21 @@ public class DataManager {
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
-			for (SharedQuestion sharedQuestion : turn.getSharedQuestions()) {
-				String sql = "INSERT INTO deelvraag "
-						+ "VALUES (?, ?, ?, ?, ?, ?)";
-				preparedStatement = connection.prepareStatement(sql);
-				preparedStatement.setInt(1, sharedQuestion.getGameId());
-				preparedStatement.setString(2, sharedQuestion.getRoundType().getValue());
-				preparedStatement.setInt(3, sharedQuestion.getTurnId());
-				preparedStatement.setInt(4, sharedQuestion.getIndexNumber());
-				preparedStatement.setInt(5, sharedQuestion.getQuestionId());
-				preparedStatement.setString(6, sharedQuestion.getAnswer());
-				if (preparedStatement.executeUpdate() > 0) {
-					pushed = true;
-					connection.commit();
+			if (turn.getSharedQuestions() != null) {
+				for (SharedQuestion sharedQuestion : turn.getSharedQuestions()) {
+					String sql = "INSERT INTO deelvraag "
+							+ "VALUES (?, ?, ?, ?, ?, ?)";
+					preparedStatement = connection.prepareStatement(sql);
+					preparedStatement.setInt(1, sharedQuestion.getGameId());
+					preparedStatement.setString(2, sharedQuestion.getRoundType().getValue());
+					preparedStatement.setInt(3, sharedQuestion.getTurnId());
+					preparedStatement.setInt(4, sharedQuestion.getIndexNumber());
+					preparedStatement.setInt(5, sharedQuestion.getQuestionId());
+					preparedStatement.setString(6, sharedQuestion.getAnswer());
+					if (preparedStatement.executeUpdate() > 0) {
+						pushed = true;
+						connection.commit();
+					}
 				}
 			}
 		}catch (SQLException e) {
@@ -792,17 +813,21 @@ public class DataManager {
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
-			for (PlayerAnswer playerAnswer : turn.getPlayerAnswers()) {
-				String sql = "INSERT INTO spelerantwoord VALUES (?, ?, ?, ?, ?, ?)";
-				preparedStatement = connection.prepareStatement(sql);
-				preparedStatement.setInt(1, playerAnswer.getGameId());
-				preparedStatement.setString(2, playerAnswer.getRoundType().getValue());
-				preparedStatement.setInt(3, playerAnswer.getTurnId());
-				preparedStatement.setInt(4, playerAnswer.getAnswerId());
-				preparedStatement.setString(5, playerAnswer.getAnswer());
-				preparedStatement.setInt(6, playerAnswer.getMoment());
-				preparedStatement.executeUpdate();
-				pushed = true;
+			if (turn.getPlayerAnswers() != null) {
+				for (PlayerAnswer playerAnswer : turn.getPlayerAnswers()) {
+					String sql = "INSERT INTO spelerantwoord VALUES (?, ?, ?, ?, ?, ?)";
+					preparedStatement = connection.prepareStatement(sql);
+					preparedStatement.setInt(1, playerAnswer.getGameId());
+					preparedStatement.setString(2, playerAnswer.getRoundType().getValue());
+					preparedStatement.setInt(3, playerAnswer.getTurnId());
+					preparedStatement.setInt(4, playerAnswer.getAnswerId());
+					preparedStatement.setString(5, playerAnswer.getAnswer());
+					preparedStatement.setInt(6, playerAnswer.getMoment());
+					if (preparedStatement.executeUpdate() > 0) {
+						pushed = true;
+						connection.commit();
+					}
+				}
 			}
 		}
 		catch (SQLException e) { }
@@ -934,6 +959,63 @@ public class DataManager {
 			} catch(SQLException ex) {} 
 		}
 		return question;
+	}
+	
+	public Question getRandomQuestionForRoundType(RoundType roundType) {
+		Question question = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT * FROM vraag WHERE rondenaam = ? ORDER BY RAND() LIMIT 1";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, roundType.getValue());
+			data = preparedStatement.executeQuery();
+			if (data.next()) 
+				question = new Question(data);
+		} catch(SQLException e) {
+			System.err.println("Error while fetching a random question for round: " + roundType.getValue());
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		return question;
+	}
+	
+	public Integer getTotalSecondsEarnedInAGame(int gameId, String playerName) {
+		Integer totalSecEarned = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT SUM(sec_verdiend) AS totaal_sec_verdiend FROM beurt WHERE spel_id = ? AND speler = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, gameId);
+			preparedStatement.setString(2, playerName);
+			data = preparedStatement.executeQuery();
+			if (data.next())
+				totalSecEarned = data.getInt("totaal_sec_verdiend");
+		} catch(SQLException e) {
+			System.err.println("Error fetching total seconds earned in a game with id: " + gameId + " and player name: " + playerName);
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		return totalSecEarned;
 	}
 	
 	public int numberOfTimesQuestionAskedTo(String playerName, int questionId) {
@@ -1119,7 +1201,6 @@ public class DataManager {
 	}
 	
 	public ArrayList<ChatMessage> getChatMessages(int gameId) {
-		getConnection();
 		ArrayList<ChatMessage> chatMessages = null;
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;
@@ -1147,19 +1228,14 @@ public class DataManager {
 	}
 	
 	public Connection getConnection() {
-		Connection connection = null;
 		try {
-			/*if (connection != null)
-				connection.close();*/
-			//System.out.println("Connecting.....");
-				connection = DriverManager.getConnection(dbUrl, username, password);
-				connection.setAutoCommit(false);
-			
-			//System.out.println("Connected");
+			Connection connect = cpds.getConnection();
+			connect.setAutoCommit(false);
+			return connect;
 		} catch (SQLException e) {
-			System.err.println("Connection Error: " + e.getMessage());
+			e.printStackTrace();
+			return null;
 		}
-		return connection;
 	}
 	
 }

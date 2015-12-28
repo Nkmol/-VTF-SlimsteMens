@@ -34,7 +34,7 @@ public class MainController {
 		mainFrame.setVisible(true);
 	}
 	
-	public void setRound(JPanel view) {
+	public void setGame(JPanel view) {
 		deleteMenu();
 		mainFrame.setContentPane(view);
 		mainFrame.setVisible(true);

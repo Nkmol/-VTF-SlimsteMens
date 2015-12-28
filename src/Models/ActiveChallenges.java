@@ -31,7 +31,6 @@ public class ActiveChallenges extends Observable {
 	private void getChallengesForPlayer() {
 		//TODO: Zorgen dat de datamanger functie niet vastloopt of heel lang gaat duren
 		ArrayList<GameInfo> challenges = DataManager.getInstance().getAllGameInfosForPlayer(DataManager.getInstance().getCurrentUser().getName());
-		
 		activeChallenges = new ArrayList<GameInfo>();
 		
 		for(int i = 0; i < challenges.size(); i++) {

@@ -8,6 +8,7 @@ import Models.OpenDoor;
 import Models.PlayerAnswer;
 import Models.Round;
 import Models.RoundType;
+import Models.ThreeSixNine;
 import Models.Turn;
 import Models.TurnState;
 import View.GamePanel;
@@ -27,11 +28,12 @@ public class GameController {
 		view.setChatPanel(chatcontroller.returnView());
 		
 		model.addObserver(view);
-		model.updateView();
 		
 		//ActionListeners
 		Utilities.ComponentUtility.addActionListener(view, "btnSubmit", (e) -> Submit_Click());
 		Utilities.ComponentUtility.addActionListener(view, "btnPass", (e) -> Pass_Click());
+		
+		loadLastRound();
 	}
 	
 	public void Submit_Click() {
@@ -62,29 +64,30 @@ public class GameController {
 		return model;
 	}
 	
-	public static RoundController getRoundController(RoundType roundType, Game model) {
-		switch(roundType) {
+	public static RoundController getRoundController(Round round, Game model) {
+		switch(round.getRoundType()) {
 		case ThreeSixNine:
-			return new ThreeSixNineController(model);
+			return new ThreeSixNineController(model, round);
 		case OpenDoor:
-			//return new OpenDoorController(model);
-			//TODO add other controllers
+			return new OpenDoorController(model, round);
+		case Final:
+			return new FinalController(model, round);
 		default:
 			return null;
 		}
 	}
 
-	public void addRound(RoundType roundType) {
-		RoundController roundController = getRoundController(roundType, model);
-		
-		model.addRound(roundController.getModel());
-		view.setRound(roundController.getView());
-	}
-
 	public void loadLastRound() {
-		RoundController roundController = getRoundController(DataManager.getInstance().getLastRoundForGame(model).getRoundType(), model);
+		Round round = DataManager.getInstance().getLastRoundForGame(model);
 		
+		if(round == null) 
+			round = new ThreeSixNine(model);
+
+		RoundController roundController = getRoundController(round, model);
+	
 		model.setRound(roundController.getModel());
 		view.setRound(roundController.getView());
+		
+		roundController.getModel().updateView();
 	}
 }

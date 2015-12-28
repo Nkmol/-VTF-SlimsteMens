@@ -24,17 +24,10 @@ public class ThreeSixNine extends Round {
 	}
 	
 	public void init() {
-		questions = DataManager.getInstance().getQuestions(this);
-		System.out.println(questions);
-		currentTurn.setCurrentQuestion(questions);
-	}
-	
-	public Question getSkippedQuestion() {
-		return skippedQuestion;
-	}
-	
-	public void setSkippedQuestion(Question quesiton) {
-		skippedQuestion = quesiton;
+		//questions = DataManager.getInstance().getQuestions(this);
+		currentTurn.setCurrentQuestion();
+		
+		updateView();
 	}
 
 	@Override

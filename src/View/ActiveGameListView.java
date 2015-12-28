@@ -83,6 +83,7 @@ public class ActiveGameListView extends JPanel implements Observer {
 		if(activeGameViews != null) {
 			for(int i = 0; i < activeGameViews.length; i++) {
 				topPanel.remove(activeGameViews[i]);
+				bottomPanel.remove(activeGameViews[i]);
 			}
 		}
 		

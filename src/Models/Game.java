@@ -18,7 +18,7 @@ public class Game extends Observable {
 	
 	
 	private int id;
-	private Player player1; // <-- THIS IS YOU
+	private Player player1;
 	private Player player2; 
 	private GameState gameState;
 	private ArrayList<Round> rounds;
@@ -31,7 +31,7 @@ public class Game extends Observable {
 		this.player2 = player2;
 		
 		this.gameState = gameState;
-		rounds = DataManager.getInstance().getRounds(this);
+		//rounds = DataManager.getInstance().getRounds(this);
 		chatMessages = DataManager.getInstance().getChatMessages(id);
 	}
 	
@@ -42,7 +42,7 @@ public class Game extends Observable {
 			player2 = DataManager.getInstance().getPlayer(data.getString("speler2"));
 			gameState = GameState.fromString(data.getString("toestand_type"));
 			//rounds = DataManager.getInstance().getRounds(this); // TODO only needed on replay?
-			currentRound = DataManager.getInstance().getLastRoundForGame(this);
+			//currentRound = DataManager.getInstance().getLastRoundForGame(this); // TODO should be done exclusively, as this normally needs a view and model (MVC)
 			chatMessages = DataManager.getInstance().getChatMessages(id);
 		} catch (SQLException e) {
 			System.err.println("Error initializing game");
@@ -132,11 +132,13 @@ public class Game extends Observable {
 	}
 
 	public void addRound(Round model) {
+		if (rounds == null)
+			rounds = new ArrayList<>();
 		rounds.add(model);
 		setCurrentRound(model);
 		
-		DataManager.getInstance().pushRound(getCurrentRound());
-		DataManager.getInstance().pushTurn(getCurrentRound().getCurrentTurn());
+		//DataManager.getInstance().pushRound(getCurrentRound());
+		//DataManager.getInstance().pushTurn(getCurrentRound().getCurrentTurn());
 		
 		setChanged();
 		notifyObservers(this);

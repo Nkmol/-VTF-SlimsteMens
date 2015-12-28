@@ -18,6 +18,13 @@ public class OpenDoorController implements RoundController {
 		model.addObserver(view);
 		model.updateView();
 	}
+	
+	public OpenDoorController(Game parent, Round round) {
+		model = (OpenDoor) round;
+		view = new OpenDoorView(model);
+		model.addObserver(view);
+		model.updateView();
+	}
 
 	@Override
 	public JPanel getView() {
@@ -30,5 +37,4 @@ public class OpenDoorController implements RoundController {
 		// TODO Auto-generated method stub
 		return model;
 	}
-	
 }

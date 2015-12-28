@@ -33,12 +33,14 @@ public class ChatController {
 		ComponentUtility.addActionListener(view, "btnSendMessage", (e) -> btnSendMessage_Press());
 
 		timer = new Timer();
-		timer.schedule(new PerformRepeatedTask(), 5000);
+		timer.scheduleAtFixedRate(new PerformRepeatedTask(), 1000 ,1000);
 		
 	}
 	
 	private void btnSendMessage_Press()
 	{
+	
+		
 		Date date = new Date();
 		String playername = DataManager.getInstance().getCurrentUser().getName();
 		
@@ -50,6 +52,8 @@ public class ChatController {
 		model.send();
 		
 		updateChatMessages(); 
+		
+		view.clearMessageBox();
 	}
 	
 	private void updateChatMessages()

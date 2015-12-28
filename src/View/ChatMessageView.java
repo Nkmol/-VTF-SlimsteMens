@@ -74,6 +74,10 @@ public class ChatMessageView extends JPanel implements Observer {
 		return messageBox.getText();
 	}
 	
+	public void clearMessageBox(){
+		messageBox.setText("");
+	}
+	
 	public void updateChatBehavior(ArrayList<ChatMessage> chatMessages)
 	{
 		//System.out.println("updateChatBehavior");
@@ -83,7 +87,7 @@ public class ChatMessageView extends JPanel implements Observer {
 		for(ChatMessage message: chatMessages){
 			
 		chatBox.append("<" + message.getSenderName() + ">:  " + message.getMessage() + "\n");
-		messageBox.setText("");
+		//messageBox.setText("");
 			
 		}
 		messageBox.requestFocusInWindow();

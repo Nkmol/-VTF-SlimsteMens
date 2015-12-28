@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import Models.Final;
 import net.miginfocom.swing.MigLayout;
 
 public class RoundFinalPanel extends JPanel implements Observer {
@@ -23,7 +24,7 @@ public class RoundFinalPanel extends JPanel implements Observer {
 	private JButton insertAnswer;
 	private JTextField messageBox;
 	
-	public RoundFinalPanel()
+	public RoundFinalPanel(Final model)
 	{
 		constructFinalRound();
 	}
@@ -31,12 +32,6 @@ public class RoundFinalPanel extends JPanel implements Observer {
 	private void constructFinalRound() {
 		// TODO Auto-generated method stub
 		
-		//frame = new JFrame();
-		//frame.setBounds(100, 100, 500, 500);
-		//frame.setSize(500, 555);
-		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//frame.setResizable(false);
-		//frame.getContentPane().setLayout(new MigLayout("", "[470px]", "[1px]"));
 		
 		this.setLayout(new MigLayout());
 		

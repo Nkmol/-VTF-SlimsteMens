@@ -27,10 +27,10 @@ public class Turn {
 	private Question skippedQuestion; //TODO: fuck dit
 	private Round parent;
 	
-	public Turn(RoundType rondeType, Player player, Round parent) {
+	public Turn(RoundType rondeType, Player player, Round parentRound) {
 		this.roundType = rondeType;
 		this.player = player;
-		this.parent = parent;
+		this.parent = parentRound;
 		this.gameId = parent.getGame().getId();
 	}
 	
@@ -85,24 +85,21 @@ public class Turn {
 		this.turnId = turnId;
 	}
 	
-	public Question getQuestion() {	
-		
-		if (questionId > 0) {
-			//TODO: get question for id
-//			return DataManager.getInstance().getques
-		}
-		return null;
-	}
-	
 	public Question getCurrentQuestion(){
 		return currentQuestion;
 	}
 	
 	//TODO move this to database
-	public void setCurrentQuestion(ArrayList<Question> questions) {
+	/*public void setCurrentQuestion(ArrayList<Question> questions) {
 		Random random = new Random();
 		int randomNumber = random.nextInt(questions.size());
 		currentQuestion = questions.get(randomNumber-1);
+		
+		System.out.println(currentQuestion.getText());
+	}*/
+	
+	public void setCurrentQuestion() {
+		currentQuestion = DataManager.getInstance().getRandomQuestionForRoundType(parent.roundType);
 	}
 	
 	public int getQuestionId() {
@@ -143,6 +140,14 @@ public class Turn {
 	
 	public ArrayList<SharedQuestion> getSharedQuestions() {
 		return sharedQuestions;
+	}
+	
+	public Question getSkippedQuestion() {
+		return skippedQuestion;
+	}
+	
+	public void setSkippedQuestion(Question question) {
+		skippedQuestion = question;
 	}
 	
 	public void setSharedQuestions(ArrayList<SharedQuestion> sharedQuestions) {

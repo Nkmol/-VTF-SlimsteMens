@@ -19,6 +19,7 @@ import javax.swing.border.Border;
 import Controllers.ThreeSixNineController;
 import Models.Question;
 import Models.ThreeSixNine;
+import Models.Turn;
 import net.miginfocom.swing.MigLayout;
 
 public class ThreeSixNineView extends JPanel implements Observer {
@@ -53,10 +54,12 @@ public class ThreeSixNineView extends JPanel implements Observer {
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
 		ThreeSixNine threesixnine = (ThreeSixNine)arg;
-		if (threesixnine.getSkippedQuestion() != null) 
-			questionTextArea.setText(threesixnine.getSkippedQuestion().getText());
+		Turn currentTurn = threesixnine.getCurrentTurn();
+		System.out.println("question: " + threesixnine.getCurrentTurn().getCurrentQuestion());
+		if (currentTurn.getSkippedQuestion() != null) 
+			questionTextArea.setText(currentTurn.getSkippedQuestion().getText());
 		else if (threesixnine.getCurrentTurn().getCurrentQuestion() != null) 
-			questionTextArea.setText(threesixnine.getCurrentTurn().getCurrentQuestion().getText());
+			questionTextArea.setText(currentTurn.getCurrentQuestion().getText());
 		
 	}
 }

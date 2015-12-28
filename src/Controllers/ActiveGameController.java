@@ -30,7 +30,7 @@ public class ActiveGameController {
 	public void startGame(int gameId) {
 		GameController gameController = new GameController(gameId, parent);
 
-		parent.setRound(gameController.getView());
+		parent.setGame(gameController.getView());
 	}
 	
 	public void handleButtonClick(int gameId) {
