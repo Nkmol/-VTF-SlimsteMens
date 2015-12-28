@@ -37,8 +37,6 @@ public class DataManager {
 			cpds.setAcquireIncrement(1);
 			//cpds.setDebugUnreturnedConnectionStackTraces(true);
 			//cpds.setUnreturnedConnectionTimeout(30);
-			
-			cpds.setAutoCommitOnClose(false);
 		} catch (PropertyVetoException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1231,7 +1229,9 @@ public class DataManager {
 	
 	public Connection getConnection() {
 		try {
-			return cpds.getConnection();
+			Connection connect = cpds.getConnection();
+			connect.setAutoCommit(false);
+			return connect;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;

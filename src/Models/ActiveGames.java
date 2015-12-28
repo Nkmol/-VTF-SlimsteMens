@@ -38,7 +38,6 @@ public class ActiveGames extends Observable {
 			GameInfo gameInfo = games.get(i);
 			
 			if(gameInfo.getGameState() == GameState.Busy) {
-				System.out.println(gameInfo.getGameId());
 				int gameId = gameInfo.getGameId();	
 				Player player1 = gameInfo.getPlayer1();
 				Player player2 = gameInfo.getPlayer2(); 
