@@ -70,6 +70,7 @@ public abstract class Round extends Observable {
 				Turn turn = new Turn(round.getRoundType(), DataManager.getInstance().getCurrentUser(), round);
 				turn.setTurnId(currentTurn.getTurnId() + 1);
 				turn.setTurnState(TurnState.Busy);
+				currentTurn = turn;
 			}
 			/*
 			 * But when it is not the current player it means the other player had ended its turn
@@ -80,6 +81,7 @@ public abstract class Round extends Observable {
 				Turn turn = new Turn(round.getRoundType(), DataManager.getInstance().getCurrentUser(), round);
 				turn.setTurnId(currentTurn.getTurnId() + 1);
 				turn.setTurnState(TurnState.Busy);
+				currentTurn = turn;
 			}
 			else {
 				System.err.println("error while init new turn");
