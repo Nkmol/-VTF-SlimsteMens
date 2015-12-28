@@ -963,6 +963,63 @@ public class DataManager {
 		return question;
 	}
 	
+	public Question getRandomQuestionForRoundType(RoundType roundType) {
+		Question question = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT * FROM vraag WHERE rondenaam = ? ORDER BY RAND() LIMIT 1";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, roundType.getValue());
+			data = preparedStatement.executeQuery();
+			if (data.next()) 
+				question = new Question(data);
+		} catch(SQLException e) {
+			System.err.println("Error while fetching a random question for round: " + roundType.getValue());
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		return question;
+	}
+	
+	public Integer getTotalSecondsEarnedInAGame(int gameId, String playerName) {
+		Integer totalSecEarned = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT SUM(sec_verdiend) AS totaal_sec_verdiend FROM beurt WHERE spel_id = ? AND speler = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, gameId);
+			preparedStatement.setString(2, playerName);
+			data = preparedStatement.executeQuery();
+			if (data.next())
+				totalSecEarned = data.getInt("totaal_sec_verdiend");
+		} catch(SQLException e) {
+			System.err.println("Error fetching total seconds earned in a game with id: " + gameId + " and player name: " + playerName);
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		return totalSecEarned;
+	}
+	
 	public int numberOfTimesQuestionAskedTo(String playerName, int questionId) {
 		int amountOfTimes = 0;
 		Connection connection = getConnection();
