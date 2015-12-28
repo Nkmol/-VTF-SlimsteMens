@@ -12,9 +12,16 @@ public class Question {
 	private static final int MinimumAnswerPercentage = 80;
 	
 	private int id;
-	private Round round;
-	private String text;
+	protected Round round;
+	protected String text;
+	protected int indexNumber;
 	private ArrayList<Answer> answers;
+
+	public Question(Question question) {
+		text = question.getText();
+		answers = question.getAnswers();
+		id = question.getId();
+	}
 	
 	public Question(int id, Round round, String text) {
 		this.id = id;
@@ -90,5 +97,14 @@ public class Question {
 	public ArrayList<Answer> getAnswers() {
 		return answers;
 	}
+
+	public int getIndexNumber() {
+		if(indexNumber <= 0)
+			System.err.println("indexNumber for sharedQuestion is 0.");
+		return indexNumber;
+	}
 	
+	public void setIndexNumber(int value) {
+		indexNumber = value;
+	}
 }

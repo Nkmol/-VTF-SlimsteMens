@@ -41,7 +41,6 @@ public class ActiveGames extends Observable {
 				int gameId = gameInfo.getGameId();	
 				Player player1 = gameInfo.getPlayer1();
 				Player player2 = gameInfo.getPlayer2(); 
-
 				if(Game.isCurrentPlayerTurn(gameId)) {
 					if(Game.isCurrentUser(player1.getName()))
 						activeGameList.add(new ActiveGameInfo(player1, player2, gameId, true));

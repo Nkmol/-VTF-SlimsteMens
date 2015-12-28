@@ -11,9 +11,7 @@ import Managers.DataManager;
 public class Turn {
 
 	private int gameId;
-	private RoundType roundType;
 	private int turnId;
-	private int questionId;
 	private String playerName;
 	private TurnState turnState;
 	private Player player;
@@ -23,39 +21,41 @@ public class Turn {
 	private Integer secondsFinalLost;
 	private ArrayList<SharedQuestion> sharedQuestions;
 	private ArrayList<PlayerAnswer> playerAnswers;
-	private Question currentQuestion;
-	private Question skippedQuestion; //TODO: fuck dit
+	private SharedQuestion currentQuestion;
+	//private SharedQuestion sharedQuestion;
 	private Round parent;
 	
-	public Turn(RoundType rondeType, Player player, Round parentRound) {
-		this.roundType = rondeType;
+	public Turn(Player player, Round parentRound) {
 		this.player = player;
 		this.parent = parentRound;
 		this.gameId = parent.getGame().getId();
+		this.sharedQuestions = DataManager.getInstance().getSharedQuestions(parentRound, turnId);
 	}
 	
-	public Turn(ResultSet data) { //TODO dont use this constructor anymore -> Conficts with ActiveGame as it has no rounds/games to init
+/*	public Turn(ResultSet data) { //TODO dont use this constructor anymore -> Conficts with ActiveGame as it has no rounds/games to init
 		readResultSet(data);
-	}
-	
-	public Turn(ResultSet data, Round parent) { //TODO parent should already be made, so better to already use it right away?
-		this.parent = parent;
+		this.parent = DataManager.getInstance().g
+	}*/
+
+	public Turn(ResultSet data, Round parentRound) { //TODO parent should already be made, so better to already use it right away?
+		this.parent = parentRound;
 		readResultSet(data);
 	}
 	
 	private void readResultSet(ResultSet data) {
 		try {
 			gameId = data.getInt("spel_id");
-			roundType = RoundType.fromString(data.getString("rondenaam"));
 			turnId = data.getInt("beurt_id");
-			questionId = data.getInt("vraag_id");
+			//questionId = data.getInt("vraag_id");
 			playerName = data.getString("speler");
 			turnState = TurnState.fromString(data.getString("beurtstatus"));
 			secondsEarnd = data.getInt("sec_verdiend");
 			secondsFinalLost = data.getInt("sec_finale_af");
-			sharedQuestions = DataManager.getInstance().getSharedQuestions(this);
+			currentQuestion = (SharedQuestion) DataManager.getInstance().getQuestionForId(data.getInt("vraag_id"));
+			sharedQuestions = DataManager.getInstance().getSharedQuestions(parent, turnId);
+			setCurrentQuestion();
 			//TODO: turn id
-			playerAnswers = DataManager.getInstance().getPlayerAnswers(gameId, roundType, turnId);
+			playerAnswers = DataManager.getInstance().getPlayerAnswers(gameId, parent.getRoundType(), turnId);
 		} catch (SQLException e) {
 			System.err.println("Error initializing Turn");
 			System.err.println(e.getMessage());
@@ -73,10 +73,6 @@ public class Turn {
 		return gameId;
 	}
 	
-	public RoundType getRoundType() {
-		return roundType;
-	}
-	
 	public int getTurnId() {
 		return turnId;
 	}
@@ -85,29 +81,16 @@ public class Turn {
 		this.turnId = turnId;
 	}
 	
-	public Question getCurrentQuestion(){
+	public SharedQuestion getCurrentQuestion(){
 		return currentQuestion;
 	}
 	
-	//TODO move this to database
-	/*public void setCurrentQuestion(ArrayList<Question> questions) {
-		Random random = new Random();
-		int randomNumber = random.nextInt(questions.size());
-		currentQuestion = questions.get(randomNumber-1);
-		
-		System.out.println(currentQuestion.getText());
-	}*/
-	
-	public void setCurrentQuestion() {
-		currentQuestion = DataManager.getInstance().getRandomQuestionForRoundType(parent.roundType);
+	public void setCurrentQuestion(SharedQuestion question) {
+		currentQuestion = question;
 	}
 	
-	public int getQuestionId() {
-		return questionId;
-	}
-	
-	public void setQuestionId(int questionId) {
-		this.questionId = questionId;
+	public void setCurrentQuestion(ArrayList<SharedQuestion> sharedQuestions) {
+		currentQuestion = sharedQuestions.get(sharedQuestions.size() - 1).setTurnId(turnId);
 	}
 	
 	public Player getPlayer() {
@@ -142,24 +125,46 @@ public class Turn {
 		return sharedQuestions;
 	}
 	
-	public Question getSkippedQuestion() {
+/*	public Question getSkippedQuestion() {
 		return skippedQuestion;
 	}
 	
 	public void setSkippedQuestion(Question question) {
 		skippedQuestion = question;
-	}
+	}*/
 	
-	public void setSharedQuestions(ArrayList<SharedQuestion> sharedQuestions) {
+	/*public void setSharedQuestions(ArrayList<SharedQuestion> sharedQuestions) {
 		this.sharedQuestions = sharedQuestions;
-	}
+	}*/
 	
+	/*
 	public void addSharedQuestion(SharedQuestion sharedQuestion) {
 		if (sharedQuestions == null)
 			sharedQuestions = new ArrayList<>();
 		
 		sharedQuestions.add(sharedQuestion);
+	}*/
+	
+	public void setCurrentQuestion() {
+		if(sharedQuestions.size() > 0)
+			currentQuestion = sharedQuestions.get(sharedQuestions.size() - 1).setTurnId(turnId);
+		else
+			currentQuestion = new SharedQuestion(DataManager.getInstance().getRandomQuestionForRoundType(parent.roundType));
+		System.out.println("current q: " + currentQuestion.getId());
 	}
+	
+/*	public void setSharedQuestion() {
+		if(sharedQuestions.size() > 0)
+			currentQuestion = sharedQuestions.get(sharedQuestions.size() - 1).setTurnId(turnId);
+	}
+	
+	public void setSharedQuestion(ArrayList<SharedQuestion> sharedQuestions) {
+		currentQuestion = sharedQuestions.get(sharedQuestions.size() - 1).setTurnId(turnId);
+	}*/
+	
+	/*public void setSharedQuestion(SharedQuestion sharedQuestion) {
+		this.currentQuestion = sharedQuestion;
+	}*/
 	
 	public ArrayList<PlayerAnswer> getPlayerAnswers() {
 		return playerAnswers;
@@ -207,23 +212,19 @@ public class Turn {
 		return playerName;
 	}
 	
+	public Round getRound() {
+		return parent;
+	}
+
 	public static void pushTurn(Turn turn, TurnState turnState, String answer) {
 		//SharedQuestion
-		if(turn.roundType == RoundType.ThreeSixNine || turn.roundType == RoundType.Puzzle) {
-			int index = turn.getSharedQuestions() != null ? turn.getSharedQuestions().size() + 1 : 1;
-			
-			turn.setQuestionId(turn.getCurrentQuestion().getId());
-			turn.addSharedQuestion(new SharedQuestion(turn, index, answer));
+		if(turn.getRound().roundType == RoundType.ThreeSixNine || turn.getRound().roundType == RoundType.Puzzle) {
+			//turn.setQuestionId(turn.getCurrentQuestion().getId());
 			turn.setTurnState(turnState);
 			
 			DataManager.getInstance().updateTurn(turn);
-			try {
-				DataManager.getInstance().pushSharedQuestion(turn);
-			} catch (SQLException e) {
-				System.err.println("Error pushing shared question");
-				System.err.println(e.getMessage());
-			}
+			if(answer != null && !answer.isEmpty())
+				DataManager.getInstance().updateSharedQuestionAntwoord(turn.getCurrentQuestion(), answer);
 		}
 	}
-	
 }
