@@ -32,7 +32,7 @@ public class ChallengeListController {
 	public void startGame(int gameId) {
 		GameController gameController = new GameController(gameId, parent);
 		
-		parent.SetViewCategoryPanel(gameController.getView());
+		parent.setGame(gameController.getView());
 	}
 	
 	public void handleAcceptButtonClick(int gameId) {
