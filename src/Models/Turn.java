@@ -90,12 +90,16 @@ public class Turn {
 	}
 	
 	//TODO move this to database
-	public void setCurrentQuestion(ArrayList<Question> questions) {
+	/*public void setCurrentQuestion(ArrayList<Question> questions) {
 		Random random = new Random();
 		int randomNumber = random.nextInt(questions.size());
 		currentQuestion = questions.get(randomNumber-1);
 		
 		System.out.println(currentQuestion.getText());
+	}*/
+	
+	public void setCurrentQuestion() {
+		currentQuestion = DataManager.getInstance().getRandomQuestionForRoundType(parent.roundType);
 	}
 	
 	public int getQuestionId() {

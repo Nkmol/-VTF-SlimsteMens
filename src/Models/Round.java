@@ -91,7 +91,7 @@ public abstract class Round extends Observable {
 			currentTurn = new Turn(roundType, DataManager.getInstance().getCurrentUser(), this);
 			currentTurn.setTurnState(TurnState.Busy);
 			currentTurn.setTurnId(1);
-			currentTurn.setCurrentQuestion(questions);
+			currentTurn.setCurrentQuestion();
 			DataManager.getInstance().pushTurn(currentTurn);
 		}
 		
