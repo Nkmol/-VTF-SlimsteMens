@@ -18,7 +18,7 @@ public class SharedQuestion extends Question {
 	}
 	
 	public SharedQuestion(ResultSet data, Round round) throws SQLException {
-		super(DataManager.getInstance().getQuestionForId(data.getInt("vraag_id")));
+		super(DataManager.getInstance().getQuestionForId(data.getInt("vraag_id"), round));
 		try {
 			this.round = round;
 			indexNumber = data.getInt("volgnummer");

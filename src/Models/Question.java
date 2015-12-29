@@ -41,7 +41,7 @@ public class Question {
 		}
 	}
 	
-	public Question(ResultSet data) {
+/*	public Question(ResultSet data) {
 		try {
 			id = data.getInt("vraag_id");
 			//TODO: try to get the round 
@@ -51,7 +51,7 @@ public class Question {
 			System.err.println("Error initializing quesiton");
 			System.err.println(e.getMessage());
 		}
-	}
+	}*/
 	
 	public boolean isPlayerAnswerCorrect(PlayerAnswer playerAnswer) {
 		

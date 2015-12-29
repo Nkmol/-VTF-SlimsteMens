@@ -51,7 +51,7 @@ public class Turn {
 			turnState = TurnState.fromString(data.getString("beurtstatus"));
 			secondsEarnd = data.getInt("sec_verdiend");
 			secondsFinalLost = data.getInt("sec_finale_af");
-			currentQuestion = (SharedQuestion) DataManager.getInstance().getQuestionForId(data.getInt("vraag_id"));
+			currentQuestion = (SharedQuestion) DataManager.getInstance().getQuestionForId(data.getInt("vraag_id"), parent);
 			sharedQuestions = DataManager.getInstance().getSharedQuestions(parent, turnId);
 			setCurrentQuestion();
 			//TODO: turn id
@@ -91,6 +91,14 @@ public class Turn {
 	
 	public void setCurrentQuestion(ArrayList<SharedQuestion> sharedQuestions) {
 		currentQuestion = sharedQuestions.get(sharedQuestions.size() - 1).setTurnId(turnId);
+	}
+	
+	public void setCurrentQuestion() {
+		if(sharedQuestions.size() > 0)
+			currentQuestion = sharedQuestions.get(sharedQuestions.size() - 1).setTurnId(turnId);
+		else
+			currentQuestion = new SharedQuestion(DataManager.getInstance().getRandomQuestionForRoundType(parent));
+		System.out.println("current q: " + currentQuestion.getId());
 	}
 	
 	public Player getPlayer() {
@@ -144,14 +152,6 @@ public class Turn {
 		
 		sharedQuestions.add(sharedQuestion);
 	}*/
-	
-	public void setCurrentQuestion() {
-		if(sharedQuestions.size() > 0)
-			currentQuestion = sharedQuestions.get(sharedQuestions.size() - 1).setTurnId(turnId);
-		else
-			currentQuestion = new SharedQuestion(DataManager.getInstance().getRandomQuestionForRoundType(parent.roundType));
-		System.out.println("current q: " + currentQuestion.getId());
-	}
 	
 /*	public void setSharedQuestion() {
 		if(sharedQuestions.size() > 0)

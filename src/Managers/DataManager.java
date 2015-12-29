@@ -620,7 +620,6 @@ public class DataManager {
 		return turns;
 	}
 	
-	// TODO Only use this -> Conflicting with Game.isCurrentPlayerTurn(int)
 	public Turn getLastTurnForGame(Round round) {
 		Turn turn = null;
 		Connection connection = getConnection();
@@ -774,11 +773,6 @@ public class DataManager {
 				preparedStatement.setInt(8, turn.getSecondsFinalLost());
 			
 			if (preparedStatement.executeUpdate() > 0) {
-//				if (roundType == RoundType.ThreeSixNine || roundType == RoundType.Puzzle) {
-//					pushSharedQuestion(turn);
-//				} else if (roundType != RoundType.ThreeSixNine) {
-//					pushPlayerAnswer(turn); //TODO delete from here 
-//				}
 				turnPushed = true;
 				connection.commit();
 			}
@@ -886,19 +880,11 @@ public class DataManager {
 				preparedStatement.setInt(1, turn.getGameId());
 				preparedStatement.setString(2, turn.getRound().getRoundType().getValue());
 				preparedStatement.setInt(3, turn.getTurnId());
-				if (turn.getCurrentQuestion() instanceof SharedQuestion) {
-					SharedQuestion sharedQuestion = turn.getCurrentQuestion();
-					preparedStatement.setInt(4, sharedQuestion.getIndexNumber());
-					preparedStatement.setInt(5, sharedQuestion.getId());
-					preparedStatement.setNull(6, Types.CHAR);
-
-				}
-				else {
-					Question question = turn.getCurrentQuestion();
-					preparedStatement.setInt(4, question.getIndexNumber());
-					preparedStatement.setInt(5, question.getId());
-					preparedStatement.setNull(6, Types.CHAR);
-				}
+				
+				SharedQuestion sharedQuestion = turn.getCurrentQuestion();
+				preparedStatement.setInt(4, sharedQuestion.getIndexNumber());
+				preparedStatement.setInt(5, sharedQuestion.getId());
+				preparedStatement.setNull(6, Types.CHAR);
 				
 				if (preparedStatement.executeUpdate() > 0) {
 					pushed = true;
@@ -1078,7 +1064,7 @@ public class DataManager {
 		return questions;
 	}
 	
-	public Question getQuestionForId(int id) {
+	public Question getQuestionForId(int id, Round round) {
 		Question question = null;
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;
@@ -1089,7 +1075,7 @@ public class DataManager {
 			preparedStatement.setInt(1, id);
 			data = preparedStatement.executeQuery();
 			if (data.next()) 
-				question = new Question(data);
+				question = new Question(data, round);
 		} catch(SQLException e) {
 			System.err.println("Error while fetching the question with id: " + id);
 			System.err.println(e.getMessage());
@@ -1106,7 +1092,7 @@ public class DataManager {
 		return question;
 	}
 	
-	public Question getRandomQuestionForRoundType(RoundType roundType) {
+	public Question getRandomQuestionForRoundType(Round round) {
 		Question question = null;
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;
@@ -1114,12 +1100,12 @@ public class DataManager {
 		try {
 			String sql = "SELECT * FROM vraag WHERE rondenaam = ? ORDER BY RAND() LIMIT 1";
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, roundType.getValue());
+			preparedStatement.setString(1, round.getRoundType().getValue());
 			data = preparedStatement.executeQuery();
 			if (data.next()) 
-				question = new Question(data);
+				question = new Question(data, round);
 		} catch(SQLException e) {
-			System.err.println("Error while fetching a random question for round: " + roundType.getValue());
+			System.err.println("Error while fetching a random question for round: " + round.getRoundType().getValue());
 			System.err.println(e.getMessage());
 		} finally {
 			try {
