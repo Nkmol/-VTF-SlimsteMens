@@ -24,6 +24,29 @@ public class OpenDoor extends Round {
 	public void init() {
 		currentTurn.setCurrentQuestion();
 		updateView();
+	//TODO: function to check turn
+	}
+	
+	public void setNewQuestion() {
+		// Get the view to update question with a new question
+		// TODO load all questions
+		/*int current = this.getQuestions().indexOf(currentQuestion);
+		
+		if(this.getQuestions().get(current + 1) != null){
+
+			setCurrentQuestion(++current);
+
+			setChanged();
+			notifyObservers();
+		}*/
+	}
+	
+//	public Question getCurrentQuestion(){
+//		return currentQuestion;
+//	}
+	
+	public void setCurrentQuestion(int index){
+		/*this.currentQuestion = this.getQuestions().get(index);*/
 	}
 
 	@Override

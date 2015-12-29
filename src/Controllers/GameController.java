@@ -38,17 +38,12 @@ public class GameController {
 	}
 	
 	public void Submit_Click() {
-		Round currentRound = model.getCurrentRound();
-		int answerId = currentRound.generateAnswerId();
-		
-		Turn currentTurn = currentRound.getCurrentTurn();
-		currentRound.getCurrentTurn().addPlayerAnswer(new PlayerAnswer(currentTurn,answerId, view.txtInput.getText(), currentTurn.getTime()));
-		
-		currentRound.onSubmit(view.txtInput.getText());
+		model.getCurrentRound().onSubmit(view.txtInput.getText());
+//		parent.ShowMainPanel();
 	}
 	
 	public void Pass_Click() {
-		model.getCurrentRound().endTurn(TurnState.Pass, 0);
+		Turn.pushTurn(model.getCurrentRound().getCurrentTurn(), TurnState.Pass, null);
 		//model.getPlayerGame1().stopTimer();
 		parent.ShowMainPanel();
 	}

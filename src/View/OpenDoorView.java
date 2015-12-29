@@ -114,9 +114,9 @@ public class OpenDoorView extends JPanel implements Observer{
 		
 		Question currentQuestion = null;
 		
-		if (currentTurn.getSkippedQuestion() != null) 
-			currentQuestion = currentTurn.getSkippedQuestion();
-		else if (openDoor.getCurrentTurn().getCurrentQuestion() != null) 
+//		if (currentTurn.getSkippedQuestion() != null) 
+//			currentQuestion = currentTurn.getSkippedQuestion();
+		if (openDoor.getCurrentTurn().getCurrentQuestion() != null) 
 			currentQuestion = currentTurn.getCurrentQuestion();
 		
 		if (currentQuestion != null) {
