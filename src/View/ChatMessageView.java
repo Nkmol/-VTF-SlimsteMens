@@ -90,7 +90,7 @@ public class ChatMessageView extends JPanel implements Observer {
 		//messageBox.setText("");
 			
 		}
-		messageBox.requestFocusInWindow();
+		//messageBox.requestFocusInWindow();
 	}
 	
 	@Override

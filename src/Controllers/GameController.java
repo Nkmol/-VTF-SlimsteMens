@@ -3,6 +3,7 @@ package Controllers;
 import javax.swing.JPanel;
 
 import Managers.DataManager;
+import Models.Final;
 import Models.Game;
 import Models.OpenDoor;
 import Models.PlayerAnswer;
@@ -65,7 +66,11 @@ public class GameController {
 	}
 	
 	public static RoundController getRoundController(Round round, Game model) {
-		switch(round.getRoundType()) {
+		
+		// TODO switch om terug naar round.getRoundType()
+
+		//switch(round.getRoundType()) {
+		switch(RoundType.Final) {
 		case ThreeSixNine:
 			return new ThreeSixNineController(model, round);
 		case OpenDoor:
@@ -80,8 +85,11 @@ public class GameController {
 	public void loadLastRound() {
 		Round round = DataManager.getInstance().getLastRoundForGame(model);
 		
-		if(round == null) 
-			round = new ThreeSixNine(model);
+		if(round == null) {	
+			//round = new ThreeSixNine(model);
+			round = new Final(model);
+		}
+			
 
 		RoundController roundController = getRoundController(round, model);
 	

@@ -706,8 +706,10 @@ public class DataManager {
 			preparedStatement.setInt(7, turn.getSecondsEarned());
 			if (roundType != RoundType.Final) 
 				preparedStatement.setNull(8, Types.INTEGER);
-			else 
-				preparedStatement.setInt(8, turn.getSecondsFinalLost());
+			else {
+				preparedStatement.setInt(8, 25);
+				//preparedStatement.setInt(8, turn.getSecondsFinalLost());
+			}
 			if (preparedStatement.executeUpdate() > 0) {
 				if (roundType == RoundType.ThreeSixNine || roundType == RoundType.Puzzle) {
 					pushSharedQuestion(turn);

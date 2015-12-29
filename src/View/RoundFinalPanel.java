@@ -13,52 +13,49 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import Models.Final;
+import Models.ThreeSixNine;
+import Models.Turn;
 import net.miginfocom.swing.MigLayout;
 
 public class RoundFinalPanel extends JPanel implements Observer {
 
 	
-	private JFrame frame;
+	
 	private JLabel question;
 	private JLabel timeremaining;
 	private JButton insertAnswer;
 	private JTextField messageBox;
+	private Final model;
+	
 	
 	public RoundFinalPanel(Final model)
 	{
+		this.model = model;
 		constructFinalRound();
 	}
 
 	private void constructFinalRound() {
 		// TODO Auto-generated method stub
-		
-		
+
 		this.setLayout(new MigLayout());
 		
 		timeremaining = new JLabel();
-		timeremaining.setText("Time left: " + 33 + " sec");
+		timeremaining.setText("Time left: " + model.getCurrentTurn().getTime() + " sec");
 		this.add(timeremaining, "wrap");
 		
 		question = new JLabel();
-		question.setText("How many Legs has a human?");
+		question.setText(model.getQuestions().get(0).getText());
 		this.add(question, "wrap");
 		
-		messageBox = new JTextField(40);
+		/*messageBox = new JTextField(40);
 		messageBox.requestFocusInWindow();
-		
-		
-		this.add(messageBox);
-
-		insertAnswer = new JButton("Answer");
-		insertAnswer.addActionListener(e -> activateReponseBehavior());
+		this.add(messageBox); */
+		//insertAnswer = new JButton("Answer");
+		//insertAnswer.addActionListener(e -> activateReponseBehavior());
 
 		
-		this.add(insertAnswer);
+		//this.add(insertAnswer);
 
-		frame.getContentPane().add(this, "cell 0 0,growx,aligny top");
-		frame.setVisible(true);
-		
-		
 	}
 	
 	private void activateReponseBehavior(){
@@ -85,11 +82,11 @@ public class RoundFinalPanel extends JPanel implements Observer {
 	public void update(Observable arg0, Object arg1) {
 		// TODO Auto-generated method stub
 		
-	}
-	
-	public void paintComponent(Graphics g)
-	{
-		super.paintComponent(g);
+		Final model = (Final)arg1;
+		Turn currentTurn = model.getCurrentTurn();
+		System.out.println("question: " + model.getCurrentTurn().getCurrentQuestion());
+
+		
 	}
 	
 }

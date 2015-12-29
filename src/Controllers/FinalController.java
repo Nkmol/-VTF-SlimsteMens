@@ -31,13 +31,13 @@ public class FinalController implements RoundController {
 	@Override
 	public JPanel getView() {
 		// TODO Auto-generated method stub
-		return null;
+		return view;
 	}
 
 	@Override
 	public Round getModel() {
 		// TODO Auto-generated method stub
-		return null;
+		return model;
 	}
 	
 	
