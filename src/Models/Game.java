@@ -55,11 +55,11 @@ public class Game extends Observable {
 	}
 	
 	public static boolean isCurrentPlayerTurn(int gameId) {
-		Turn lastTurn = DataManager.getInstance().getLastTurnForGame(gameId);
+		TurnInfo lastTurn = DataManager.getInstance().getLastInfoTurnForGame(gameId);
 		if(lastTurn != null) {
-			if(!isCurrentUser(lastTurn.getPlayerName()) && lastTurn.getTurnState() != TurnState.Busy) 
+			if(!isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() != TurnState.Busy) 
 				return true;
-			else if(isCurrentUser(lastTurn.getPlayerName()) && lastTurn.getTurnState() == TurnState.Busy)
+			else if(isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() == TurnState.Busy)
 				return true;
 			else 
 				return false; 

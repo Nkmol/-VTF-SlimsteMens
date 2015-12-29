@@ -63,7 +63,7 @@ public class Puzzle extends Round {
 		// just do it randomly for now
 		SharedQuestion question;
 		Random r = new Random();
-		for (int I = 0; I < QuestionAmount; I++) {
+		/*for (int I = 0; I < QuestionAmount; I++) {
 			int Index = r.nextInt(getQuestions().size());
 			question = new SharedQuestion(
 					game.getId(), 
@@ -73,7 +73,7 @@ public class Puzzle extends Round {
 					getQuestions().get(Index).getId(), 
 					null);
 			currentTurn.getSharedQuestions().add(question);
-		}
+		}*/
 	}
 	
 	private void NextQuestion() {
@@ -91,12 +91,14 @@ public class Puzzle extends Round {
 	public Question[] getPuzzleQuestions() {
 		Question[] puzzleQuestions = new Question[QuestionAmount];
 
-		for (int I = 0; I < puzzleQuestions.length && I < currentTurn.getSharedQuestions().size(); I++)
+		// TODO load all questions
+		/*for (int I = 0; I < puzzleQuestions.length && I < currentTurn.getSharedQuestions().size(); I++)
 			for (Question question : getQuestions())
-				if (currentTurn.getSharedQuestions().get(I).getQuestionId() == question.getId()) {
+				if (currentTurn.getSharedQuestions().get(I).getId() == question.getId()) {
 					 puzzleQuestions[I] = question;
 					 break;
 				}
+		*/
 		return puzzleQuestions;
 	}
 	
@@ -106,9 +108,10 @@ public class Puzzle extends Round {
 	
 	public Question GetQuestion() {
 		SharedQuestion sharedQuestion = getCurrentTurn().getSharedQuestions().get(CurrentSharedQuestion);
-		for (Question question : getQuestions())
-			if (sharedQuestion.getQuestionId() == question.getId())
-				return question;
+		// TODO load all questions
+		/*for (Question question : getQuestions())
+			if (sharedQuestion.getId() == question.getId())
+				return question;*/
 		return null;
 	}
 

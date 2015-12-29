@@ -1,15 +1,20 @@
 package Models;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
+
+import Managers.DataManager;
 
 public class Final extends Round {
 
 	private final static int POINTS_QUESTION = 20;
+	protected ArrayList<Question> questions;
 	Question currentQuestion;
 	
 	
 	public Final(Game game) {
 		super(game, RoundType.Final);
+		questions =  DataManager.getInstance().getQuestions(this);
 		init();
 	}
 	
@@ -22,6 +27,10 @@ public class Final extends Round {
 		currentTurn.setCurrentQuestion();
 		updateView();
 	}
+	
+	public ArrayList<Question> getQuestions() {
+		return questions;
+	}
 
 	@Override
 	public void onSubmit(String answer) {
@@ -32,6 +41,7 @@ public class Final extends Round {
 		else 
 			Turn.pushTurn(currentTurn, TurnState.Wrong, answer);
 		
+		updateView();
 	}
 
 }

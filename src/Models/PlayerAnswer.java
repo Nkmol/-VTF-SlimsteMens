@@ -14,7 +14,7 @@ public class PlayerAnswer {
 	
 	public PlayerAnswer(Turn turn, int answerId, String answer, int moment) {
 		this.gameId = turn.getGameId();
-		this.roundType = turn.getRoundType();
+		this.roundType = turn.getRound().getRoundType();
 		this.turnId = turn.getTurnId();
 		this.answerId = answerId;
 		this.answer = answer;

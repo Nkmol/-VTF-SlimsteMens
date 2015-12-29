@@ -25,8 +25,6 @@ public class ThreeSixNine extends Round {
 	
 	public void init() {
 		//questions = DataManager.getInstance().getQuestions(this);
-		currentTurn.setCurrentQuestion();
-		
 		updateView();
 	}
 

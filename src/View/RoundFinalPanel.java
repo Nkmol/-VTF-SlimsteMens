@@ -19,8 +19,6 @@ import net.miginfocom.swing.MigLayout;
 
 public class RoundFinalPanel extends JPanel implements Observer {
 
-	
-	
 	private JLabel question;
 	private JLabel timeremaining;
 	private JButton insertAnswer;
@@ -44,18 +42,8 @@ public class RoundFinalPanel extends JPanel implements Observer {
 		this.add(timeremaining, "wrap");
 		
 		question = new JLabel();
-		question.setText(model.getQuestions().get(0).getText());
+		//question.setText(model );//model.getQuestions().get(0).getText());
 		this.add(question, "wrap");
-		
-		/*messageBox = new JTextField(40);
-		messageBox.requestFocusInWindow();
-		this.add(messageBox); */
-		//insertAnswer = new JButton("Answer");
-		//insertAnswer.addActionListener(e -> activateReponseBehavior());
-
-		
-		//this.add(insertAnswer);
-
 	}
 	
 	private void activateReponseBehavior(){
@@ -82,11 +70,14 @@ public class RoundFinalPanel extends JPanel implements Observer {
 	public void update(Observable arg0, Object arg1) {
 		// TODO Auto-generated method stub
 		
+		System.out.println("Hij komt in de update");
+		
 		Final model = (Final)arg1;
 		Turn currentTurn = model.getCurrentTurn();
 		System.out.println("question: " + model.getCurrentTurn().getCurrentQuestion());
 
-		
+		if (model.getCurrentTurn().getCurrentQuestion() != null) 
+			question.setText(currentTurn.getCurrentQuestion().getText());
 	}
 	
 }
