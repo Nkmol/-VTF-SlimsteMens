@@ -12,7 +12,7 @@ public class OpenDoor extends Round {
 		super(game, RoundType.OpenDoor);
 		
 		roundType = RoundType.OpenDoor;
-		setCurrrentTurn(new Turn(roundType, DataManager.getInstance().getCurrentUser(), this));
+		setCurrrentTurn(new Turn(DataManager.getInstance().getCurrentUser(), this));
 	}
 	
 	public OpenDoor(ResultSet data, Game game) {

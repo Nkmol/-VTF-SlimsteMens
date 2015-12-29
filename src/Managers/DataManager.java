@@ -757,7 +757,7 @@ public class DataManager {
 			String sql = "INSERT INTO beurt "
 					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 			preparedStatement = connection.prepareStatement(sql);
-			RoundType roundType = turn.getRoundType();
+			RoundType roundType = turn.getRound().getRoundType();
 			preparedStatement.setInt(1, turn.getGameId());
 			preparedStatement.setString(2, roundType.getValue());
 			preparedStatement.setInt(3, turn.getTurnId());
@@ -817,7 +817,7 @@ public class DataManager {
 			else 
 				preparedStatement.setNull(3, Types.INTEGER);
 			preparedStatement.setInt(4, turn.getGameId());
-			preparedStatement.setString(5, turn.getRoundType().getValue());
+			preparedStatement.setString(5, turn.getRound().getRoundType().getValue());
 			preparedStatement.setInt(6, turn.getTurnId());
 			if (preparedStatement.executeUpdate() > 0) {
 				updated = true;
@@ -884,7 +884,7 @@ public class DataManager {
 						+ "VALUES (?, ?, ?, ?, ?, ?)";
 				preparedStatement = connection.prepareStatement(sql);
 				preparedStatement.setInt(1, turn.getGameId());
-				preparedStatement.setString(2, turn.getRoundType().getValue());
+				preparedStatement.setString(2, turn.getRound().getRoundType().getValue());
 				preparedStatement.setInt(3, turn.getTurnId());
 				if (turn.getCurrentQuestion() instanceof SharedQuestion) {
 					SharedQuestion sharedQuestion = turn.getCurrentQuestion();

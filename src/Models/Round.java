@@ -70,7 +70,7 @@ public abstract class Round extends Observable {
 			 */
 			else if(Game.isCurrentPlayerTurn(round.getGame().getId()) && Game.isCurrentUser(lastTurn.getPlayerName()) && lastTurn.getTurnState() != TurnState.Busy) {
 				System.out.println("continue answering");
-				Turn turn = new Turn(round.getRoundType(), DataManager.getInstance().getCurrentUser(), round);
+				Turn turn = new Turn( DataManager.getInstance().getCurrentUser(), round);
 				turn.setTurnId(lastTurn.getTurnId());
 				turn.setTurnState(TurnState.Busy);
 				lastTurn = turn;
@@ -84,7 +84,7 @@ public abstract class Round extends Observable {
 			 */
 			else if(Game.isCurrentPlayerTurn(round.getGame().getId()) && !Game.isCurrentUser(lastTurn.getPlayerName()) && lastTurn.getTurnState() != TurnState.Busy) {
 				System.out.println("Other play ended turn, it is your turn");
-				Turn turn = new Turn(round.getRoundType(), DataManager.getInstance().getCurrentUser(), round);
+				Turn turn = new Turn(DataManager.getInstance().getCurrentUser(), round);
 				
 				turn.setTurnId(lastTurn.getTurnId() + 1);
 				turn.setTurnState(TurnState.Busy);
@@ -114,7 +114,7 @@ public abstract class Round extends Observable {
 			/*
 			 * We don't have a turn so we need to push a new turn to the database
 			 */
-			lastTurn = new Turn(roundType, DataManager.getInstance().getCurrentUser(), this);
+			lastTurn = new Turn(DataManager.getInstance().getCurrentUser(), this);
 			lastTurn.setTurnState(TurnState.Busy);
 			lastTurn.setTurnId(1);
 			lastTurn.setCurrentQuestion();
