@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import Models.Framed;
+import Models.Question;
 import Models.Turn;
 
 public class FramedView extends JPanel implements Observer{
@@ -86,11 +87,10 @@ public class FramedView extends JPanel implements Observer{
 		// TODO Auto-generated method stub
 		Framed framed = (Framed)arg;
 		Turn currentTurn = framed.getCurrentTurn();
-		System.out.println("question: " + framed.getCurrentTurn().getCurrentQuestion());
-		if (currentTurn.getSkippedQuestion() != null) 
-			questionTextArea.setText(currentTurn.getSkippedQuestion().getText());
-		else if (framed.getCurrentTurn().getCurrentQuestion() != null) 
-			questionTextArea.setText(currentTurn.getCurrentQuestion().getText());
+		Question currentQuestion = currentTurn.getCurrentQuestion();
+		
+		if (currentQuestion != null) 
+			questionTextArea.setText(currentQuestion.getText());
 		
 	}
 }

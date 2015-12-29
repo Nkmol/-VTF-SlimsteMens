@@ -18,6 +18,7 @@ public class PlayerListView extends JPanel implements Observer{
 	private PlayerView[] playerViews;
 	private PlayerListController controller;
 	private JPanel container;
+	private JScrollPane scroll;
 	
 	public PlayerListView(PlayerListController controller) {
 		
@@ -27,23 +28,19 @@ public class PlayerListView extends JPanel implements Observer{
 		setLayout(new BorderLayout());
 		setBackground(new Color(193,212,255));
 		
-		container = new JPanel();
-		container.setPreferredSize(new Dimension(0,0));
+		container = new JPanel(new CustomFlowLayout());
+		//container.setPreferredSize(new Dimension(0,0));
 		
-		JScrollPane scroll = new JScrollPane(container, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scroll = new JScrollPane(container, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		add(scroll, BorderLayout.CENTER);
 		
 	}
 
 	private void updatePlayers(ArrayList<ChallengedPlayer> players) {
-		
-		if(playerViews != null) {
-			for(int i = 0; i < playerViews.length; i++) {
-				container.remove(playerViews[i]);
-			}
-		}
-		
+
 		playerViews = new PlayerView[players.size()];
+		
+		JPanel containerTemp = new JPanel(new CustomFlowLayout());
 		
 		for(int i = 0; i < players.size(); i++) {
 			playerViews[i] = new PlayerView(players.get(i).getPlayer(), players.get(i).getRank(), !players.get(i).isChallenged(), controller); // TODO add a check to see if the player has already been challenged.

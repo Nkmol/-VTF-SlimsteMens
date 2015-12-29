@@ -41,8 +41,46 @@ public class ActivePlayers extends Observable{
 				}
 			}
 		}		
-		activePlayers = players;
+		
+		calculateDifference(players);
+		
+		//activePlayers = players;
 		notifyObs();
+	}
+	
+	private void calculateDifference(ArrayList<ChallengedPlayer> players) {
+		if(activePlayers == null) {
+			activePlayers = players;
+		}
+		else {
+			
+			for(int i = 0; i < activePlayers.size(); i++) {
+				for(int n = 0; n < players.size(); n++) {
+					// TODO function for deleting removed players.
+				}
+			}
+			
+			
+			
+			for(int i = 0; i < players.size(); i++) {
+				ChallengedPlayer player = players.get(i);
+				
+				if (!activePlayers.contains(player)) {
+					
+					for(int n = 0; n < activePlayers.size(); n++) {
+						ChallengedPlayer activePlayer = activePlayers.get(n);
+						
+						if(player.getName().equals(activePlayer.getName())) {
+							activePlayer = player;
+						}
+						else {
+							activePlayers.add(player);
+						}
+					}
+					
+				}
+			}
+		}
 	}
 	
 	private void notifyObs() {
