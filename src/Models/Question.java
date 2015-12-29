@@ -17,10 +17,12 @@ public class Question {
 	protected int indexNumber;
 	private ArrayList<Answer> answers;
 
+	//TODO ugly ...
 	public Question(Question question) {
 		text = question.getText();
 		answers = question.getAnswers();
 		id = question.getId();
+		round = question.getRound();
 	}
 	
 	public Question(int id, Round round, String text) {
