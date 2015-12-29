@@ -10,16 +10,16 @@ public class Framed extends Round {
 	
 	public Framed(Game game) {
 		super(game, RoundType.Framed);	
+		init();
 	}
 	
 	public Framed(ResultSet data, Game game) {
 		super(data,game);
+		init();
 	}
 	
 	public void init() {
 		//questions = DataManager.getInstance().getQuestions(this);
-		currentTurn.setCurrentQuestion();
-		
 		updateView();
 	}
 
