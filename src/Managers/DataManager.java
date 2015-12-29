@@ -763,8 +763,8 @@ public class DataManager {
 			if (roundType == RoundType.ThreeSixNine || roundType == RoundType.Puzzle) 
 				preparedStatement.setNull(4, Types.INTEGER);
 			else 
-				preparedStatement.setInt(4, 6);
-			//preparedStatement.setInt(4, turn.getCurrentQuestion().getId());
+				//preparedStatement.setInt(4, 6);
+			preparedStatement.setInt(4, turn.getCurrentQuestion().getId());
 			preparedStatement.setString(5, turn.getPlayer().getName());
 			preparedStatement.setString(6, turn.getTurnState().getValue());
 			preparedStatement.setInt(7, turn.getSecondsEarned());
