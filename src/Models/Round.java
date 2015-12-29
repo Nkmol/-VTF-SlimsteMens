@@ -45,6 +45,8 @@ public abstract class Round extends Observable {
 		currentTurn.startTimer();
 	}
 	
+	//Generating beginning of turn
+	//TODO add other round func
 	public Turn initCurrentTurn(Round round) {
 		
 		Turn lastTurn = DataManager.getInstance().getLastTurnForGame(round);
@@ -76,36 +78,47 @@ public abstract class Round extends Observable {
 				lastTurn = turn;
 				
 				DataManager.getInstance().pushTurn(lastTurn);
-				DataManager.getInstance().pushSharedQuestion(lastTurn);
+				if(round.getRoundType() == RoundType.ThreeSixNine)
+					DataManager.getInstance().pushSharedQuestion(lastTurn);
 			}
 			/*
 			 * But when it is not the current player it means the other player had ended its turn
 			 * RESULT it is your first turn
 			 */
 			else if(Game.isCurrentPlayerTurn(round.getGame().getId()) && !Game.isCurrentUser(lastTurn.getPlayerName()) && lastTurn.getTurnState() != TurnState.Busy) {
-				System.out.println("Other play ended turn, it is your turn");
+				System.out.println("Other player ended turn, it is your turn");
 				Turn turn = new Turn(DataManager.getInstance().getCurrentUser(), round);
 				
 				turn.setTurnId(lastTurn.getTurnId() + 1);
 				turn.setTurnState(TurnState.Busy);
 				
-				if(round.getRoundType() == RoundType.ThreeSixNine && lastTurn.getTurnState() == TurnState.Pass) {
-					Turn beforeLastTurn = DataManager.getInstance().getBeforeLastTurnForGame(round);
-					
-					if(beforeLastTurn != null && beforeLastTurn.getCurrentQuestion().getId() == lastTurn.getCurrentQuestion().getId()) {
-						System.out.println("Other play passed turn, question has been passed by all");
-						turn.setCurrentQuestion();
-						turn.getCurrentQuestion().setIndexNumber(lastTurn.getCurrentQuestion().getIndexNumber() + 1);
+				//ThreeSixNine
+				if(round.getRoundType() == RoundType.ThreeSixNine) {
+					//Passed/Wrong state code
+					if(lastTurn.getTurnState() == TurnState.Pass || lastTurn.getTurnState() == TurnState.Wrong) {
+						Turn beforeLastTurn = DataManager.getInstance().getBeforeLastTurnForGame(round);
+
+						if(beforeLastTurn != null && beforeLastTurn.getCurrentQuestion().getId() == lastTurn.getCurrentQuestion().getId()) {
+							System.out.println("Other player passed/wrong turn, question has been passed by all");
+							turn.setCurrentQuestion();
+							turn.getCurrentQuestion().setIndexNumber(lastTurn.getCurrentQuestion().getIndexNumber() + 1);
+						}
+						else {
+							System.out.println("Other player passed/wrong turn, use previous turn question");
+							turn.setCurrentQuestion(lastTurn.getCurrentQuestion());
+						}
 					}
 					else {
-						System.out.println("Other play passed turn, use previous turn question");
-						turn.setCurrentQuestion(lastTurn.getSharedQuestions());
+						turn.setCurrentQuestion(); // generate new question
+						turn.getCurrentQuestion().setIndexNumber(lastTurn.getCurrentQuestion().getIndexNumber() + 1);
 					}
 				}
+				
 				lastTurn = turn;
 				
 				DataManager.getInstance().pushTurn(lastTurn);
-				DataManager.getInstance().pushSharedQuestion(lastTurn);
+				if(round.getRoundType() == RoundType.ThreeSixNine)
+					DataManager.getInstance().pushSharedQuestion(lastTurn);
 			}
 			else {
 				System.err.println("error while init new turn");
@@ -117,13 +130,12 @@ public abstract class Round extends Observable {
 			lastTurn = new Turn(DataManager.getInstance().getCurrentUser(), this);
 			lastTurn.setTurnState(TurnState.Busy);
 			lastTurn.setTurnId(1);
-			lastTurn.setCurrentQuestion();
-		
+
 			DataManager.getInstance().pushTurn(lastTurn);
 			if(round.getRoundType() == RoundType.ThreeSixNine) {
 				//int index = lastTurn.getSharedQuestions() != null ? lastTurn.getSharedQuestions().size() + 1 : 1;
-				lastTurn.setCurrentQuestion(new SharedQuestion(lastTurn.getCurrentQuestion()));
-
+				lastTurn.setCurrentQuestion();
+				lastTurn.getCurrentQuestion().setIndexNumber(1);
 				DataManager.getInstance().pushSharedQuestion(lastTurn);
 			}
 		}
