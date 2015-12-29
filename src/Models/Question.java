@@ -12,9 +12,18 @@ public class Question {
 	private static final int MinimumAnswerPercentage = 80;
 	
 	private int id;
-	private Round round;
-	private String text;
+	protected Round round;
+	protected String text;
+	protected int indexNumber;
 	private ArrayList<Answer> answers;
+
+	//TODO ugly ...
+	public Question(Question question) {
+		text = question.getText();
+		answers = question.getAnswers();
+		id = question.getId();
+		round = question.getRound();
+	}
 	
 	public Question(int id, Round round, String text) {
 		this.id = id;
@@ -34,7 +43,7 @@ public class Question {
 		}
 	}
 	
-	public Question(ResultSet data) {
+/*	public Question(ResultSet data) {
 		try {
 			id = data.getInt("vraag_id");
 			//TODO: try to get the round 
@@ -44,7 +53,7 @@ public class Question {
 			System.err.println("Error initializing quesiton");
 			System.err.println(e.getMessage());
 		}
-	}
+	}*/
 	
 	public boolean isPlayerAnswerCorrect(PlayerAnswer playerAnswer) {
 		
@@ -90,5 +99,14 @@ public class Question {
 	public ArrayList<Answer> getAnswers() {
 		return answers;
 	}
+
+	public int getIndexNumber() {
+		if(indexNumber <= 0)
+			System.err.println("indexNumber for sharedQuestion is 0.");
+		return indexNumber;
+	}
 	
+	public void setIndexNumber(int value) {
+		indexNumber = value;
+	}
 }
