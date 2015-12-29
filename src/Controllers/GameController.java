@@ -29,6 +29,7 @@ public class GameController {
 		view.setChatPanel(chatcontroller.returnView());
 		
 		model.addObserver(view);
+		model.setController(this);
 		
 		//ActionListeners
 		Utilities.ComponentUtility.addActionListener(view, "btnSubmit", (e) -> Submit_Click());
@@ -39,14 +40,16 @@ public class GameController {
 	
 	public void Submit_Click() {
 		model.getCurrentRound().onSubmit(view.txtInput.getText());
-		
-		//parent.ShowMainPanel();
 	}
 	
 	public void Pass_Click() {
 		Turn.pushTurn(model.getCurrentRound().getCurrentTurn(), TurnState.Pass, null);
 		//model.getPlayerGame1().stopTimer();
 		//parent.ShowMainPanel();
+	}
+	
+	public void endTurn() {
+		parent.ShowMainPanel();
 	}
 	
 	public void setRoundView(JPanel round) {
@@ -86,7 +89,6 @@ public class GameController {
 			round = new ThreeSixNine(model);
 			//round = new Final(model);
 		}
-			
 
 		RoundController roundController = getRoundController(round, model);
 	
