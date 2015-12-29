@@ -870,6 +870,42 @@ public class DataManager {
 //		return pushed;
 //	}
 	
+	public SharedQuestion getLastSharedQuestion(Turn turn) {
+		SharedQuestion sharedQuestion = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		
+		try {
+			String sql = "SELECT d.* FROM beurt AS b "
+					+ "INNER JOIN deelvraag AS d "
+					+ "ON b.spel_id = d.spel_id AND b.beurt_id = d.beurt_id "
+					+ "WHERE b.spel_id = ?  AND b.beurtstatus = 'pas' AND b.rondenaam = ? "
+					+ "AND b.beurt_id = ? ORDER BY d.volgnummer DESC LIMIT 1";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, turn.getGameId());
+			preparedStatement.setString(2, turn.getRoundType().getValue());
+			preparedStatement.setInt(3, turn.getTurnId());
+			data = preparedStatement.executeQuery();
+			if (data.next())
+				sharedQuestion = new SharedQuestion(data);
+		} catch (SQLException e) {
+			System.err.println("Error fetching last shared question for turn id: " + turn.getTurnId());
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		
+		return sharedQuestion;
+	}
+	
 	public ArrayList<SharedQuestion> getSharedQuestions(Turn turn) {
 		ArrayList<SharedQuestion> sharedQuestions = null;
 		Connection connection = getConnection();
