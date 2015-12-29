@@ -36,6 +36,7 @@ public class Final extends Round {
 	public void onSubmit(String answer) {
 		// TODO Auto-generated method stub
 		System.out.println("your answers is " + answer);
+		System.out.println(currentTurn.getCurrentQuestion());
 		if (currentTurn.getCurrentQuestion().isPlayerAnswerCorrect(answer)) 
 			Turn.pushTurn(currentTurn, TurnState.Correct, answer);
 		else 
