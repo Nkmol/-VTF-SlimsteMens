@@ -7,7 +7,6 @@ import Managers.DataManager;
 
 public class SharedQuestion extends Question {
 	
-	private int turnId;
 	public SharedQuestion(int id, Round round, String text) {
 		
 		super(id, round, text);
@@ -30,15 +29,5 @@ public class SharedQuestion extends Question {
 	
 	public String getQuestionText() {
 		return text;
-	}
-
-	public int getTurnId() {
-		return turnId;
-	}
-	
-	public SharedQuestion setTurnId(int id) {
-		turnId = id;
-		
-		return this; //chaining
 	}
 }

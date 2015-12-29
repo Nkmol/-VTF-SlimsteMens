@@ -846,7 +846,7 @@ public class DataManager {
 					preparedStatement = connection.prepareStatement(sql);
 					preparedStatement.setInt(1, sharedQuestion.getRound().getGame().getId());
 					preparedStatement.setString(2, sharedQuestion.getRound().getRoundType().getValue());
-					preparedStatement.setInt(3, sharedQuestion.getTurnId());
+					preparedStatement.setInt(3, sharedQuestion.getRound().getCurrentTurn().getTurnId());
 					preparedStatement.setInt(4, sharedQuestion.getIndexNumber());
 					preparedStatement.setInt(5, sharedQuestion.getId());
 					//preparedStatement.setString(6, sharedQuestion.getAnswer());
@@ -916,7 +916,7 @@ public class DataManager {
 			preparedStatement.setString(1, antwoord);
 			preparedStatement.setInt(2, sharedQuestion.getRound().getGame().getId());
 			preparedStatement.setString(3, sharedQuestion.getRound().getRoundType().getValue());
-			preparedStatement.setInt(4, sharedQuestion.getTurnId());
+			preparedStatement.setInt(4, sharedQuestion.getRound().getCurrentTurn().getTurnId());
 			preparedStatement.setInt(5, sharedQuestion.getIndexNumber());
 			if (preparedStatement.executeUpdate() > 0) {
 				updated = true;

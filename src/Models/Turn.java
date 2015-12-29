@@ -90,12 +90,12 @@ public class Turn {
 	}
 	
 	public void setCurrentQuestion(ArrayList<SharedQuestion> sharedQuestions) {
-		currentQuestion = sharedQuestions.get(sharedQuestions.size() - 1).setTurnId(turnId);
+		currentQuestion = sharedQuestions.get(sharedQuestions.size() - 1);
 	}
 	
 	public void setCurrentQuestion() {
 		if(sharedQuestions.size() > 0)
-			currentQuestion = sharedQuestions.get(sharedQuestions.size() - 1).setTurnId(turnId);
+			currentQuestion = sharedQuestions.get(sharedQuestions.size() - 1);
 		else
 			currentQuestion = new SharedQuestion(DataManager.getInstance().getRandomQuestionForRoundType(parent));
 		System.out.println("current q: " + currentQuestion.getId());
