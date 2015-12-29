@@ -10,12 +10,12 @@ import Models.*;
 
 public class DataManager {
 
-//	private static final String dbUrl = "jdbc:mysql://localhost/slimsteMens";
-//	private static final String username = "root";
-//	private static final String password = "root";
-	private static final String dbUrl = "jdbc:mysql://databases.aii.avans.nl:3306/spmol_db2";
-	private static final String username = "spmol";
-	private static final String password = "Ab12345";
+	private static final String dbUrl = "jdbc:mysql://localhost/slimsteMens";
+	private static final String username = "root";
+	private static final String password = "root";
+//	private static final String dbUrl = "jdbc:mysql://databases.aii.avans.nl:3306/spmol_db2";
+//	private static final String username = "spmol";
+//	private static final String password = "Ab12345";
 	
 	private static DataManager instance = null;
 //	private Connection connection;
@@ -709,11 +709,12 @@ public class DataManager {
 			else 
 				preparedStatement.setInt(8, turn.getSecondsFinalLost());
 			if (preparedStatement.executeUpdate() > 0) {
-				if (roundType == RoundType.ThreeSixNine || roundType == RoundType.Puzzle) {
-					pushSharedQuestion(turn);
-				} else if (roundType != RoundType.ThreeSixNine) {
-					pushPlayerAnswer(turn); //TODO delete from here 
-				}
+				// Push player's answers and shared questions separately 
+//				if (roundType == RoundType.ThreeSixNine || roundType == RoundType.Puzzle) {
+//					pushSharedQuestion(turn);
+//				} else if (roundType != RoundType.ThreeSixNine) {
+//					pushPlayerAnswer(turn); //TODO delete from here 
+//				}
 				connection.commit();
 			}
 			
@@ -808,30 +809,24 @@ public class DataManager {
 		return pushed;
 	}
 	
-	public boolean pushPlayerAnswer(Turn turn) throws SQLException {
-		boolean pushed = false;
+	public void pushPlayerAnswer(PlayerAnswer playerAnswer) {
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
-			if (turn.getPlayerAnswers() != null) {
-				for (PlayerAnswer playerAnswer : turn.getPlayerAnswers()) {
-					String sql = "INSERT INTO spelerantwoord VALUES (?, ?, ?, ?, ?, ?)";
-					preparedStatement = connection.prepareStatement(sql);
-					preparedStatement.setInt(1, playerAnswer.getGameId());
-					preparedStatement.setString(2, playerAnswer.getRoundType().getValue());
-					preparedStatement.setInt(3, playerAnswer.getTurnId());
-					preparedStatement.setInt(4, playerAnswer.getAnswerId());
-					preparedStatement.setString(5, playerAnswer.getAnswer());
-					preparedStatement.setInt(6, playerAnswer.getMoment());
-					if (preparedStatement.executeUpdate() > 0) {
-						pushed = true;
-						connection.commit();
-					}
-				}
+			String sql = "INSERT INTO spelerantwoord VALUES (?, ?, ?, ?, ?, ?)";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, playerAnswer.getGameId());
+			preparedStatement.setString(2, playerAnswer.getRoundType().getValue());
+			preparedStatement.setInt(3, playerAnswer.getTurnId());
+			preparedStatement.setInt(4, playerAnswer.getAnswerId());
+			preparedStatement.setString(5, playerAnswer.getAnswer());
+			preparedStatement.setInt(6, playerAnswer.getMoment());
+			if (preparedStatement.executeUpdate() > 0) {
+				connection.commit();
 			}
-		}
-		catch (SQLException e) { }
-		finally {
+		} catch (SQLException e) {
+			
+		} finally {
 			try {
 				if (preparedStatement != null) 
 					preparedStatement.close();
@@ -839,8 +834,41 @@ public class DataManager {
 					connection.close();
 			} catch(SQLException ex) {} 
 		}
-		return pushed;
 	}
+	
+//	public boolean pushPlayerAnswer(Turn turn) throws SQLException {
+//		boolean pushed = false;
+//		Connection connection = getConnection();
+//		PreparedStatement preparedStatement = null;
+//		try {
+//			if (turn.getPlayerAnswers() != null) {
+//				for (PlayerAnswer playerAnswer : turn.getPlayerAnswers()) {
+//					String sql = "INSERT INTO spelerantwoord VALUES (?, ?, ?, ?, ?, ?)";
+//					preparedStatement = connection.prepareStatement(sql);
+//					preparedStatement.setInt(1, playerAnswer.getGameId());
+//					preparedStatement.setString(2, playerAnswer.getRoundType().getValue());
+//					preparedStatement.setInt(3, playerAnswer.getTurnId());
+//					preparedStatement.setInt(4, playerAnswer.getAnswerId());
+//					preparedStatement.setString(5, playerAnswer.getAnswer());
+//					preparedStatement.setInt(6, playerAnswer.getMoment());
+//					if (preparedStatement.executeUpdate() > 0) {
+//						pushed = true;
+//						connection.commit();
+//					}
+//				}
+//			}
+//		}
+//		catch (SQLException e) { }
+//		finally {
+//			try {
+//				if (preparedStatement != null) 
+//					preparedStatement.close();
+//				if (connection != null)
+//					connection.close();
+//			} catch(SQLException ex) {} 
+//		}
+//		return pushed;
+//	}
 	
 	public ArrayList<SharedQuestion> getSharedQuestions(Turn turn) {
 		ArrayList<SharedQuestion> sharedQuestions = null;

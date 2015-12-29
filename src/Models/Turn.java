@@ -196,6 +196,8 @@ public class Turn {
 	}
 	
 	public void addPlayerAnswer(PlayerAnswer answer) {
+		if (playerAnswers == null)
+			playerAnswers = new ArrayList<>();
 		playerAnswers.add(answer);
 	}
 	

@@ -8,6 +8,7 @@ import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import Controllers.GameController;
 import Managers.DataManager;
 import Utilities.StringUtility;
 
@@ -24,6 +25,7 @@ public class Game extends Observable {
 	private ArrayList<Round> rounds;
 	private Round currentRound;
 	private ArrayList<ChatMessage> chatMessages;
+	private GameController controller;
 	
 	public Game(int gameId, Player player1, Player player2, GameState gameState) {
 		this.id = gameId;
@@ -48,6 +50,14 @@ public class Game extends Observable {
 			System.err.println("Error initializing game");
 			System.err.println(e.getMessage());
 		}
+	}
+	
+	public void setController(GameController controller) {
+		this.controller = controller;
+	}
+	
+	public GameController getController() {
+		return controller;
 	}
 	
 	public static boolean isCurrentUser(String playerName) {
