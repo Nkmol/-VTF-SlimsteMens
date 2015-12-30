@@ -56,7 +56,7 @@ public class ThreeSixNineView extends JPanel implements Observer {
 		ThreeSixNine threesixnine = (ThreeSixNine)arg;
 		Turn currentTurn = threesixnine.getCurrentTurn();
 
-		if (threesixnine.getCurrentTurn().getCurrentQuestion() != null) 
+		if (currentTurn.getCurrentQuestion() != null) 
 			questionTextArea.setText(currentTurn.getCurrentQuestion().getText());
 		
 	}

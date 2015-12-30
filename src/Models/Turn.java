@@ -36,13 +36,7 @@ public class Turn {
 		//TODO: get last skipped quesiton
 		//1- get last turn
 		//2- fetch question from turn
-		
 	}
-	
-/*	public Turn(ResultSet data) { //TODO dont use this constructor anymore -> Conficts with ActiveGame as it has no rounds/games to init
-		readResultSet(data);
-		this.parent = DataManager.getInstance().g
-	}*/
 
 	public Turn(ResultSet data, Round parentRound) { //TODO parent should already be made, so better to already use it right away?
 		this.parent = parentRound;
@@ -144,39 +138,6 @@ public class Turn {
 		return sharedQuestions;
 	}
 	
-/*	public Question getSkippedQuestion() {
-		return skippedQuestion;
-	}
-	
-	public void setSkippedQuestion(Question question) {
-		skippedQuestion = question;
-	}*/
-	
-	/*public void setSharedQuestions(ArrayList<SharedQuestion> sharedQuestions) {
-		this.sharedQuestions = sharedQuestions;
-	}*/
-	
-	/*
-	public void addSharedQuestion(SharedQuestion sharedQuestion) {
-		if (sharedQuestions == null)
-			sharedQuestions = new ArrayList<>();
-		
-		sharedQuestions.add(sharedQuestion);
-	}*/
-	
-/*	public void setSharedQuestion() {
-		if(sharedQuestions.size() > 0)
-			currentQuestion = sharedQuestions.get(sharedQuestions.size() - 1).setTurnId(turnId);
-	}
-	
-	public void setSharedQuestion(ArrayList<SharedQuestion> sharedQuestions) {
-		currentQuestion = sharedQuestions.get(sharedQuestions.size() - 1).setTurnId(turnId);
-	}*/
-	
-	/*public void setSharedQuestion(SharedQuestion sharedQuestion) {
-		this.currentQuestion = sharedQuestion;
-	}*/
-	
 	public ArrayList<PlayerAnswer> getPlayerAnswers() {
 		return playerAnswers;
 	}
@@ -234,7 +195,7 @@ public class Turn {
 	}
 
 	public static void pushTurn(Turn turn, TurnState turnState, String answer) {
-		//SharedQuestion
+		//Deelvraag
 		if(turn.getRound().roundType == RoundType.ThreeSixNine || turn.getRound().roundType == RoundType.Puzzle) {
 			//turn.setQuestionId(turn.getCurrentQuestion().getId());
 			turn.setTurnState(turnState);
