@@ -27,8 +27,10 @@ public class ThreeSixNine extends Round {
 		if(lastTurn != null)
 			getCurrentTurn().setSharedSkippedQuestion(initSharedSkippedQuestion());
 		getCurrentTurn().setSharedQuestion(initSharedQuestion());
-		if(!continueCurrentTurn)
+		if(!continueCurrentTurn) {
+			DataManager.getInstance().pushTurn(currentTurn);
 			DataManager.getInstance().pushSharedQuestion(getCurrentTurn());
+		}
 		updateView();
 	}
 	

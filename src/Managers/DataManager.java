@@ -605,7 +605,7 @@ public class DataManager {
 			data = preparedStatement.executeQuery();
 			turns = new ArrayList<>();
 			while (data.next())
-				turns.add(new Turn(data, round));
+				turns.add(new Turn(data, round, false));
 		} catch (SQLException e) {
 			System.err.println("Error fetching turns for game id: " + round.getGame().getId());
 		} finally {
@@ -636,7 +636,7 @@ public class DataManager {
 			preparedStatement.setInt(1, round.getGame().getId());
 			data = preparedStatement.executeQuery();
 			if (data.next())
-				turn = new Turn(data, round);
+				turn = new Turn(data, round, true);
 		} catch (SQLException e) {
 			System.err.println("Error fetching last turn for game id: " + round.getGame().getId());
 			System.err.println(e.getMessage());
@@ -668,7 +668,7 @@ public class DataManager {
 			preparedStatement.setInt(1, round.getGame().getId());
 			data = preparedStatement.executeQuery();
 			if (data.last() && data.getRow() == 2)
-				turn = new Turn(data, round);
+				turn = new Turn(data, round, false);
 		} catch (SQLException e) {
 			System.err.println("Error fetching last turn for game id: " + round.getGame().getId());
 			System.err.println(e.getMessage());
@@ -700,7 +700,7 @@ public class DataManager {
 			preparedStatement.setInt(1, gameId);
 			data = preparedStatement.executeQuery();
 			if (data.next())
-				turn = new Turn(data, round);
+				turn = new Turn(data, round, false);
 		} catch (SQLException e) {
 			System.err.println("Error fetching last turn for game id: " + gameId);
 			System.err.println(e.getMessage());
