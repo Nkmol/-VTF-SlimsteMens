@@ -15,11 +15,16 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import Controllers.PlayerListController;
+import Models.ChallengedPlayer;
 import Models.CompetitionRankItem;
 import Models.Player;
 
 public class PlayerView extends JPanel {
 	private JLabel playerNameLabel;
+	private JLabel totalGamesLabel;
+	private JLabel winsLabel;
+	private JLabel losesLabel;
+	private JLabel timeLeftLabel;
 	private JButton challengeButton;
 	private Player player;
 	private CompetitionRankItem rank;
@@ -129,7 +134,7 @@ public class PlayerView extends JPanel {
 		JPanel totalGamesContentView = new JPanel();
 		totalGamesContentView.setBackground(new Color(135,171,255));
 		
-		JLabel totalGamesLabel = new JLabel();
+		totalGamesLabel = new JLabel();
 		totalGamesLabel.setText(String.valueOf(rank.getAmountPlayedGames()));
 		totalGamesLabel.setFont(new Font("Serif", Font.ITALIC, 15));
 		totalGamesContentView.add(totalGamesLabel);	
@@ -155,7 +160,7 @@ public class PlayerView extends JPanel {
 		JPanel winsContentView = new JPanel();
 		winsContentView.setBackground(new Color(135,171,255));
 		
-		JLabel winsLabel = new JLabel();
+		winsLabel = new JLabel();
 		winsLabel.setText(String.valueOf(rank.getAmountGamesWon()));
 		winsLabel.setFont(new Font("Serif", Font.ITALIC, 15));
 		winsContentView.add(winsLabel);	
@@ -181,7 +186,7 @@ public class PlayerView extends JPanel {
 		JPanel losesContentView = new JPanel();
 		losesContentView.setBackground(new Color(135,171,255));
 		
-		JLabel losesLabel = new JLabel();
+		losesLabel = new JLabel();
 		losesLabel.setText(String.valueOf(rank.getAmountGamesLost()));
 		losesLabel.setFont(new Font("Serif", Font.ITALIC, 15));
 		losesContentView.add(losesLabel);	
@@ -207,7 +212,7 @@ public class PlayerView extends JPanel {
 		JPanel timeLeftContentView = new JPanel();
 		timeLeftContentView.setBackground(new Color(135,171,255));
 		
-		JLabel timeLeftLabel = new JLabel();
+		timeLeftLabel = new JLabel();
 		timeLeftLabel.setText(String.valueOf(rank.getAverageSecondsLeft()));
 		timeLeftLabel.setFont(new Font("Serif", Font.ITALIC, 15));
 		timeLeftContentView.add(timeLeftLabel);	
@@ -256,6 +261,17 @@ public class PlayerView extends JPanel {
 	private void sendChallenge() {
 		// TODO use classes instead of names.
 		controller.handleButtonClick(player);
+	}
+
+
+	public void updateView(ChallengedPlayer playerUpdate) {
+		playerNameLabel.setText(playerUpdate.getName());
+		totalGamesLabel.setText(String.valueOf(playerUpdate.getRank().getAmountPlayedGames()));
+		winsLabel.setText(String.valueOf(playerUpdate.getRank().getAmountGamesWon()));
+		losesLabel.setText(String.valueOf(playerUpdate.getRank().getAmountGamesLost()));
+		timeLeftLabel.setText(String.valueOf(playerUpdate.getRank().getAverageSecondsLeft()));		
+		challengeButton.setEnabled(!playerUpdate.isChallenged());
+		
 	}
 
 }
