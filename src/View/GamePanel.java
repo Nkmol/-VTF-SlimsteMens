@@ -10,6 +10,7 @@ import java.util.Observer;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import Managers.DataManager;
 import Models.Game;
 import Models.Player;
 import Models.Round;
@@ -20,6 +21,7 @@ public class GamePanel extends JPanel implements Observer{
 	private JLabel lblPlayer1, lblPlayer2, lblRoundType;
 	public JButton btnSubmit, btnPass;
 	public JTextField txtInput;
+	private boolean initOpponentTurn;
 	
 	public GamePanel() {
 		setLayout(new BorderLayout());
@@ -65,6 +67,19 @@ public class GamePanel extends JPanel implements Observer{
 		middle.add(round, BorderLayout.CENTER);
 	}
 
+	public void setOponnonentTime(Player player1, Player player2, int gameId) {
+		if(!Game.isCurrentUser(player1.getName())) {
+			String strPlayer1 = player1.getName() + " : " + DataManager.getInstance().getTotalSecondsEarnedInAGame(gameId, player1.getName());
+			lblPlayer1.setText(strPlayer1); 
+		}
+		else if(!Game.isCurrentUser(player2.getName())) {
+			String strPlayer2 = player2.getName() + " : " + DataManager.getInstance().getTotalSecondsEarnedInAGame(gameId, player2.getName());
+			lblPlayer2.setText(strPlayer2);
+		}
+		
+		initOpponentTurn = true;
+	}
+	
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		Game model = (Game)arg1;
@@ -75,16 +90,19 @@ public class GamePanel extends JPanel implements Observer{
 		
 		if(model.getCurrentRound() != null && model.getCurrentRound().getCurrentTurn() != null) {
 			lblRoundType.setText(model.getCurrentRound().getRoundType().toString());
-			String strPlayer1 = player1.getName() + " : ";
-			String strPlayer2 = player2.getName() + " : ";
-			if(Game.isCurrentUser(player1.getName()))
-				strPlayer1 += model.getCurrentRound().getCurrentTurn().getTime();
-			else if(Game.isCurrentUser(player2.getName()))
-				strPlayer2 += model.getCurrentRound().getCurrentTurn().getTime();
-			
-			lblPlayer1.setText(strPlayer1); // TODO show total time from all turns for a player
-			lblPlayer2.setText(strPlayer2);
+		
+			if(Game.isCurrentUser(player1.getName())) {
+				String strPlayer1 = player1.getName() + " : " + (DataManager.getInstance().getTotalSecondsEarnedInAGame(model.getId(), player1.getName()) + model.getCurrentRound().getCurrentTurn().getSecondsEarned());
+				lblPlayer1.setText(strPlayer1); 
+			}
+			else if(Game.isCurrentUser(player2.getName())) {
+				String strPlayer2 = player2.getName() + " : " + (DataManager.getInstance().getTotalSecondsEarnedInAGame(model.getId(), player2.getName()) + model.getCurrentRound().getCurrentTurn().getSecondsEarned());
+				lblPlayer2.setText(strPlayer2);
+			}
 		}
+		
+		if(!initOpponentTurn)
+			setOponnonentTime(player1, player2, model.getId());
 	}
 	
 	public void setChatPanel(ChatMessageView chatPanel){
