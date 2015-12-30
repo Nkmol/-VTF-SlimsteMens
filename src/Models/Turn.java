@@ -75,19 +75,11 @@ public class Turn {
 	public Question initSkippedQuestion() {
 		Turn lastTurn = getRound().getLastTurn();
 		
-<<<<<<< HEAD
-		if(lastTurn != null){
-			if(lastTurn.getTurnState() == TurnState.Pass && !Game.isCurrentUser(lastTurn.getPlayerName())) 
-				return lastTurn.getCurrentQuestion();
-			}
-		
-		return null;
-=======
 		if(lastTurn != null && lastTurn.getTurnState() == TurnState.Pass && !Game.isCurrentUser(lastTurn.getPlayerName())) 
 			return lastTurn.getCurrentQuestion();
 		else
 			return null;
->>>>>>> 6e01ca78aab8c5182a697362e3795e74c10b2d74
+
 	}
 
 	public int getGameId() {
