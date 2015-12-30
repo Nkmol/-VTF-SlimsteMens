@@ -28,7 +28,6 @@ public abstract class Round extends Observable {
 		// So we can init the current turn and push it to this round
 		DataManager.getInstance().pushRound(this);  
 		currentTurn = initCurrentTurn(this);
-		currentTurn.startTimer();
 	}
 	
 	public Round(ResultSet data, Game game) {

@@ -33,6 +33,8 @@ public class ThreeSixNine extends Round {
 			DataManager.getInstance().pushTurn(currentTurn);
 			DataManager.getInstance().pushSharedQuestion(getCurrentTurn());
 		}
+		
+		currentTurn.startTurn();
 	}
 	
 	public SharedQuestion initSharedQuestion() {
