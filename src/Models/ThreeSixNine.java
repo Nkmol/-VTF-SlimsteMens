@@ -64,8 +64,10 @@ public class ThreeSixNine extends Round {
 		System.out.println("your answers is " + answer);
 		Question currentQuestion = (currentTurn.getSkippedQuestion() != null) ? currentTurn.getSkippedQuestion() : currentTurn.getCurrentQuestion();
 		
-		if (currentQuestion.isPlayerAnswerCorrect(answer)) 
+		if (currentQuestion.isPlayerAnswerCorrect(answer)) {
+			currentTurn.addSecondsEarnd(POINTS_QUESTION);
 			Turn.pushTurn(currentTurn, TurnState.Correct, answer);
+		}
 		else 
 			Turn.pushTurn(currentTurn, TurnState.Wrong, answer);
 
