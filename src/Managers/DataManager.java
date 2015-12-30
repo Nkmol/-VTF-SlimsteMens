@@ -653,38 +653,6 @@ public class DataManager {
 		return turn;
 	}
 	
-	public Turn getBeforeLastTurnForGame(Round round) {
-		Turn turn = null;
-		Connection connection = getConnection();
-		PreparedStatement preparedStatement = null;
-		ResultSet data = null;
-		try {
-			String sql = "SELECT b.* FROM ronde AS r"
-					+ " INNER JOIN rondenaam AS rn ON"
-					+ " (SELECT COUNT(spel_id) FROM ronde WHERE spel_id = r.spel_id AND r.rondenaam = rn.type) = rn.volgnr"
-					+ " INNER JOIN beurt AS b ON b.spel_id = r.spel_id AND r.rondenaam = b.rondenaam"
-					+ " WHERE r.spel_id = ? ORDER BY b.beurt_id DESC LIMIT 2";
-			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, round.getGame().getId());
-			data = preparedStatement.executeQuery();
-			if (data.last() && data.getRow() == 2)
-				turn = new Turn(data, round, false);
-		} catch (SQLException e) {
-			System.err.println("Error fetching last turn for game id: " + round.getGame().getId());
-			System.err.println(e.getMessage());
-		} finally {
-			try {
-				if (data != null)
-					data.close();
-				if (preparedStatement != null) 
-					preparedStatement.close();
-				if (connection != null)
-					connection.close();
-			} catch(SQLException ex) {} 
-		}
-		return turn;
-	}
-	
 	public Turn getLastTurnForGame(int gameId, Round round) {
 		Turn turn = null;
 		Connection connection = getConnection();
@@ -1070,6 +1038,42 @@ public class DataManager {
 			} catch(SQLException ex) {} 
 		}
 		
+		return sharedQuestion;
+	}
+	
+	public SharedQuestion getSharedQuestion(Turn turn) {
+		SharedQuestion sharedQuestion = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			
+			String sql = "SELECT * FROM deelvraag WHERE spel_id = ? AND rondenaam = ? AND beurt_id = ? ";
+			sql += "AND beurt_id NOT IN (SELECT beurt_id FROM beurt WHERE spel_id = ? AND rondenaam = ? AND beurt_id = ? AND speler = ?)";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, turn.getRound().getGame().getId());
+			preparedStatement.setString(2, turn.getRound().getRoundType().getValue());
+			preparedStatement.setInt(3, turn.getTurnId());
+			preparedStatement.setInt(4, turn.getRound().getGame().getId());
+			preparedStatement.setString(5, turn.getRound().getRoundType().getValue());
+			preparedStatement.setInt(6, turn.getTurnId());
+			preparedStatement.setString(7, turn.getPlayer().getName());
+			data = preparedStatement.executeQuery();
+			while (data.next())
+				sharedQuestion = new SharedQuestion(data, turn);
+		} catch (SQLException e) {
+			System.err.println("Error fetching shared questions");
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
 		return sharedQuestion;
 	}
 	
