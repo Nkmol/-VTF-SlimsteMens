@@ -95,6 +95,7 @@ public class ActiveGameListView extends JPanel implements Observer {
 				topPanel.add(activeGameViews[i]);
 			}
 			else {
+				activeGameViews[i].hideGoButton();
 				bottomPanel.add(activeGameViews[i]);
 			}
 		}

@@ -212,6 +212,8 @@ public abstract class Round extends Observable {
 	
 	public abstract void onSubmit(String answer);
 	
+	public abstract void onPass();
+	
 	private void updateCurrentTurn(TurnState pass, int i) {
 		currentTurn.setTurnState(pass);
 		currentTurn.setSecondsEarned(i);

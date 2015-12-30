@@ -119,4 +119,10 @@ public class Puzzle extends Round {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void onPass() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -44,4 +44,10 @@ public class Final extends Round {
 		updateView();
 	}
 
+	@Override
+	public void onPass() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
