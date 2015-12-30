@@ -8,9 +8,9 @@ import Managers.DataManager;
 public class SharedQuestion extends Question {
 	private int indexNumber;
 	
-	public SharedQuestion(int id, Round round, String text) {
+	public SharedQuestion(int id, Turn turn, String text) {
 		
-		super(id, round, text);
+		super(id, turn, text);
 	}
 
 	public SharedQuestion(Question question, int indexNumber) {
@@ -18,10 +18,10 @@ public class SharedQuestion extends Question {
 		this.indexNumber = indexNumber;
 	}
 	
-	public SharedQuestion(ResultSet data, Round round) throws SQLException {
-		super(DataManager.getInstance().getQuestionForId(data.getInt("vraag_id"), round));
+	public SharedQuestion(ResultSet data, Turn turn) throws SQLException {
+		super(DataManager.getInstance().getQuestionForId(data.getInt("vraag_id"), turn.getRound()));
 		try {
-			this.round = round;
+			this.turn = turn;
 			indexNumber = data.getInt("volgnummer");
 		} catch (SQLException e) {
 			System.err.println("Error initializing shared question");

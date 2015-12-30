@@ -212,6 +212,10 @@ public class Turn {
 	public Question getSkippedQuestion() {
 		return skippedQuestion;
 	}
+	
+	public void deleteSkippedQuestion() {
+		skippedQuestion = null;
+	}
 
 	public static void pushTurn(Turn turn, TurnState turnState, String answer) {
 		//Deelvraag
