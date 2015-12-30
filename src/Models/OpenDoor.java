@@ -15,6 +15,7 @@ public class OpenDoor extends Round {
 	
 	public OpenDoor(Game game) {
 		super(game, RoundType.OpenDoor);
+		DataManager.getInstance().pushTurn(currentTurn);
 		init();
 	}
 	
@@ -31,6 +32,7 @@ public class OpenDoor extends Round {
 	public void initNewTurn() {
 		amountCorrectAnswers = 0;
 		currentTurn = initCurrentTurn(this);
+		DataManager.getInstance().pushTurn(currentTurn);
 		updateView();
 	}
 
