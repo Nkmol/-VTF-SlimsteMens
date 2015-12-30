@@ -21,8 +21,9 @@ public class Turn {
 	private ArrayList<SharedQuestion> sharedQuestions;
 	private ArrayList<PlayerAnswer> playerAnswers;
 	private Question currentQuestion;
-	private SharedQuestion sharedQuestion;
 	private Question skippedQuestion;
+	private SharedQuestion sharedQuestion;
+	private SharedQuestion sharedSkippedQuestion;
 	private Round parent;
 	
 	public Turn(Player player, Round parentRound) {
@@ -72,16 +73,23 @@ public class Turn {
 	}
 	
 	public Question initSkippedQuestion() {
-		Turn lastTurn = DataManager.getInstance().getLastTurnForGame(getRound());
+		Turn lastTurn = getRound().getLastTurn();
 		
+<<<<<<< HEAD
 		if(lastTurn != null){
 			if(lastTurn.getTurnState() == TurnState.Pass && !Game.isCurrentUser(lastTurn.getPlayerName())) 
 				return lastTurn.getCurrentQuestion();
 			}
 		
 		return null;
+=======
+		if(lastTurn != null && lastTurn.getTurnState() == TurnState.Pass && !Game.isCurrentUser(lastTurn.getPlayerName())) 
+			return lastTurn.getCurrentQuestion();
+		else
+			return null;
+>>>>>>> 6e01ca78aab8c5182a697362e3795e74c10b2d74
 	}
-	
+
 	public int getGameId() {
 		return gameId;
 	}
@@ -102,6 +110,14 @@ public class Turn {
 		return sharedQuestion;
 	}
 	
+	public SharedQuestion getSharedSkippedQuestion() {
+		return sharedSkippedQuestion;
+	}
+
+	public void setSharedSkippedQuestion(SharedQuestion sharedSkippedQuestion) {
+		this.sharedSkippedQuestion = sharedSkippedQuestion;
+	}
+
 	public void setCurrentQuestion(Question question) {
 		currentQuestion = question;
 	}
@@ -204,6 +220,10 @@ public class Turn {
 	
 	public Question getSkippedQuestion() {
 		return skippedQuestion;
+	}
+	
+	public void deleteSkippedQuestion() {
+		skippedQuestion = null;
 	}
 
 	public static void pushTurn(Turn turn, TurnState turnState, String answer) {
