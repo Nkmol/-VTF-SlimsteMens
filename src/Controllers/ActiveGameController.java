@@ -15,24 +15,24 @@ public class ActiveGameController {
 	ActiveGameListView view;
 	ActiveGames model;
 	MainController parent;
-	
-	public ActiveGameController(MainController parent) {	
+
+	public ActiveGameController(MainController parent) {
 		this.parent = parent;
 		view = new ActiveGameListView(this);
 		model = new ActiveGames();
 		model.addObserver(view);
 	}
-	
+
 	public ActiveGameListView getView() {
 		return view;
 	}
-	
+
 	public void startGame(int gameId) {
 		GameController gameController = new GameController(gameId, parent);
 
 		parent.setGame(gameController.getView());
 	}
-	
+
 	public void handleButtonClick(int gameId) {
 		startGame(gameId);
 	}

@@ -33,4 +33,10 @@ public class Framed extends Round {
 			Turn.pushTurn(currentTurn, TurnState.Wrong, answer);
 	}
 
+	@Override
+	public void onPass() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

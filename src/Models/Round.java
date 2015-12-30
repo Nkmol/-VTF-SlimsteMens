@@ -13,6 +13,8 @@ public abstract class Round extends Observable {
 	protected RoundType roundType;
 	//protected ArrayList<Question> questions;
 	//protected SharedQuestion sharedQuestion;
+	protected boolean continueCurrentTurn;
+	protected Turn lastTurn;
 	protected Turn currentTurn;
 	protected ArrayList<Turn> turns;
 	protected Game game;
@@ -48,8 +50,8 @@ public abstract class Round extends Observable {
 	//Generating beginning of turn
 	//TODO add other round func
 	public Turn initCurrentTurn(Round round) {
-		
-		Turn lastTurn = DataManager.getInstance().getLastTurnForGame(round);
+		lastTurn = DataManager.getInstance().getLastTurnForGame(round);
+		Turn turn = lastTurn;
 		
 		// Make sure we have a last turn
 		if (lastTurn != null) {
@@ -61,9 +63,8 @@ public abstract class Round extends Observable {
 			 */
 			if(Game.isCurrentPlayerTurn(round.getGame().getId()) && Game.isCurrentUser(lastTurn.getPlayerName()) && lastTurn.getTurnState() == TurnState.Busy) {
 				System.out.println("continue last turn as it was on TurnState.BUSY");
-				if(round.getRoundType() == RoundType.ThreeSixNine && lastTurn.getSharedQuestions() != null) {
-					lastTurn.setCurrentQuestion();
-				}
+				// MEEH ...
+				continueCurrentTurn = true;
 			}
 			/*
 			 * When it is his turn, but TurnState is not BUSY
@@ -72,14 +73,11 @@ public abstract class Round extends Observable {
 			 */
 			else if(Game.isCurrentPlayerTurn(round.getGame().getId()) && Game.isCurrentUser(lastTurn.getPlayerName()) && lastTurn.getTurnState() != TurnState.Busy) {
 				System.out.println("continue answering");
-				Turn turn = new Turn( DataManager.getInstance().getCurrentUser(), round);
+				turn = new Turn( DataManager.getInstance().getCurrentUser(), round);
 				turn.setTurnId(lastTurn.getTurnId());
 				turn.setTurnState(TurnState.Busy);
-				lastTurn = turn;
 				
-				DataManager.getInstance().pushTurn(lastTurn);
-				if(round.getRoundType() == RoundType.ThreeSixNine)
-					DataManager.getInstance().pushSharedQuestion(lastTurn);
+				//DataManager.getInstance().pushTurn(turn);
 			}
 			/*
 			 * But when it is not the current player it means the other player had ended its turn
@@ -87,38 +85,12 @@ public abstract class Round extends Observable {
 			 */
 			else if(Game.isCurrentPlayerTurn(round.getGame().getId()) && !Game.isCurrentUser(lastTurn.getPlayerName()) && lastTurn.getTurnState() != TurnState.Busy) {
 				System.out.println("Other player ended turn, it is your turn");
-				Turn turn = new Turn(DataManager.getInstance().getCurrentUser(), round);
+				turn = new Turn(DataManager.getInstance().getCurrentUser(), round);
 				
 				turn.setTurnId(lastTurn.getTurnId() + 1);
 				turn.setTurnState(TurnState.Busy);
 				
-				//ThreeSixNine
-				if(round.getRoundType() == RoundType.ThreeSixNine) {
-					//Passed/Wrong state code
-					if(lastTurn.getTurnState() == TurnState.Pass || lastTurn.getTurnState() == TurnState.Wrong) {
-						Turn beforeLastTurn = DataManager.getInstance().getBeforeLastTurnForGame(round);
-
-						if(beforeLastTurn != null && beforeLastTurn.getCurrentQuestion().getId() == lastTurn.getCurrentQuestion().getId()) {
-							System.out.println("Other player passed/wrong turn, question has been passed by all");
-							turn.setCurrentQuestion();
-							turn.getCurrentQuestion().setIndexNumber(lastTurn.getCurrentQuestion().getIndexNumber() + 1);
-						}
-						else {
-							System.out.println("Other player passed/wrong turn, use previous turn question");
-							turn.setCurrentQuestion(lastTurn.getCurrentQuestion());
-						}
-					}
-					else {
-						turn.setCurrentQuestion(); // generate new question
-						turn.getCurrentQuestion().setIndexNumber(lastTurn.getCurrentQuestion().getIndexNumber() + 1);
-					}
-				}
-				
-				lastTurn = turn;
-				
-				DataManager.getInstance().pushTurn(lastTurn);
-				if(round.getRoundType() == RoundType.ThreeSixNine)
-					DataManager.getInstance().pushSharedQuestion(lastTurn);
+				//DataManager.getInstance().pushTurn(turn);	
 			}
 			else {
 				System.err.println("error while init new turn");
@@ -127,20 +99,14 @@ public abstract class Round extends Observable {
 			/*
 			 * We don't have a turn so we need to push a new turn to the database
 			 */
-			lastTurn = new Turn(DataManager.getInstance().getCurrentUser(), this);
-			lastTurn.setTurnState(TurnState.Busy);
-			lastTurn.setTurnId(1);
+			turn = new Turn(DataManager.getInstance().getCurrentUser(), this);
+			turn.setTurnState(TurnState.Busy);
+			turn.setTurnId(1);
 
-			DataManager.getInstance().pushTurn(lastTurn);
-			if(round.getRoundType() == RoundType.ThreeSixNine) {
-				//int index = lastTurn.getSharedQuestions() != null ? lastTurn.getSharedQuestions().size() + 1 : 1;
-				lastTurn.setCurrentQuestion();
-				lastTurn.getCurrentQuestion().setIndexNumber(1);
-				DataManager.getInstance().pushSharedQuestion(lastTurn);
-			}
+			//DataManager.getInstance().pushTurn(turn);
 		}
 		
-		return lastTurn;
+		return turn;
 	}
 	
 /*	public void startRound() {
@@ -212,6 +178,8 @@ public abstract class Round extends Observable {
 	
 	public abstract void onSubmit(String answer);
 	
+	public abstract void onPass();
+	
 	private void updateCurrentTurn(TurnState pass, int i) {
 		currentTurn.setTurnState(pass);
 		currentTurn.setSecondsEarned(i);
@@ -221,5 +189,9 @@ public abstract class Round extends Observable {
 	public void endTurn(TurnState pass, int i) {
 		updateCurrentTurn(pass, i);
 		//DataManager.getInstance().updateGa
+	}
+
+	public Turn getLastTurn() {
+		return lastTurn;
 	}
 }
