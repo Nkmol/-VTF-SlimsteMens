@@ -81,6 +81,7 @@ public class Turn {
 			return lastTurn.getCurrentQuestion();
 		else
 			return null;
+
 	}
 
 	public int getGameId() {
