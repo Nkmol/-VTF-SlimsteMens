@@ -66,8 +66,8 @@ public class GameController {
 		
 		// TODO switch om terug naar round.getRoundType()
 
-		//switch(round.getRoundType()) {
-		switch(RoundType.Final) {
+		switch(round.getRoundType()) {
+		//switch(RoundType.Final) {
 		case ThreeSixNine:
 			return new ThreeSixNineController(model, round);
 		case OpenDoor:
@@ -84,8 +84,8 @@ public class GameController {
 		Round round = DataManager.getInstance().getLastRoundForGame(model);
 		
 		if(round == null) {	
-			//round = new ThreeSixNine(model);
-			round = new Final(model);
+			round = new ThreeSixNine(model);
+			//round = new Final(model);
 		}
 
 		RoundController roundController = getRoundController(round, model);
