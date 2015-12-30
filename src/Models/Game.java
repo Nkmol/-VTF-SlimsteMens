@@ -87,7 +87,8 @@ public class Game extends Observable {
 		if (turnBeforeLastTurn != null) {
 			if (isCurrentUser(lastTurn.getPlayer().getName()) 
 					&& lastTurn.getTurnState().getValue().equals(turnBeforeLastTurn.getTurnState().getValue()) // Both should be passed
-					&& lastTurn.getQuestionId() == turnBeforeLastTurn.getQuestionId()) { // now we know that the current player has answered a skipped question
+					&& lastTurn.getQuestionId() == turnBeforeLastTurn.getQuestionId()
+					&& !isCurrentUser(turnBeforeLastTurn.getPlayer().getName())) { // now we know that the current player has answered a skipped question
 				return true;
 			}
 		}
