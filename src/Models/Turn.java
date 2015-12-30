@@ -58,6 +58,7 @@ public class Turn {
 			
 			//in 369 question is from sharedQuestion, will be overridden if null
 			currentQuestion = DataManager.getInstance().getSharedQuestion(this);
+			sharedQuestion = DataManager.getInstance().getSharedQuestion(this); // >.<
 			if(currentQuestion == null)
 				currentQuestion = DataManager.getInstance().getQuestionForId(data.getInt("vraag_id"), parent); 
 
