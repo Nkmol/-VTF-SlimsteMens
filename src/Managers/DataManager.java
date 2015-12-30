@@ -10,6 +10,7 @@ import Models.*;
 
 public class DataManager {
 
+
 //	private static final String dbUrl = "jdbc:mysql://localhost/slimsteMens";
 //	private static final String username = "root";
 //	private static final String password = "root";
@@ -884,7 +885,7 @@ public class DataManager {
 				preparedStatement.setString(2, turn.getRound().getRoundType().getValue());
 				preparedStatement.setInt(3, turn.getTurnId());
 				
-				SharedQuestion sharedQuestion = turn.getCurrentQuestion();
+				SharedQuestion sharedQuestion = turn.getSharedQuestion();
 				preparedStatement.setInt(4, sharedQuestion.getIndexNumber());
 				preparedStatement.setInt(5, sharedQuestion.getId());
 				preparedStatement.setNull(6, Types.CHAR);
@@ -907,7 +908,7 @@ public class DataManager {
 		return pushed;
 	}
 	
-	public boolean updateSharedQuestionAntwoord(SharedQuestion sharedQuestion, String antwoord) {
+	public boolean updateSharedQuestionAnswer(Question question, String answer) {
 		boolean updated = false;
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;
@@ -916,18 +917,18 @@ public class DataManager {
 					+ "antwoord = ?"
 					+ "where spel_id = ? AND rondenaam = ? AND beurt_id = ? AND volgnummer = ?";
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, antwoord);
-			preparedStatement.setInt(2, sharedQuestion.getRound().getGame().getId());
-			preparedStatement.setString(3, sharedQuestion.getRound().getRoundType().getValue());
-			preparedStatement.setInt(4, sharedQuestion.getRound().getCurrentTurn().getTurnId());
-			preparedStatement.setInt(5, sharedQuestion.getIndexNumber());
+			preparedStatement.setString(1, answer);
+			preparedStatement.setInt(2, question.getRound().getGame().getId());
+			preparedStatement.setString(3, question.getRound().getRoundType().getValue());
+			preparedStatement.setInt(4, question.getRound().getCurrentTurn().getTurnId());
+			preparedStatement.setInt(5, question.getIndexNumber());
 			if (preparedStatement.executeUpdate() > 0) {
 				updated = true;
 				connection.commit();
 			}
 			
 		} catch (SQLException e) {
-			System.err.println("Error updating deelvraag with questionid : " + sharedQuestion.getId());
+			System.err.println("Error updating deelvraag with questionid : " + question.getId());
 			System.err.println(e.getMessage());
 		} finally {
 			try {
@@ -940,30 +941,24 @@ public class DataManager {
 		return updated;
 	}
 	
-	public boolean pushPlayerAnswer(Turn turn) throws SQLException {
-		boolean pushed = false;
+	public void pushPlayerAnswer(PlayerAnswer playerAnswer) {
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
-			if (turn.getPlayerAnswers() != null) {
-				for (PlayerAnswer playerAnswer : turn.getPlayerAnswers()) {
-					String sql = "INSERT INTO spelerantwoord VALUES (?, ?, ?, ?, ?, ?)";
-					preparedStatement = connection.prepareStatement(sql);
-					preparedStatement.setInt(1, playerAnswer.getGameId());
-					preparedStatement.setString(2, playerAnswer.getRoundType().getValue());
-					preparedStatement.setInt(3, playerAnswer.getTurnId());
-					preparedStatement.setInt(4, playerAnswer.getAnswerId());
-					preparedStatement.setString(5, playerAnswer.getAnswer());
-					preparedStatement.setInt(6, playerAnswer.getMoment());
-					if (preparedStatement.executeUpdate() > 0) {
-						pushed = true;
-						connection.commit();
-					}
-				}
+			String sql = "INSERT INTO spelerantwoord VALUES (?, ?, ?, ?, ?, ?)";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, playerAnswer.getGameId());
+			preparedStatement.setString(2, playerAnswer.getRoundType().getValue());
+			preparedStatement.setInt(3, playerAnswer.getTurnId());
+			preparedStatement.setInt(4, playerAnswer.getAnswerId());
+			preparedStatement.setString(5, playerAnswer.getAnswer());
+			preparedStatement.setInt(6, playerAnswer.getMoment());
+			if (preparedStatement.executeUpdate() > 0) {
+				connection.commit();
 			}
-		}
-		catch (SQLException e) { }
-		finally {
+		} catch (SQLException e) {
+			
+		} finally {
 			try {
 				if (preparedStatement != null) 
 					preparedStatement.close();
@@ -971,7 +966,76 @@ public class DataManager {
 					connection.close();
 			} catch(SQLException ex) {} 
 		}
-		return pushed;
+	}
+	
+//	public boolean pushPlayerAnswer(Turn turn) throws SQLException {
+//		boolean pushed = false;
+//		Connection connection = getConnection();
+//		PreparedStatement preparedStatement = null;
+//		try {
+//			if (turn.getPlayerAnswers() != null) {
+//				for (PlayerAnswer playerAnswer : turn.getPlayerAnswers()) {
+//					String sql = "INSERT INTO spelerantwoord VALUES (?, ?, ?, ?, ?, ?)";
+//					preparedStatement = connection.prepareStatement(sql);
+//					preparedStatement.setInt(1, playerAnswer.getGameId());
+//					preparedStatement.setString(2, playerAnswer.getRoundType().getValue());
+//					preparedStatement.setInt(3, playerAnswer.getTurnId());
+//					preparedStatement.setInt(4, playerAnswer.getAnswerId());
+//					preparedStatement.setString(5, playerAnswer.getAnswer());
+//					preparedStatement.setInt(6, playerAnswer.getMoment());
+//					if (preparedStatement.executeUpdate() > 0) {
+//						pushed = true;
+//						connection.commit();
+//					}
+//				}
+//			}
+//		}
+//		catch (SQLException e) { }
+//		finally {
+//			try {
+//				if (preparedStatement != null) 
+//					preparedStatement.close();
+//				if (connection != null)
+//					connection.close();
+//			} catch(SQLException ex) {} 
+//		}
+//		return pushed;
+//	}
+	
+	public SharedQuestion getLastSharedQuestion(Turn turn) {
+		SharedQuestion sharedQuestion = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		
+		try {
+			String sql = "SELECT d.* FROM beurt AS b "
+					+ "INNER JOIN deelvraag AS d "
+					+ "ON b.spel_id = d.spel_id AND b.beurt_id = d.beurt_id "
+					+ "WHERE b.spel_id = ?  AND b.beurtstatus = 'pas' AND b.rondenaam = ? "
+					+ "AND b.beurt_id = ? ORDER BY d.volgnummer DESC LIMIT 1";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, turn.getGameId());
+			preparedStatement.setString(2, turn.getRound().getRoundType().getValue());
+			preparedStatement.setInt(3, turn.getTurnId());
+			data = preparedStatement.executeQuery();
+			if (data.next())
+				sharedQuestion = new SharedQuestion(data, turn.getRound());
+		} catch (SQLException e) {
+			System.err.println("Error fetching last shared question for turn id: " + turn.getTurnId());
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		
+		return sharedQuestion;
 	}
 	
 	//TODO does this need to be an Array?

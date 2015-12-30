@@ -4,7 +4,6 @@ import java.util.TimerTask;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Random;
 
 import Managers.DataManager;
 
@@ -21,15 +20,17 @@ public class Turn {
 	private Integer secondsFinalLost;
 	private ArrayList<SharedQuestion> sharedQuestions;
 	private ArrayList<PlayerAnswer> playerAnswers;
-	private SharedQuestion currentQuestion;
-	//private SharedQuestion sharedQuestion;
+	private Question currentQuestion;
+	private SharedQuestion sharedQuestion;
 	private Round parent;
 	
 	public Turn(Player player, Round parentRound) {
 		this.player = player;
 		this.parent = parentRound;
 		this.gameId = parent.getGame().getId();
-		this.sharedQuestions = DataManager.getInstance().getSharedQuestions(parentRound, turnId);
+		this.sharedQuestion = DataManager.getInstance().getLastSharedQuestion(this);
+		this.currentQuestion = DataManager.getInstance().getRandomQuestionForRoundType(this.getRound());
+//		this.sharedQuestions = DataManager.getInstance().getSharedQuestions(parentRound, turnId);
 	}
 	
 /*	public Turn(ResultSet data) { //TODO dont use this constructor anymore -> Conficts with ActiveGame as it has no rounds/games to init
@@ -81,12 +82,20 @@ public class Turn {
 		this.turnId = turnId;
 	}
 	
-	public SharedQuestion getCurrentQuestion(){
+	public Question getCurrentQuestion(){
 		return currentQuestion;
 	}
 	
-	public void setCurrentQuestion(SharedQuestion question) {
+	public SharedQuestion getSharedQuestion() {
+		return sharedQuestion;
+	}
+	
+	public void setCurrentQuestion(Question question) {
 		currentQuestion = question;
+	}
+	
+	public void setSharedQuestion(SharedQuestion sharedQuestion) {
+		this.sharedQuestion = sharedQuestion;
 	}
 	
 	public void setCurrentQuestion(ArrayList<SharedQuestion> sharedQuestions) {
@@ -94,11 +103,7 @@ public class Turn {
 	}
 	
 	public void setCurrentQuestion() {
-		if(sharedQuestions.size() > 0)
-			currentQuestion = sharedQuestions.get(sharedQuestions.size() - 1);
-		else
-			currentQuestion = new SharedQuestion(DataManager.getInstance().getRandomQuestionForRoundType(parent));
-		System.out.println("current q: " + currentQuestion.getId());
+ 		currentQuestion = DataManager.getInstance().getRandomQuestionForRoundType(parent);
 	}
 	
 	public Player getPlayer() {
@@ -201,6 +206,8 @@ public class Turn {
 	}
 	
 	public void addPlayerAnswer(PlayerAnswer answer) {
+		if (playerAnswers == null)
+			playerAnswers = new ArrayList<>();
 		playerAnswers.add(answer);
 	}
 	
@@ -224,7 +231,7 @@ public class Turn {
 			
 			DataManager.getInstance().updateTurn(turn);
 			if(answer != null && !answer.isEmpty())
-				DataManager.getInstance().updateSharedQuestionAntwoord(turn.getCurrentQuestion(), answer);
+				DataManager.getInstance().updateSharedQuestionAnswer(turn.getSharedQuestion(), answer);
 		}
 	}
 }
