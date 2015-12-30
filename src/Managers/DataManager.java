@@ -1049,15 +1049,15 @@ public class DataManager {
 		try {
 			
 			String sql = "SELECT * FROM deelvraag WHERE spel_id = ? AND rondenaam = ? AND beurt_id = ? ";
-			sql += "AND beurt_id NOT IN (SELECT beurt_id FROM beurt WHERE spel_id = ? AND rondenaam = ? AND beurt_id = ? AND speler = ?)";
+			//sql += "AND beurt_id NOT IN (SELECT beurt_id FROM beurt WHERE spel_id = ? AND rondenaam = ? AND beurt_id = ? AND speler = ?)";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, turn.getRound().getGame().getId());
 			preparedStatement.setString(2, turn.getRound().getRoundType().getValue());
 			preparedStatement.setInt(3, turn.getTurnId());
-			preparedStatement.setInt(4, turn.getRound().getGame().getId());
+/*			preparedStatement.setInt(4, turn.getRound().getGame().getId());
 			preparedStatement.setString(5, turn.getRound().getRoundType().getValue());
 			preparedStatement.setInt(6, turn.getTurnId());
-			preparedStatement.setString(7, turn.getPlayer().getName());
+			preparedStatement.setString(7, turn.getPlayer().getName());*/
 			data = preparedStatement.executeQuery();
 			while (data.next())
 				sharedQuestion = new SharedQuestion(data, turn);

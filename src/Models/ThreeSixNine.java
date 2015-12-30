@@ -50,8 +50,11 @@ public class ThreeSixNine extends Round {
 	
 	public SharedQuestion initSharedSkippedQuestion() {
 		SharedQuestion sharedSkippedQuestion = DataManager.getInstance().getLastSkippedSharedQuestion(lastTurn);
-		if(!sharedSkippedQuestion.getTurn().getPlayer().getName().equals(currentTurn.getPlayer().getName())); //If the skipped question is not from you
+		if(!sharedSkippedQuestion.getTurn().getPlayer().getName().equals(currentTurn.getPlayer().getName())) //If the skipped question is not from you
 			return DataManager.getInstance().getLastSkippedSharedQuestion(lastTurn);
+		else
+			return null;
+				
 	}
 
 	@Override
@@ -64,19 +67,22 @@ public class ThreeSixNine extends Round {
 		else 
 			Turn.pushTurn(currentTurn, TurnState.Wrong, answer);
 
-		if(currentTurn.getSkippedQuestion() == null) 
-			getGame().getController().endTurn();
-		else {
-			currentTurn = initCurrentTurn(this);
-			initNewTurn();
-		}
-		
-		updateView();
+		returnScreenCheck();
 	}
 
 	@Override
 	public void onPass() {
 		Turn.pushTurn(getCurrentTurn(), TurnState.Pass, null);
-		getGame().getController().endTurn();
+		returnScreenCheck();
+	}
+	
+	public void returnScreenCheck() {
+		if(currentTurn.getSkippedQuestion() == null) 
+			getGame().getController().endTurn();
+		else {
+			currentTurn = initCurrentTurn(this);
+			initNewTurn();
+			updateView();
+		}
 	}
 }
