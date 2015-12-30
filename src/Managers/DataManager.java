@@ -908,7 +908,7 @@ public class DataManager {
 		return pushed;
 	}
 	
-	public boolean updateSharedQuestionAnswer(Question question, String answer) {
+	public boolean updateSharedQuestionAnswer(SharedQuestion sharedQuestion, String answer) {
 		boolean updated = false;
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;
@@ -918,17 +918,17 @@ public class DataManager {
 					+ "where spel_id = ? AND rondenaam = ? AND beurt_id = ? AND volgnummer = ?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, answer);
-			preparedStatement.setInt(2, question.getRound().getGame().getId());
-			preparedStatement.setString(3, question.getRound().getRoundType().getValue());
-			preparedStatement.setInt(4, question.getRound().getCurrentTurn().getTurnId());
-			preparedStatement.setInt(5, question.getIndexNumber());
+			preparedStatement.setInt(2, sharedQuestion.getRound().getGame().getId());
+			preparedStatement.setString(3, sharedQuestion.getRound().getRoundType().getValue());
+			preparedStatement.setInt(4, sharedQuestion.getRound().getCurrentTurn().getTurnId());
+			preparedStatement.setInt(5, sharedQuestion.getIndexNumber());
 			if (preparedStatement.executeUpdate() > 0) {
 				updated = true;
 				connection.commit();
 			}
 			
 		} catch (SQLException e) {
-			System.err.println("Error updating deelvraag with questionid : " + question.getId());
+			System.err.println("Error updating deelvraag with questionid : " + sharedQuestion.getId());
 			System.err.println(e.getMessage());
 		} finally {
 			try {

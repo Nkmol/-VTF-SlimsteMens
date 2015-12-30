@@ -38,11 +38,11 @@ public class GameController {
 		loadLastRound();
 	}
 	
-	public void Submit_Click() {
+	private void Submit_Click() {
 		model.getCurrentRound().onSubmit(view.txtInput.getText());
 	}
 	
-	public void Pass_Click() {
+	private void Pass_Click() {
 		model.getCurrentRound().onPass();
 	}
 	

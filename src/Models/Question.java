@@ -14,7 +14,6 @@ public class Question {
 	private int id;
 	protected Round round;
 	protected String text;
-	protected int indexNumber;
 	private ArrayList<Answer> answers;
 
 	//TODO ugly ...
@@ -92,21 +91,15 @@ public class Question {
 		return round;
 	}
 	
+	public void setRound(Round round) {
+		this.round = round;
+	}
+	
 	public String getText() {
 		return text;
 	}
 	
 	public ArrayList<Answer> getAnswers() {
 		return answers;
-	}
-
-	public int getIndexNumber() {
-		if(indexNumber <= 0)
-			System.err.println("indexNumber for sharedQuestion is 0.");
-		return indexNumber;
-	}
-	
-	public void setIndexNumber(int value) {
-		indexNumber = value;
 	}
 }
