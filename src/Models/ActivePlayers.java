@@ -41,6 +41,7 @@ public class ActivePlayers extends Observable{
 				}
 			}
 		}		
+		
 		activePlayers = players;
 		notifyObs();
 	}
