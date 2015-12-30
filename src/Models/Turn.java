@@ -56,7 +56,7 @@ public class Turn {
 			secondsFinalLost = data.getInt("sec_finale_af");
 			currentQuestion =  DataManager.getInstance().getQuestionForId(data.getInt("vraag_id"), parent);
 			sharedQuestions = DataManager.getInstance().getSharedQuestions(parent, turnId);
-			setCurrentQuestion();
+//			setCurrentQuestion();
 			//TODO: turn id
 			playerAnswers = DataManager.getInstance().getPlayerAnswers(gameId, parent.getRoundType(), turnId);
 		} catch (SQLException e) {
@@ -79,6 +79,10 @@ public class Turn {
 			return lastTurn.getCurrentQuestion();
 		else
 			return null;
+	}
+	
+	public void setSkippedQuestion(Question question) {
+		skippedQuestion = question;
 	}
 
 	public int getGameId() {
@@ -121,9 +125,9 @@ public class Turn {
 		currentQuestion = sharedQuestions.get(sharedQuestions.size() - 1);
 	}
 	
-	public void setCurrentQuestion() {
- 		currentQuestion = DataManager.getInstance().getRandomQuestionForRoundType(parent);
-	}
+//	public void setCurrentQuestion() {
+// 		currentQuestion = DataManager.getInstance().getRandomQuestionForRoundType(parent);
+//	}
 	
 	public Player getPlayer() {
 		return player;

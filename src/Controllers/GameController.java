@@ -84,8 +84,9 @@ public class GameController {
 		Round round = DataManager.getInstance().getLastRoundForGame(model);
 		
 		if(round == null) {	
-			round = new ThreeSixNine(model);
+//			round = new ThreeSixNine(model);
 			//round = new Final(model);
+			round = new OpenDoor(model);
 		}
 
 		RoundController roundController = getRoundController(round, model);

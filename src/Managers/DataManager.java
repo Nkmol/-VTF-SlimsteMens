@@ -11,12 +11,12 @@ import Models.*;
 public class DataManager {
 
 
-//	private static final String dbUrl = "jdbc:mysql://localhost/slimsteMens";
-//	private static final String username = "root";
-//	private static final String password = "root";
-	private static final String dbUrl = "jdbc:mysql://databases.aii.avans.nl:3306/spmol_db2";
-	private static final String username = "spmol";
-	private static final String password = "Ab12345";
+	private static final String dbUrl = "jdbc:mysql://localhost/slimsteMens";
+	private static final String username = "root";
+	private static final String password = "root";
+//	private static final String dbUrl = "jdbc:mysql://databases.aii.avans.nl:3306/spmol_db2";
+//	private static final String username = "spmol";
+//	private static final String password = "Ab12345";
 	
 	private static DataManager instance = null;
 //	private Connection connection;
@@ -765,7 +765,11 @@ public class DataManager {
 				preparedStatement.setNull(4, Types.INTEGER);
 			else 
 				//preparedStatement.setInt(4, 6);
-			preparedStatement.setInt(4, turn.getCurrentQuestion().getId());
+			if (turn.getSkippedQuestion() != null)
+				preparedStatement.setInt(4, turn.getSkippedQuestion().getId());
+			else 
+				preparedStatement.setInt(4, turn.getCurrentQuestion().getId());
+			
 			preparedStatement.setString(5, turn.getPlayer().getName());
 			preparedStatement.setString(6, turn.getTurnState().getValue());
 			preparedStatement.setInt(7, turn.getSecondsEarned());
@@ -835,6 +839,37 @@ public class DataManager {
 		}
 		
 		return updated;
+	}
+	
+	public TurnInfo getTurInfonBeforeATurnInfo(TurnInfo turnInfo) {
+		TurnInfo turnBefore = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		String sql = "SELECT * FROM beurt "
+				+ "WHERE spel_id = ? AND beurt_id = ? AND rondenaam = ? LIMIT 1";
+		try {
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, turnInfo.getGameId());
+			preparedStatement.setInt(2, turnInfo.getTurnId() - 1);
+			preparedStatement.setString(3, turnInfo.getRoundType().getValue());
+			data = preparedStatement.executeQuery();
+			if (data.next())
+				turnBefore = new TurnInfo(data);
+		} catch (SQLException e) {
+			System.err.println("Error fetching the predecessor of turn with id: " + turnInfo.getTurnId() + " and game id: " + turnInfo.getGameId() + " and round: " + turnInfo.getRoundType().getValue());
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		return turnBefore;
 	}
 	
 	//TODO do i ever need to push all shared questions?

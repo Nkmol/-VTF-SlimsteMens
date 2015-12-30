@@ -74,7 +74,8 @@ public abstract class Round extends Observable {
 			else if(Game.isCurrentPlayerTurn(round.getGame().getId()) && Game.isCurrentUser(lastTurn.getPlayerName()) && lastTurn.getTurnState() != TurnState.Busy) {
 				System.out.println("continue answering");
 				turn = new Turn( DataManager.getInstance().getCurrentUser(), round);
-				turn.setTurnId(lastTurn.getTurnId());
+				turn.setTurnId(lastTurn.getTurnId()+1);
+				turn.setSkippedQuestion(null);
 				turn.setTurnState(TurnState.Busy);
 				
 				DataManager.getInstance().pushTurn(turn);
