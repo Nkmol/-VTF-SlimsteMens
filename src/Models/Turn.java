@@ -11,7 +11,7 @@ public class Turn {
 
 	private int gameId;
 	private int turnId;
-	private String playerName;
+	//private String playerName;
 	private TurnState turnState;
 	private Player player;
 	private TimerTask timer;
@@ -32,8 +32,7 @@ public class Turn {
 		gameId = parent.getGame().getId();
 //		this.sharedQuestion = DataManager.getInstance().getLastSharedQuestion(this); //TOOD: get last skipped question instead
 		currentQuestion = DataManager.getInstance().getRandomQuestionForRoundType(this.getRound());
-//		this.sharedQuestions = DataManager.getInstance().getSharedQuestions(parentRound, turnId);
-		
+//		this.sharedQuestions = DataManager.getInstance().getSharedQuestions(parentRound, turnId); //Dont need this?
 		//TODO: get last skipped quesiton
 		//1- get last turn
 		//2- fetch question from turn
@@ -52,12 +51,17 @@ public class Turn {
 			gameId = data.getInt("spel_id");
 			turnId = data.getInt("beurt_id");
 			//questionId = data.getInt("vraag_id");
-			playerName = data.getString("speler");
+			//playerName = data.getString("speler");
+			player = DataManager.getInstance().getPlayer(data.getString("speler"));
 			turnState = TurnState.fromString(data.getString("beurtstatus"));
 			secondsEarnd = data.getInt("sec_verdiend");
 			secondsFinalLost = data.getInt("sec_finale_af");
-			currentQuestion =  DataManager.getInstance().getQuestionForId(data.getInt("vraag_id"), parent);
-			sharedQuestions = DataManager.getInstance().getSharedQuestions(parent, turnId);
+			
+			//in 369 question is from sharedQuestion, will be overridden if null
+			currentQuestion = DataManager.getInstance().getSharedQuestion(this);
+			if(currentQuestion == null)
+				currentQuestion = DataManager.getInstance().getQuestionForId(data.getInt("vraag_id"), parent); 
+
 //			setCurrentQuestion();
 			//TODO: turn id
 			playerAnswers = DataManager.getInstance().getPlayerAnswers(gameId, parent.getRoundType(), turnId);
@@ -77,7 +81,7 @@ public class Turn {
 	public Question initSkippedQuestion() {
 		Turn lastTurn = getRound().getLastTurn();
 		
-		if(lastTurn != null && lastTurn.getTurnState() == TurnState.Pass && !Game.isCurrentUser(lastTurn.getPlayerName())) 
+		if(lastTurn != null && lastTurn.getTurnState() == TurnState.Pass && !Game.isCurrentUser(lastTurn.getPlayer().getName())) 
 			return lastTurn.getCurrentQuestion();
 		else
 			return null;
@@ -207,10 +211,10 @@ public class Turn {
 	public int getAmountAnswers() {
 		return playerAnswers == null ? 0 : playerAnswers.size();
 	}
-	
+/*	
 	public String getPlayerName() {
 		return playerName;
-	}
+	}*/
 	
 	public Round getRound() {
 		return parent;
