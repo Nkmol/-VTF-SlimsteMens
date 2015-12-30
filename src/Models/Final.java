@@ -36,7 +36,6 @@ public class Final extends Round {
 	}
 	
 	public void init() {
-		currentTurn.setCurrentQuestion();
 		updateView();
 	}
 
