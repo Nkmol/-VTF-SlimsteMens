@@ -40,7 +40,9 @@ public class Turn {
 		skippedQuestion = initSkippedQuestion();
 	}
 
-	public Turn(ResultSet data, Round parentRound) { //TODO parent should already be made, so better to already use it right away?
+	public Turn(ResultSet data, Round parentRound, boolean setCurrentTurn) { //TODO parent should already be made, so better to already use it right away?
+		if(setCurrentTurn)
+			parentRound.setCurrrentTurn(this);
 		parent = parentRound;
 		readResultSet(data);
 	}
@@ -79,6 +81,7 @@ public class Turn {
 			return lastTurn.getCurrentQuestion();
 		else
 			return null;
+
 	}
 	
 	public void setSkippedQuestion(Question question) {
@@ -215,6 +218,10 @@ public class Turn {
 	
 	public Question getSkippedQuestion() {
 		return skippedQuestion;
+	}
+	
+	public void deleteSkippedQuestion() {
+		skippedQuestion = null;
 	}
 
 	public static void pushTurn(Turn turn, TurnState turnState, String answer) {

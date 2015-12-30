@@ -15,9 +15,11 @@ import Models.ChallengedPlayer;
 
 public class PlayerListView extends JPanel implements Observer{
 	
-	private PlayerView[] playerViews;
+	private ArrayList<PlayerView> playerViews;
 	private PlayerListController controller;
 	private JPanel container;
+	private JScrollPane scroll;
+	private ArrayList<ChallengedPlayer> activePlayers;
 	
 	public PlayerListView(PlayerListController controller) {
 		
@@ -27,31 +29,102 @@ public class PlayerListView extends JPanel implements Observer{
 		setLayout(new BorderLayout());
 		setBackground(new Color(193,212,255));
 		
-		container = new JPanel();
-		container.setPreferredSize(new Dimension(0,0));
+		container = new JPanel(new CustomFlowLayout());
+		//container.setPreferredSize(new Dimension(0,0));
 		
-		JScrollPane scroll = new JScrollPane(container, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scroll = new JScrollPane(container, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		add(scroll, BorderLayout.CENTER);
+		
+		playerViews = new ArrayList<PlayerView>();
 		
 	}
 
 	private void updatePlayers(ArrayList<ChallengedPlayer> players) {
+
 		
-		if(playerViews != null) {
-			for(int i = 0; i < playerViews.length; i++) {
-				container.remove(playerViews[i]);
-			}
-		}
-		
-		playerViews = new PlayerView[players.size()];
-		
-		for(int i = 0; i < players.size(); i++) {
-			playerViews[i] = new PlayerView(players.get(i).getPlayer(), players.get(i).getRank(), !players.get(i).isChallenged(), controller); // TODO add a check to see if the player has already been challenged.
-			container.add(playerViews[i]);
-		}
+		calculateDifference(players);
 		
 		repaint();
 	}
+	
+	private void addAllPlayers(ArrayList<ChallengedPlayer> players) {
+		for(int i = 0; i < players.size(); i++) {
+			addPlayer(players.get(i));
+		}
+	}
+	
+	private void addPlayer(ChallengedPlayer player) {
+		PlayerView playerView = new PlayerView(player.getPlayer(), player.getRank(), !player.isChallenged(), controller);
+		playerViews.add(playerView);
+		container.add(playerView);
+	}
+	
+	private void updatePlayer(ChallengedPlayer newPlayer, int viewIndex) {
+		playerViews.get(viewIndex).updateView(newPlayer);
+	}
+	
+	
+	private void calculateDifference(ArrayList<ChallengedPlayer> players) {
+		if (activePlayers == null) {
+			activePlayers = players;
+			addAllPlayers(activePlayers);
+		}
+		else {
+			for (int i = 0; i < players.size(); i++) {
+				Boolean playerExists = false;
+				ChallengedPlayer newPlayer = players.get(i);
+				
+				for(int n = 0; n < activePlayers.size(); n++) {
+					ChallengedPlayer oldPlayer = activePlayers.get(n);
+					
+					if(comparePlayerNames(oldPlayer, newPlayer)) {
+						playerExists = true;
+						
+						
+						if(!comparePlayerActivity(oldPlayer, newPlayer) || !comparePlayerRanks(oldPlayer, newPlayer)) {
+							updatePlayer(newPlayer, n);
+							activePlayers.set(n, newPlayer);
+						}
+					}
+				}
+				
+				if(!playerExists) {
+					activePlayers.add(newPlayer);
+				}
+			}
+		}
+	}
+	
+	private Boolean comparePlayerNames(ChallengedPlayer oldPlayer, ChallengedPlayer newPlayer) {
+		if(oldPlayer.getPlayer().getName().equals(newPlayer.getPlayer().getName())) {
+			if(oldPlayer.getPlayer().getRole().equals(newPlayer.getPlayer().getRole())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
+	private Boolean comparePlayerRanks(ChallengedPlayer oldPlayer, ChallengedPlayer newPlayer) {
+		if(oldPlayer.getRank().getAmountPlayedGames() == newPlayer.getRank().getAmountPlayedGames()) {
+			if(oldPlayer.getRank().getAmountGamesWon() == newPlayer.getRank().getAmountGamesWon()) {
+				if(oldPlayer.getRank().getAmountGamesWon() == newPlayer.getRank().getAmountGamesWon()) {
+					if(oldPlayer.getRank().getAverageSecondsLeft() == newPlayer.getRank().getAverageSecondsLeft()) {
+						return true;
+					}	
+				}	
+			}
+		}
+		return false;
+	}
+	
+	private Boolean comparePlayerActivity(ChallengedPlayer oldPlayer, ChallengedPlayer newPlayer) {
+		if(oldPlayer.isChallenged() == newPlayer.isChallenged()) {
+			return true;
+		}
+		return false;
+	}
+	
 	
 	@Override
 	public void update(Observable o, Object arg) {

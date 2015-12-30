@@ -78,7 +78,7 @@ public abstract class Round extends Observable {
 				turn.setSkippedQuestion(null);
 				turn.setTurnState(TurnState.Busy);
 				
-				DataManager.getInstance().pushTurn(turn);
+				//DataManager.getInstance().pushTurn(turn);
 			}
 			/*
 			 * But when it is not the current player it means the other player had ended its turn
@@ -91,7 +91,7 @@ public abstract class Round extends Observable {
 				turn.setTurnId(lastTurn.getTurnId() + 1);
 				turn.setTurnState(TurnState.Busy);
 				
-				DataManager.getInstance().pushTurn(turn);	
+				//DataManager.getInstance().pushTurn(turn);	
 			}
 			else {
 				System.err.println("error while init new turn");
@@ -104,7 +104,7 @@ public abstract class Round extends Observable {
 			turn.setTurnState(TurnState.Busy);
 			turn.setTurnId(1);
 
-			DataManager.getInstance().pushTurn(turn);
+			//DataManager.getInstance().pushTurn(turn);
 		}
 		
 		return turn;

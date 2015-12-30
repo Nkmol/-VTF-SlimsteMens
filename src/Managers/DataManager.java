@@ -605,7 +605,7 @@ public class DataManager {
 			data = preparedStatement.executeQuery();
 			turns = new ArrayList<>();
 			while (data.next())
-				turns.add(new Turn(data, round));
+				turns.add(new Turn(data, round, false));
 		} catch (SQLException e) {
 			System.err.println("Error fetching turns for game id: " + round.getGame().getId());
 		} finally {
@@ -636,7 +636,7 @@ public class DataManager {
 			preparedStatement.setInt(1, round.getGame().getId());
 			data = preparedStatement.executeQuery();
 			if (data.next())
-				turn = new Turn(data, round);
+				turn = new Turn(data, round, true);
 		} catch (SQLException e) {
 			System.err.println("Error fetching last turn for game id: " + round.getGame().getId());
 			System.err.println(e.getMessage());
@@ -668,7 +668,7 @@ public class DataManager {
 			preparedStatement.setInt(1, round.getGame().getId());
 			data = preparedStatement.executeQuery();
 			if (data.last() && data.getRow() == 2)
-				turn = new Turn(data, round);
+				turn = new Turn(data, round, false);
 		} catch (SQLException e) {
 			System.err.println("Error fetching last turn for game id: " + round.getGame().getId());
 			System.err.println(e.getMessage());
@@ -700,7 +700,7 @@ public class DataManager {
 			preparedStatement.setInt(1, gameId);
 			data = preparedStatement.executeQuery();
 			if (data.next())
-				turn = new Turn(data, round);
+				turn = new Turn(data, round, false);
 		} catch (SQLException e) {
 			System.err.println("Error fetching last turn for game id: " + gameId);
 			System.err.println(e.getMessage());
@@ -883,9 +883,9 @@ public class DataManager {
 					String sql = "INSERT INTO deelvraag "
 							+ "VALUES (?, ?, ?, ?, ?, ?)";
 					preparedStatement = connection.prepareStatement(sql);
-					preparedStatement.setInt(1, sharedQuestion.getRound().getGame().getId());
-					preparedStatement.setString(2, sharedQuestion.getRound().getRoundType().getValue());
-					preparedStatement.setInt(3, sharedQuestion.getRound().getCurrentTurn().getTurnId());
+					preparedStatement.setInt(1, sharedQuestion.getTurn().getRound().getGame().getId());
+					preparedStatement.setString(2, sharedQuestion.getTurn().getRound().getRoundType().getValue());
+					preparedStatement.setInt(3, sharedQuestion.getTurn().getRound().getCurrentTurn().getTurnId());
 					preparedStatement.setInt(4, sharedQuestion.getIndexNumber());
 					preparedStatement.setInt(5, sharedQuestion.getId());
 					//preparedStatement.setString(6, sharedQuestion.getAnswer());
@@ -953,9 +953,9 @@ public class DataManager {
 					+ "where spel_id = ? AND rondenaam = ? AND beurt_id = ? AND volgnummer = ?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, answer);
-			preparedStatement.setInt(2, sharedQuestion.getRound().getGame().getId());
-			preparedStatement.setString(3, sharedQuestion.getRound().getRoundType().getValue());
-			preparedStatement.setInt(4, sharedQuestion.getRound().getCurrentTurn().getTurnId());
+			preparedStatement.setInt(2, sharedQuestion.getTurn().getRound().getGame().getId());
+			preparedStatement.setString(3, sharedQuestion.getTurn().getRound().getRoundType().getValue());
+			preparedStatement.setInt(4, sharedQuestion.getTurn().getRound().getCurrentTurn().getTurnId());
 			preparedStatement.setInt(5, sharedQuestion.getIndexNumber());
 			if (preparedStatement.executeUpdate() > 0) {
 				updated = true;
@@ -1037,7 +1037,7 @@ public class DataManager {
 //		return pushed;
 //	}
 	
-	public SharedQuestion getLastSharedQuestion(Turn turn) {
+	public SharedQuestion getLastSkippedSharedQuestion(Turn turn) {
 		SharedQuestion sharedQuestion = null;
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;
@@ -1055,7 +1055,7 @@ public class DataManager {
 			preparedStatement.setInt(3, turn.getTurnId());
 			data = preparedStatement.executeQuery();
 			if (data.next())
-				sharedQuestion = new SharedQuestion(data, turn.getRound());
+				sharedQuestion = new SharedQuestion(data, turn);
 		} catch (SQLException e) {
 			System.err.println("Error fetching last shared question for turn id: " + turn.getTurnId());
 			System.err.println(e.getMessage());
@@ -1089,7 +1089,7 @@ public class DataManager {
 			data = preparedStatement.executeQuery();
 			sharedQuestions = new ArrayList<>();
 			while (data.next())
-				sharedQuestions.add(new SharedQuestion(data, round));
+				sharedQuestions.add(new SharedQuestion(data, round.getCurrentTurn()));
 		} catch (SQLException e) {
 			System.err.println("Error fetching shared questions");
 			System.err.println(e.getMessage());
@@ -1149,7 +1149,7 @@ public class DataManager {
 			data = preparedStatement.executeQuery();
 			questions = new ArrayList<>();
 			while (data.next()) 
-				questions.add(new Question(data, round)); //TODO: remove round from the parameters 
+				questions.add(new Question(data, round.getCurrentTurn())); //TODO: remove round from the parameters 
 		} catch (SQLException e) {
 			System.err.println("Error fetching questions for round: " + round.getRoundType().getValue());
 			System.err.println(e.getMessage());
@@ -1177,7 +1177,7 @@ public class DataManager {
 			preparedStatement.setInt(1, id);
 			data = preparedStatement.executeQuery();
 			if (data.next()) 
-				question = new Question(data, round);
+				question = new Question(data, round.getCurrentTurn());
 		} catch(SQLException e) {
 			System.err.println("Error while fetching the question with id: " + id);
 			System.err.println(e.getMessage());
@@ -1205,7 +1205,7 @@ public class DataManager {
 			preparedStatement.setString(1, round.getRoundType().getValue());
 			data = preparedStatement.executeQuery();
 			if (data.next()) 
-				question = new Question(data, round);
+				question = new Question(data, round.getCurrentTurn());
 		} catch(SQLException e) {
 			System.err.println("Error while fetching a random question for round: " + round.getRoundType().getValue());
 			System.err.println(e.getMessage());

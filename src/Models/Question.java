@@ -12,7 +12,7 @@ public class Question {
 	private static final int MinimumAnswerPercentage = 80;
 	
 	private int id;
-	protected Round round;
+	protected Turn turn;
 	protected String text;
 	private ArrayList<Answer> answers;
 
@@ -21,19 +21,19 @@ public class Question {
 		text = question.getText();
 		answers = question.getAnswers();
 		id = question.getId();
-		round = question.getRound();
+		turn = question.getTurn();
 	}
 	
-	public Question(int id, Round round, String text) {
+	public Question(int id, Turn turn, String text) {
 		this.id = id;
-		this.round = round;
+		this.turn = turn;
 		this.text = text;
 	}
 	
-	public Question(ResultSet data, Round round) {
+	public Question(ResultSet data, Turn turn) {
 		try {
 			id = data.getInt("vraag_id");
-			this.round = round;
+			this.turn = turn;
 			text = data.getString("vraagtekst");
 			answers = DataManager.getInstance().getAnswers(id);
 		} catch (SQLException e) {
@@ -87,12 +87,12 @@ public class Question {
 		return id;
 	}
 	
-	public Round getRound() {
-		return round;
+	public Turn getTurn() {
+		return turn;
 	}
 	
-	public void setRound(Round round) {
-		this.round = round;
+	public void setTurn(Turn turn) {
+		this.turn = turn;
 	}
 	
 	public String getText() {
