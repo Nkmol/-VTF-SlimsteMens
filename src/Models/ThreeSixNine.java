@@ -24,7 +24,7 @@ public class ThreeSixNine extends Round {
 	}
 	
 	public void init() {
-		System.out.println(currentTurn.getCurrentQuestion().getText());
+		System.out.println(currentTurn.getSkippedQuestion().getText());
 		updateView();
 	}
 

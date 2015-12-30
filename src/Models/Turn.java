@@ -28,18 +28,19 @@ public class Turn {
 	public Turn(Player player, Round parentRound) {
 		this.player = player;
 		this.parent = parentRound;
-		this.gameId = parent.getGame().getId();
+		gameId = parent.getGame().getId();
 //		this.sharedQuestion = DataManager.getInstance().getLastSharedQuestion(this); //TOOD: get last skipped question instead
-		this.currentQuestion = DataManager.getInstance().getRandomQuestionForRoundType(this.getRound());
+		currentQuestion = DataManager.getInstance().getRandomQuestionForRoundType(this.getRound());
 //		this.sharedQuestions = DataManager.getInstance().getSharedQuestions(parentRound, turnId);
 		
 		//TODO: get last skipped quesiton
 		//1- get last turn
 		//2- fetch question from turn
+		skippedQuestion = initSkippedQuestion();
 	}
 
 	public Turn(ResultSet data, Round parentRound) { //TODO parent should already be made, so better to already use it right away?
-		this.parent = parentRound;
+		parent = parentRound;
 		readResultSet(data);
 	}
 	
@@ -68,6 +69,15 @@ public class Turn {
 		sharedQuestions = new ArrayList<SharedQuestion>();
 		
 		startTimer();
+	}
+	
+	public Question initSkippedQuestion() {
+		Turn lastTurn = DataManager.getInstance().getLastTurnForGame(getRound());
+		
+		if(lastTurn.getTurnState() == TurnState.Pass && !Game.isCurrentUser(lastTurn.getPlayerName())) 
+			return lastTurn.getCurrentQuestion();
+		else
+			return null;
 	}
 	
 	public int getGameId() {
