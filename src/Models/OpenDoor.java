@@ -51,7 +51,7 @@ public class OpenDoor extends Round {
 		if (amountCorrectAnswers == AMOUNT_OF_ANSWERS) {
 			currentTurn.setTurnState(TurnState.Correct);
 			currentTurn.setSecondsEarned(secondsEarned);
-//			DataManager.getInstance().updateTurn(currentTurn);
+			DataManager.getInstance().updateTurn(currentTurn);
 			getGame().getController().endTurn();
 		}
 	
@@ -61,6 +61,7 @@ public class OpenDoor extends Round {
 	public void onPass() {
 		//TODO: further implementation
 		currentTurn.setTurnState(TurnState.Pass);
+		DataManager.getInstance().updateTurn(currentTurn);
 		getGame().getController().endTurn();
 	}
 	

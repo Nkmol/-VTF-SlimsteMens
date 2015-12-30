@@ -54,7 +54,6 @@ public class GameController {
 	}
 	
 	public void endTurn() {
-		DataManager.getInstance().updateTurn(model.getCurrentRound().getCurrentTurn());
 		parent.ShowMainPanel();
 	}
 	

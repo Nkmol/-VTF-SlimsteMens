@@ -22,15 +22,21 @@ public class Turn {
 	private ArrayList<PlayerAnswer> playerAnswers;
 	private Question currentQuestion;
 	private SharedQuestion sharedQuestion;
+	private Question skippedQuestion;
 	private Round parent;
 	
 	public Turn(Player player, Round parentRound) {
 		this.player = player;
 		this.parent = parentRound;
 		this.gameId = parent.getGame().getId();
-		this.sharedQuestion = DataManager.getInstance().getLastSharedQuestion(this);
+//		this.sharedQuestion = DataManager.getInstance().getLastSharedQuestion(this); //TOOD: get last skipped question instead
 		this.currentQuestion = DataManager.getInstance().getRandomQuestionForRoundType(this.getRound());
 //		this.sharedQuestions = DataManager.getInstance().getSharedQuestions(parentRound, turnId);
+		
+		//TODO: get last skipped quesiton
+		//1- get last turn
+		//2- fetch question from turn
+		
 	}
 	
 /*	public Turn(ResultSet data) { //TODO dont use this constructor anymore -> Conficts with ActiveGame as it has no rounds/games to init
@@ -52,7 +58,7 @@ public class Turn {
 			turnState = TurnState.fromString(data.getString("beurtstatus"));
 			secondsEarnd = data.getInt("sec_verdiend");
 			secondsFinalLost = data.getInt("sec_finale_af");
-			currentQuestion = (SharedQuestion) DataManager.getInstance().getQuestionForId(data.getInt("vraag_id"), parent);
+			currentQuestion =  DataManager.getInstance().getQuestionForId(data.getInt("vraag_id"), parent);
 			sharedQuestions = DataManager.getInstance().getSharedQuestions(parent, turnId);
 			setCurrentQuestion();
 			//TODO: turn id
@@ -221,6 +227,10 @@ public class Turn {
 	
 	public Round getRound() {
 		return parent;
+	}
+	
+	public Question getSkippedQuestion() {
+		return skippedQuestion;
 	}
 
 	public static void pushTurn(Turn turn, TurnState turnState, String answer) {
