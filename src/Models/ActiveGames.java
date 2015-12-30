@@ -46,8 +46,7 @@ public class ActiveGames extends Observable {
 						activeGameList.add(new ActiveGameInfo(player1, player2, gameId, true));
 					else 
 						activeGameList.add(new ActiveGameInfo(player2, player1, gameId, true)); 
-				}
-				else {
+				} else {
 					if(Game.isCurrentUser(player1.getName()))
 						activeGameList.add(new ActiveGameInfo(player1, player2, gameId, false));
 					else

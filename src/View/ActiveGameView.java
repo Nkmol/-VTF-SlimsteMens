@@ -60,6 +60,14 @@ public class ActiveGameView extends JPanel {
 		// 135, 171, 255
 		setBackground(new Color(135, 171, 255));
 	}
+	
+	public void hideGoButton() {
+		goButton.setVisible(false);
+	}
+	
+	public void unhideGoButton() {
+		goButton.setVisible(true);
+	}
 
 	private void handleButtonClick() { // TODO TEMP
 		controller.handleButtonClick(gameId);

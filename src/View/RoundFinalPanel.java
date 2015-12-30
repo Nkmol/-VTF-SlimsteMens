@@ -38,6 +38,8 @@ public class RoundFinalPanel extends JPanel implements Observer {
 	private JTextArea questionTextArea;
 	private JPanel answersPanel;
 	private ArrayList<AnswerView> answerViews;
+	private JLabel notification;
+	
 	
 	public RoundFinalPanel(Final model)
 	{
@@ -61,6 +63,9 @@ public class RoundFinalPanel extends JPanel implements Observer {
 		answersPanel = new JPanel();
 		answersPanel.setLayout(new GridBagLayout());
 		add(answersPanel, BorderLayout.CENTER);
+		
+		notification = new JLabel();
+		add(notification, BorderLayout.SOUTH);
 	}
 	
 	private JTextArea textAreaProperties(JTextArea textArea) {
@@ -101,6 +106,13 @@ public class RoundFinalPanel extends JPanel implements Observer {
 		}
 		
 		repaint();
+	}
+	
+	public void setNotificationMessage(Boolean responseIsRight){
+		if(responseIsRight)
+			notification.setText("Your answer is correct!");
+		else
+			notification.setText("Wrong answer!");
 	}
 	
 	private void checkSubmittedAnswers(ArrayList<PlayerAnswer> submittedAnswers, Final model) {
@@ -148,6 +160,10 @@ public class RoundFinalPanel extends JPanel implements Observer {
 		
 		if (submittedAnswers != null && submittedAnswers.size() > 0) {
 			checkSubmittedAnswers(submittedAnswers, model);
+		}
+		
+		if(model.getResponseIsRight() != null){
+			setNotificationMessage(model.getResponseIsRight());
 		}
 	}
 	

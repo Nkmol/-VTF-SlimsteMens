@@ -24,7 +24,7 @@ public class ThreeSixNine extends Round {
 	}
 	
 	public void init() {
-		//questions = DataManager.getInstance().getQuestions(this);
+		System.out.println(currentTurn.getSkippedQuestion().getText());
 		updateView();
 	}
 
@@ -35,5 +35,11 @@ public class ThreeSixNine extends Round {
 			Turn.pushTurn(currentTurn, TurnState.Correct, answer);
 		else 
 			Turn.pushTurn(currentTurn, TurnState.Wrong, answer);
+	}
+
+	@Override
+	public void onPass() {
+		// TODO Auto-generated method stub
+		
 	}
 }

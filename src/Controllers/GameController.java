@@ -43,9 +43,7 @@ public class GameController {
 	}
 	
 	public void Pass_Click() {
-		Turn.pushTurn(model.getCurrentRound().getCurrentTurn(), TurnState.Pass, null);
-		//model.getPlayerGame1().stopTimer();
-		//parent.ShowMainPanel();
+		model.getCurrentRound().onPass();
 	}
 	
 	public void endTurn() {

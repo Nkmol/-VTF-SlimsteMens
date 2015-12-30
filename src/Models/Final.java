@@ -10,7 +10,16 @@ public class Final extends Round {
 	private final static int POINTS_QUESTION = 20;
 	private static final int amountOfAnswers = 5;
 	private int amountCorrectAnswers = 0;
+	private Boolean responseIsRight;
 	
+	public Boolean getResponseIsRight() {
+		return responseIsRight;
+	}
+
+	public void setResponseIsRight(Boolean responseIsRight) {
+		this.responseIsRight = responseIsRight;
+	}
+
 	private ArrayList<PlayerAnswer> playerAnswers;
 	
 	Question currentQuestion;
@@ -47,8 +56,12 @@ public class Final extends Round {
 		
 		System.out.println("Question id: " + currentTurn.getCurrentQuestion().getId());
 		
-		if (currentTurn.getCurrentQuestion().isPlayerAnswerCorrect(answer)) 
+		if (currentTurn.getCurrentQuestion().isPlayerAnswerCorrect(answer)){ 
 			amountCorrectAnswers++;
+			setResponseIsRight(true);
+		}else{
+			setResponseIsRight(false);
+		}
 		
 		updateView();
 		
@@ -62,6 +75,12 @@ public class Final extends Round {
 	
 	public ArrayList<PlayerAnswer> getSubmittedAnswers() {
 		return playerAnswers;
+	}
+
+	@Override
+	public void onPass() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
