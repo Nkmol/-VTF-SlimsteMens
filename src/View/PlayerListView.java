@@ -15,7 +15,6 @@ import Models.ChallengedPlayer;
 
 public class PlayerListView extends JPanel implements Observer{
 	
-	//private PlayerView[] playerViews;
 	private ArrayList<PlayerView> playerViews;
 	private PlayerListController controller;
 	private JPanel container;
@@ -45,65 +44,87 @@ public class PlayerListView extends JPanel implements Observer{
 		
 		calculateDifference(players);
 		
-		//playerViews = new PlayerView[players.size()];
-		
-		JPanel containerTemp = new JPanel(new CustomFlowLayout());
-		/*
-		for(int i = 0; i < players.size(); i++) {
-			playerViews[i] = new PlayerView(players.get(i).getPlayer(), players.get(i).getRank(), !players.get(i).isChallenged(), controller); // TODO add a check to see if the player has already been challenged.
-			container.add(playerViews[i]);
-		}
-		*/
 		repaint();
 	}
 	
 	private void addAllPlayers(ArrayList<ChallengedPlayer> players) {
 		for(int i = 0; i < players.size(); i++) {
-			PlayerView playerView = new PlayerView(players.get(i).getPlayer(), players.get(i).getRank(), !players.get(i).isChallenged(), controller); // TODO add a check to see if the player has already been challenged.
-			playerViews.add(playerView);
-			container.add(playerView);
+			addPlayer(players.get(i));
 		}
 	}
 	
+	private void addPlayer(ChallengedPlayer player) {
+		PlayerView playerView = new PlayerView(player.getPlayer(), player.getRank(), !player.isChallenged(), controller);
+		playerViews.add(playerView);
+		container.add(playerView);
+	}
+	
+	private void updatePlayer(ChallengedPlayer newPlayer, int viewIndex) {
+		playerViews.get(viewIndex).updateView(newPlayer);
+	}
+	
+	
 	private void calculateDifference(ArrayList<ChallengedPlayer> players) {
-		if(activePlayers == null) {
+		if (activePlayers == null) {
 			activePlayers = players;
-			addAllPlayers(players);		
+			addAllPlayers(activePlayers);
 		}
 		else {
-			
-			for(int i = 0; i < activePlayers.size(); i++) {
-				for(int n = 0; n < players.size(); n++) {
-					// TODO function for deleting removed players.
-				}
-			}
-			
-			
-			
-			for(int i = 0; i < players.size(); i++) {
-				ChallengedPlayer player = players.get(i);
+			for (int i = 0; i < players.size(); i++) {
+				Boolean playerExists = false;
+				ChallengedPlayer newPlayer = players.get(i);
 				
-				if (!activePlayers.contains(player)) {
+				for(int n = 0; n < activePlayers.size(); n++) {
+					ChallengedPlayer oldPlayer = activePlayers.get(n);
 					
-					for(int n = 0; n < activePlayers.size(); n++) {
-						ChallengedPlayer activePlayer = activePlayers.get(n);
+					if(comparePlayerNames(oldPlayer, newPlayer)) {
+						playerExists = true;
 						
-						if(player.getName().equals(activePlayer.getName())) {
-							activePlayer = player;
-							playerViews.get(n).updateView(player);
-						}
-						else {
-							activePlayers.add(player);
-							PlayerView tempView = new PlayerView(players.get(i).getPlayer(), players.get(i).getRank(), !players.get(i).isChallenged(), controller); // TODO add a check to see if the player has already been challenged.
-							playerViews.add(tempView);	
-							container.add(tempView);
+						
+						if(!comparePlayerActivity(oldPlayer, newPlayer) || !comparePlayerRanks(oldPlayer, newPlayer)) {
+							updatePlayer(newPlayer, n);
+							activePlayers.set(n, newPlayer);
 						}
 					}
-					
+				}
+				
+				if(!playerExists) {
+					activePlayers.add(newPlayer);
 				}
 			}
 		}
 	}
+	
+	private Boolean comparePlayerNames(ChallengedPlayer oldPlayer, ChallengedPlayer newPlayer) {
+		if(oldPlayer.getPlayer().getName().equals(newPlayer.getPlayer().getName())) {
+			if(oldPlayer.getPlayer().getRole().equals(newPlayer.getPlayer().getRole())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
+	private Boolean comparePlayerRanks(ChallengedPlayer oldPlayer, ChallengedPlayer newPlayer) {
+		if(oldPlayer.getRank().getAmountPlayedGames() == newPlayer.getRank().getAmountPlayedGames()) {
+			if(oldPlayer.getRank().getAmountGamesWon() == newPlayer.getRank().getAmountGamesWon()) {
+				if(oldPlayer.getRank().getAmountGamesWon() == newPlayer.getRank().getAmountGamesWon()) {
+					if(oldPlayer.getRank().getAverageSecondsLeft() == newPlayer.getRank().getAverageSecondsLeft()) {
+						return true;
+					}	
+				}	
+			}
+		}
+		return false;
+	}
+	
+	private Boolean comparePlayerActivity(ChallengedPlayer oldPlayer, ChallengedPlayer newPlayer) {
+		if(oldPlayer.isChallenged() == newPlayer.isChallenged()) {
+			return true;
+		}
+		return false;
+	}
+	
 	
 	@Override
 	public void update(Observable o, Object arg) {
