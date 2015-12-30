@@ -9,7 +9,9 @@ public class OpenDoor extends Round {
 
 	private ArrayList<PlayerAnswer> playerAnswers;
 	private int amountCorrectAnswers = 0;
-	private static final int amountOfAnswers = 4;
+	private static final int AMOUNT_OF_ANSWERS = 4;
+	private int secondsEarned = 0;
+	private static final int SECONDS_PER_CORRECT_ANSWER = 40;
 	
 	public OpenDoor(Game game) {
 		super(game, RoundType.OpenDoor);
@@ -24,29 +26,6 @@ public class OpenDoor extends Round {
 	public void init() {
 		currentTurn.setCurrentQuestion();
 		updateView();
-	//TODO: function to check turn
-	}
-	
-	public void setNewQuestion() {
-		// Get the view to update question with a new question
-		// TODO load all questions
-		/*int current = this.getQuestions().indexOf(currentQuestion);
-		
-		if(this.getQuestions().get(current + 1) != null){
-
-			setCurrentQuestion(++current);
-
-			setChanged();
-			notifyObservers();
-		}*/
-	}
-	
-//	public Question getCurrentQuestion(){
-//		return currentQuestion;
-//	}
-	
-	public void setCurrentQuestion(int index){
-		/*this.currentQuestion = this.getQuestions().get(index);*/
 	}
 
 	@Override
@@ -62,17 +41,27 @@ public class OpenDoor extends Round {
 		
 		System.out.println("Question id: " + currentTurn.getCurrentQuestion().getId());
 		
-		if (currentTurn.getCurrentQuestion().isPlayerAnswerCorrect(answer)) 
-			amountCorrectAnswers++;
-		
+		if (currentTurn.getCurrentQuestion().isPlayerAnswerCorrect(answer)) {
+			amountCorrectAnswers++; 
+			secondsEarned+=SECONDS_PER_CORRECT_ANSWER;
+		}
+			
 		updateView();
 		
-		if (amountCorrectAnswers == amountOfAnswers) {
+		if (amountCorrectAnswers == AMOUNT_OF_ANSWERS) {
 			currentTurn.setTurnState(TurnState.Correct);
-			DataManager.getInstance().updateTurn(currentTurn);
+			currentTurn.setSecondsEarned(secondsEarned);
+//			DataManager.getInstance().updateTurn(currentTurn);
 			getGame().getController().endTurn();
 		}
 	
+	}
+
+	@Override
+	public void onPass() {
+		//TODO: further implementation
+		currentTurn.setTurnState(TurnState.Pass);
+		getGame().getController().endTurn();
 	}
 	
 	public ArrayList<PlayerAnswer> getSubmittedAnswers() {

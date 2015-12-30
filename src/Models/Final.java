@@ -18,4 +18,10 @@ public class Final extends Round {
 		
 	}
 
+	@Override
+	public void onPass() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

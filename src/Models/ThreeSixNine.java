@@ -36,4 +36,10 @@ public class ThreeSixNine extends Round {
 		else 
 			Turn.pushTurn(currentTurn, TurnState.Wrong, answer);
 	}
+
+	@Override
+	public void onPass() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -43,12 +43,18 @@ public class GameController {
 	}
 	
 	public void Pass_Click() {
-		Turn.pushTurn(model.getCurrentRound().getCurrentTurn(), TurnState.Pass, null);
-		//model.getPlayerGame1().stopTimer();
-		parent.ShowMainPanel();
+//		Turn.pushTurn(model.getCurrentRound().getCurrentTurn(), TurnState.Pass, null);
+//		//model.getPlayerGame1().stopTimer();
+//		parent.ShowMainPanel();
+		
+		// Add your own implementation when the pass button gets clicked
+		// call getGame().getController().endTurn(); in your round model to end the turn
+		// after the onPass implementation
+		model.getCurrentRound().onPass();
 	}
 	
 	public void endTurn() {
+		DataManager.getInstance().updateTurn(model.getCurrentRound().getCurrentTurn());
 		parent.ShowMainPanel();
 	}
 	
