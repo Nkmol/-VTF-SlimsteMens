@@ -15,7 +15,6 @@ public class Turn {
 	private TurnState turnState;
 	private Player player;
 	private TimerTask timer;
-	private int time;
 	private int secondsEarnd;
 	private Integer secondsFinalLost;
 	private ArrayList<SharedQuestion> sharedQuestions;
@@ -31,7 +30,7 @@ public class Turn {
 		this.parent = parentRound;
 		gameId = parent.getGame().getId();
 //		this.sharedQuestion = DataManager.getInstance().getLastSharedQuestion(this); //TOOD: get last skipped question instead
-		currentQuestion = DataManager.getInstance().getRandomQuestionForRoundType(this.getRound());
+		currentQuestion = DataManager.getInstance().getRandomQuestionForRoundType(this);
 //		this.sharedQuestions = DataManager.getInstance().getSharedQuestions(parentRound, turnId); //Dont need this?
 		//TODO: get last skipped quesiton
 		//1- get last turn
@@ -59,6 +58,7 @@ public class Turn {
 			
 			//in 369 question is from sharedQuestion, will be overridden if null
 			currentQuestion = DataManager.getInstance().getSharedQuestion(this);
+			sharedQuestion = DataManager.getInstance().getSharedQuestion(this); // >.<
 			if(currentQuestion == null)
 				currentQuestion = DataManager.getInstance().getQuestionForId(data.getInt("vraag_id"), parent); 
 
@@ -176,18 +176,20 @@ public class Turn {
 		this.playerAnswers = playerAnswers;
 	}
 	
-	public void addTime(int value) {
-		time += value;
+	public void addSecondsEarnd(int value) {
+		secondsEarnd += value;
 	}
 	
-	public void substractTime(int value) {
-		time -= value;
+	public void substractSecondsEarnd(int value) {
+		secondsEarnd -= value;
 		
 		parent.getGame().updateView();
 	}
 	
 	public void startTimer() {
-		timer = new MyTimer().schedule(() -> substractTime(1), 1000);
+		if(timer != null)
+			timer.cancel();
+		timer = new MyTimer().schedule(() -> substractSecondsEarnd(1), 1000);
 	}
 	
 	public void stopTimer() {
@@ -196,10 +198,6 @@ public class Turn {
 	
 	public void submitTurn() {
 		//TODO: submit to the database
-	}
-	
-	public int getTime() {
-		return time;
 	}
 	
 	public void addPlayerAnswer(PlayerAnswer answer) {

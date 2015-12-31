@@ -33,11 +33,17 @@ public class ThreeSixNine extends Round {
 			DataManager.getInstance().pushTurn(currentTurn);
 			DataManager.getInstance().pushSharedQuestion(getCurrentTurn());
 		}
+		
+		currentTurn.startTurn();
 	}
 	
 	public SharedQuestion initSharedQuestion() {
 		if(getCurrentTurn().getSharedSkippedQuestion() == null) {
-			SharedQuestion newSharedQuestion =  new SharedQuestion(getCurrentTurn().getCurrentQuestion(), 1);
+			SharedQuestion newSharedQuestion = null;
+			if(lastTurn == null)
+				newSharedQuestion =  new SharedQuestion(getCurrentTurn().getCurrentQuestion(), 1);
+			else
+				newSharedQuestion =  new SharedQuestion(getCurrentTurn().getCurrentQuestion(), lastTurn.getSharedQuestion().getIndexNumber() + 1);
 			return newSharedQuestion;
 		}
 		else {
@@ -50,7 +56,8 @@ public class ThreeSixNine extends Round {
 	
 	public SharedQuestion initSharedSkippedQuestion() {
 		SharedQuestion sharedSkippedQuestion = DataManager.getInstance().getLastSkippedSharedQuestion(lastTurn);
-		if(!sharedSkippedQuestion.getTurn().getPlayer().getName().equals(currentTurn.getPlayer().getName())) //If the skipped question is not from you
+		if(sharedSkippedQuestion != null && 
+				!sharedSkippedQuestion.getTurn().getPlayer().getName().equals(currentTurn.getPlayer().getName())) //If the skipped question is not from you
 			return DataManager.getInstance().getLastSkippedSharedQuestion(lastTurn);
 		else
 			return null;
@@ -62,8 +69,10 @@ public class ThreeSixNine extends Round {
 		System.out.println("your answers is " + answer);
 		Question currentQuestion = (currentTurn.getSkippedQuestion() != null) ? currentTurn.getSkippedQuestion() : currentTurn.getCurrentQuestion();
 		
-		if (currentQuestion.isPlayerAnswerCorrect(answer)) 
+		if (currentQuestion.isPlayerAnswerCorrect(answer)) {
+			currentTurn.addSecondsEarnd(POINTS_QUESTION);
 			Turn.pushTurn(currentTurn, TurnState.Correct, answer);
+		}
 		else 
 			Turn.pushTurn(currentTurn, TurnState.Wrong, answer);
 

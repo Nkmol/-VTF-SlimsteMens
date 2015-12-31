@@ -46,7 +46,7 @@ public class Puzzle extends Round {
 	}
 
 	public void Submit(String SubmittedAnswer) {
-		PlayerAnswer playerAnswer = new PlayerAnswer(currentTurn, generateAnswerId(), SubmittedAnswer, currentTurn.getTime());
+		PlayerAnswer playerAnswer = new PlayerAnswer(currentTurn, generateAnswerId(), SubmittedAnswer, currentTurn.getSecondsEarned());
 		currentTurn.addPlayerAnswer(playerAnswer);
 		if (GetQuestion().isPlayerAnswerCorrect(playerAnswer)) {
 			NextQuestion();

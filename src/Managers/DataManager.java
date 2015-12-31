@@ -11,12 +11,12 @@ import Models.*;
 public class DataManager {
 
 
-	private static final String dbUrl = "jdbc:mysql://localhost/slimsteMens";
-	private static final String username = "root";
-	private static final String password = "root";
-//	private static final String dbUrl = "jdbc:mysql://databases.aii.avans.nl:3306/spmol_db2";
-//	private static final String username = "spmol";
-//	private static final String password = "Ab12345";
+//	private static final String dbUrl = "jdbc:mysql://localhost/slimsteMens";
+//	private static final String username = "root";
+//	private static final String password = "root";
+	private static final String dbUrl = "jdbc:mysql://databases.aii.avans.nl:3306/spmol_db2";
+	private static final String username = "spmol";
+	private static final String password = "Ab12345";
 	
 	private static DataManager instance = null;
 //	private Connection connection;
@@ -1198,7 +1198,7 @@ public class DataManager {
 		return question;
 	}
 	
-	public Question getRandomQuestionForRoundType(Round round) {
+	public Question getRandomQuestionForRoundType(Turn turn) {
 		Question question = null;
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;
@@ -1206,12 +1206,12 @@ public class DataManager {
 		try {
 			String sql = "SELECT * FROM vraag WHERE rondenaam = ? ORDER BY RAND() LIMIT 1";
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, round.getRoundType().getValue());
+			preparedStatement.setString(1, turn.getRound().getRoundType().getValue());
 			data = preparedStatement.executeQuery();
 			if (data.next()) 
-				question = new Question(data, round.getCurrentTurn());
+				question = new Question(data, turn);
 		} catch(SQLException e) {
-			System.err.println("Error while fetching a random question for round: " + round.getRoundType().getValue());
+			System.err.println("Error while fetching a random question for round: " +  turn.getRound().getRoundType().getValue());
 			System.err.println(e.getMessage());
 		} finally {
 			try {
