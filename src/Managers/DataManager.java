@@ -653,38 +653,6 @@ public class DataManager {
 		return turn;
 	}
 	
-	public Turn getBeforeLastTurnForGame(Round round) {
-		Turn turn = null;
-		Connection connection = getConnection();
-		PreparedStatement preparedStatement = null;
-		ResultSet data = null;
-		try {
-			String sql = "SELECT b.* FROM ronde AS r"
-					+ " INNER JOIN rondenaam AS rn ON"
-					+ " (SELECT COUNT(spel_id) FROM ronde WHERE spel_id = r.spel_id AND r.rondenaam = rn.type) = rn.volgnr"
-					+ " INNER JOIN beurt AS b ON b.spel_id = r.spel_id AND r.rondenaam = b.rondenaam"
-					+ " WHERE r.spel_id = ? ORDER BY b.beurt_id DESC LIMIT 2";
-			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, round.getGame().getId());
-			data = preparedStatement.executeQuery();
-			if (data.last() && data.getRow() == 2)
-				turn = new Turn(data, round, false);
-		} catch (SQLException e) {
-			System.err.println("Error fetching last turn for game id: " + round.getGame().getId());
-			System.err.println(e.getMessage());
-		} finally {
-			try {
-				if (data != null)
-					data.close();
-				if (preparedStatement != null) 
-					preparedStatement.close();
-				if (connection != null)
-					connection.close();
-			} catch(SQLException ex) {} 
-		}
-		return turn;
-	}
-	
 	public Turn getLastTurnForGame(int gameId, Round round) {
 		Turn turn = null;
 		Connection connection = getConnection();
@@ -765,7 +733,11 @@ public class DataManager {
 				preparedStatement.setNull(4, Types.INTEGER);
 			else 
 				//preparedStatement.setInt(4, 6);
-			preparedStatement.setInt(4, turn.getCurrentQuestion().getId());
+			if (turn.getSkippedQuestion() != null)
+				preparedStatement.setInt(4, turn.getSkippedQuestion().getId());
+			else 
+				preparedStatement.setInt(4, turn.getCurrentQuestion().getId());
+			
 			preparedStatement.setString(5, turn.getPlayer().getName());
 			preparedStatement.setString(6, turn.getTurnState().getValue());
 			preparedStatement.setInt(7, turn.getSecondsEarned());
@@ -835,6 +807,37 @@ public class DataManager {
 		}
 		
 		return updated;
+	}
+	
+	public TurnInfo getTurInfonBeforeATurnInfo(TurnInfo turnInfo) {
+		TurnInfo turnBefore = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		String sql = "SELECT * FROM beurt "
+				+ "WHERE spel_id = ? AND beurt_id = ? AND rondenaam = ? LIMIT 1";
+		try {
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, turnInfo.getGameId());
+			preparedStatement.setInt(2, turnInfo.getTurnId() - 1);
+			preparedStatement.setString(3, turnInfo.getRoundType().getValue());
+			data = preparedStatement.executeQuery();
+			if (data.next())
+				turnBefore = new TurnInfo(data);
+		} catch (SQLException e) {
+			System.err.println("Error fetching the predecessor of turn with id: " + turnInfo.getTurnId() + " and game id: " + turnInfo.getGameId() + " and round: " + turnInfo.getRoundType().getValue());
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		return turnBefore;
 	}
 	
 	//TODO do i ever need to push all shared questions?
@@ -1038,6 +1041,42 @@ public class DataManager {
 		return sharedQuestion;
 	}
 	
+	public SharedQuestion getSharedQuestion(Turn turn) {
+		SharedQuestion sharedQuestion = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			
+			String sql = "SELECT * FROM deelvraag WHERE spel_id = ? AND rondenaam = ? AND beurt_id = ? ";
+			//sql += "AND beurt_id NOT IN (SELECT beurt_id FROM beurt WHERE spel_id = ? AND rondenaam = ? AND beurt_id = ? AND speler = ?)";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, turn.getRound().getGame().getId());
+			preparedStatement.setString(2, turn.getRound().getRoundType().getValue());
+			preparedStatement.setInt(3, turn.getTurnId());
+/*			preparedStatement.setInt(4, turn.getRound().getGame().getId());
+			preparedStatement.setString(5, turn.getRound().getRoundType().getValue());
+			preparedStatement.setInt(6, turn.getTurnId());
+			preparedStatement.setString(7, turn.getPlayer().getName());*/
+			data = preparedStatement.executeQuery();
+			while (data.next())
+				sharedQuestion = new SharedQuestion(data, turn);
+		} catch (SQLException e) {
+			System.err.println("Error fetching shared questions");
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		return sharedQuestion;
+	}
+	
 	//TODO does this need to be an Array?
 	public ArrayList<SharedQuestion> getSharedQuestions(Round round, int turnId) {
 		ArrayList<SharedQuestion> sharedQuestions = null;
@@ -1159,7 +1198,7 @@ public class DataManager {
 		return question;
 	}
 	
-	public Question getRandomQuestionForRoundType(Round round) {
+	public Question getRandomQuestionForRoundType(Turn turn) {
 		Question question = null;
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;
@@ -1167,12 +1206,12 @@ public class DataManager {
 		try {
 			String sql = "SELECT * FROM vraag WHERE rondenaam = ? ORDER BY RAND() LIMIT 1";
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, round.getRoundType().getValue());
+			preparedStatement.setString(1, turn.getRound().getRoundType().getValue());
 			data = preparedStatement.executeQuery();
 			if (data.next()) 
-				question = new Question(data, round.getCurrentTurn());
+				question = new Question(data, turn);
 		} catch(SQLException e) {
-			System.err.println("Error while fetching a random question for round: " + round.getRoundType().getValue());
+			System.err.println("Error while fetching a random question for round: " +  turn.getRound().getRoundType().getValue());
 			System.err.println(e.getMessage());
 		} finally {
 			try {

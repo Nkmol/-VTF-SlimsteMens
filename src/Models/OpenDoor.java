@@ -24,7 +24,14 @@ public class OpenDoor extends Round {
 	}
 	
 	public void init() {
-		currentTurn.setCurrentQuestion();
+		updateView();
+		DataManager.getInstance().pushTurn(currentTurn);
+	}
+	
+	public void initNewTurn() {
+		amountCorrectAnswers = 0;
+		currentTurn = initCurrentTurn(this);
+		DataManager.getInstance().pushTurn(currentTurn);
 		updateView();
 	}
 
@@ -39,12 +46,16 @@ public class OpenDoor extends Round {
 		DataManager.getInstance().pushPlayerAnswer(playerAnswer);
 		playerAnswers.add(playerAnswer);
 		
-		System.out.println("Question id: " + currentTurn.getCurrentQuestion().getId());
+		Question currentQuestion = (currentTurn.getSkippedQuestion() != null) ? currentTurn.getSkippedQuestion() : currentTurn.getCurrentQuestion();
 		
-		if (currentTurn.getCurrentQuestion().isPlayerAnswerCorrect(answer)) {
-			amountCorrectAnswers++; 
-			secondsEarned+=SECONDS_PER_CORRECT_ANSWER;
-		}
+		System.out.println("Question id: " + currentQuestion.getId());
+		
+		if (currentQuestion != null) {
+			if (currentQuestion.isPlayerAnswerCorrect(answer)) {
+				amountCorrectAnswers++; 
+				secondsEarned+=SECONDS_PER_CORRECT_ANSWER;
+			}
+		}		
 			
 		updateView();
 		
@@ -52,7 +63,11 @@ public class OpenDoor extends Round {
 			currentTurn.setTurnState(TurnState.Correct);
 			currentTurn.setSecondsEarned(secondsEarned);
 			DataManager.getInstance().updateTurn(currentTurn);
-			getGame().getController().endTurn();
+			amountCorrectAnswers = 0;
+			if (currentTurn.getSkippedQuestion() == null)
+				getGame().getController().endTurn();
+			else 
+				initNewTurn();
 		}
 	
 	}
@@ -62,7 +77,10 @@ public class OpenDoor extends Round {
 		//TODO: further implementation
 		currentTurn.setTurnState(TurnState.Pass);
 		DataManager.getInstance().updateTurn(currentTurn);
-		getGame().getController().endTurn();
+		if (currentTurn.getSkippedQuestion() == null)
+			getGame().getController().endTurn();
+		else 
+			initNewTurn();
 	}
 	
 	public ArrayList<PlayerAnswer> getSubmittedAnswers() {

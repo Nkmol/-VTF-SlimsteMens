@@ -15,15 +15,17 @@ public class ThreeSixNine extends Round {
 	
 	public ThreeSixNine(Game game) {
 		super(game, RoundType.ThreeSixNine);
-		init();
+		initNewTurn();
+		updateView();
 	}
 	
 	public ThreeSixNine(ResultSet data, Game game) {
 		super(data, game);
-		init();
+		initNewTurn();
+		updateView();
 	}
 	
-	public void init() {
+	public void initNewTurn() {
 		if(lastTurn != null)
 			getCurrentTurn().setSharedSkippedQuestion(initSharedSkippedQuestion());
 		getCurrentTurn().setSharedQuestion(initSharedQuestion());
@@ -31,12 +33,17 @@ public class ThreeSixNine extends Round {
 			DataManager.getInstance().pushTurn(currentTurn);
 			DataManager.getInstance().pushSharedQuestion(getCurrentTurn());
 		}
-		updateView();
+		
+		currentTurn.startTurn();
 	}
 	
 	public SharedQuestion initSharedQuestion() {
 		if(getCurrentTurn().getSharedSkippedQuestion() == null) {
-			SharedQuestion newSharedQuestion =  new SharedQuestion(getCurrentTurn().getCurrentQuestion(), 1);
+			SharedQuestion newSharedQuestion = null;
+			if(lastTurn == null)
+				newSharedQuestion =  new SharedQuestion(getCurrentTurn().getCurrentQuestion(), 1);
+			else
+				newSharedQuestion =  new SharedQuestion(getCurrentTurn().getCurrentQuestion(), lastTurn.getSharedQuestion().getIndexNumber() + 1);
 			return newSharedQuestion;
 		}
 		else {
@@ -48,36 +55,43 @@ public class ThreeSixNine extends Round {
 	}
 	
 	public SharedQuestion initSharedSkippedQuestion() {
-		return DataManager.getInstance().getLastSkippedSharedQuestion(lastTurn);
+		SharedQuestion sharedSkippedQuestion = DataManager.getInstance().getLastSkippedSharedQuestion(lastTurn);
+		if(sharedSkippedQuestion != null && 
+				!sharedSkippedQuestion.getTurn().getPlayer().getName().equals(currentTurn.getPlayer().getName())) //If the skipped question is not from you
+			return DataManager.getInstance().getLastSkippedSharedQuestion(lastTurn);
+		else
+			return null;
+				
 	}
 
 	@Override
 	public void onSubmit(String answer) {
 		System.out.println("your answers is " + answer);
+		Question currentQuestion = (currentTurn.getSkippedQuestion() != null) ? currentTurn.getSkippedQuestion() : currentTurn.getCurrentQuestion();
 		
-		if(currentTurn.getSkippedQuestion() != null) {
-			if (currentTurn.getSkippedQuestion().isPlayerAnswerCorrect(answer)) 
-				Turn.pushTurn(currentTurn, TurnState.Correct, answer);
-			else 
-				Turn.pushTurn(currentTurn, TurnState.Wrong, answer);
-			
-			currentTurn.deleteSkippedQuestion();
-		} 
-		else {
-			initSharedQuestion();
-			
-			if (currentTurn.getCurrentQuestion().isPlayerAnswerCorrect(answer)) 
-				Turn.pushTurn(currentTurn, TurnState.Correct, answer);
-			else 
-				Turn.pushTurn(currentTurn, TurnState.Wrong, answer);
-			
-			getGame().getController().endTurn();
+		if (currentQuestion.isPlayerAnswerCorrect(answer)) {
+			currentTurn.addSecondsEarnd(POINTS_QUESTION);
+			Turn.pushTurn(currentTurn, TurnState.Correct, answer);
 		}
+		else 
+			Turn.pushTurn(currentTurn, TurnState.Wrong, answer);
+
+		returnScreenCheck();
 	}
 
 	@Override
 	public void onPass() {
 		Turn.pushTurn(getCurrentTurn(), TurnState.Pass, null);
-		getGame().getController().endTurn();
+		returnScreenCheck();
+	}
+	
+	public void returnScreenCheck() {
+		if(currentTurn.getSkippedQuestion() == null) 
+			getGame().getController().endTurn();
+		else {
+			currentTurn = initCurrentTurn(this);
+			initNewTurn();
+			updateView();
+		}
 	}
 }

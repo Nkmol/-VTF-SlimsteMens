@@ -8,6 +8,8 @@ import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.mysql.fabric.xmlrpc.base.Data;
+
 import Controllers.GameController;
 import Managers.DataManager;
 import Utilities.StringUtility;
@@ -67,7 +69,9 @@ public class Game extends Observable {
 	public static boolean isCurrentPlayerTurn(int gameId) {
 		TurnInfo lastTurn = DataManager.getInstance().getLastInfoTurnForGame(gameId);
 		if(lastTurn != null) {
-			if(!isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() != TurnState.Busy) 
+			if(playerAnsweredASkippedQuestion(lastTurn)) 
+				return true;
+			else if(!isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() != TurnState.Busy)
 				return true;
 			else if(isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() == TurnState.Busy)
 				return true;
@@ -76,6 +80,20 @@ public class Game extends Observable {
 		}
 		
 		return false;	
+	}
+	
+	public static boolean playerAnsweredASkippedQuestion(TurnInfo lastTurn) {
+		TurnInfo turnBeforeLastTurn = DataManager.getInstance().getTurInfonBeforeATurnInfo(lastTurn);
+		if (turnBeforeLastTurn != null) {
+			if (isCurrentUser(lastTurn.getPlayer().getName()) 
+					&& turnBeforeLastTurn.getTurnState() == TurnState.Pass
+					&& lastTurn.getQuestionId() == turnBeforeLastTurn.getQuestionId()
+					&& !isCurrentUser(turnBeforeLastTurn.getPlayer().getName())) { // now we know that the current player has answered a skipped question
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	public void updateView() {
