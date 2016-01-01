@@ -62,7 +62,7 @@ public class OpenDoorView extends JPanel implements Observer{
 		
 		if (answerViews.size() > 0) {
 			for (AnswerView asnwerView : answerViews) 
-				answersPanel.remove(asnwerView);
+				answersPanel.remove(asnwerView); // TODO asnwerview
 		}
 		
 		answerViews = new ArrayList<>();
