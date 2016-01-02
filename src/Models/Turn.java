@@ -16,6 +16,7 @@ public class Turn {
 	private Player player;
 	private TimerTask timer;
 	private int secondsEarnd;
+	private int moment;
 	private Integer secondsFinalLost;
 	private ArrayList<SharedQuestion> sharedQuestions;
 	private ArrayList<PlayerAnswer> playerAnswers;
@@ -180,16 +181,17 @@ public class Turn {
 		secondsEarnd += value;
 	}
 	
-	public void substractSecondsEarnd(int value) {
+	public void executeTimer(int value) {
 		secondsEarnd -= value;
-		
+		moment++;
 		parent.getGame().updateView();
 	}
 	
 	public void startTimer() {
+		moment = 0;
 		if(timer != null)
 			timer.cancel();
-		timer = new MyTimer().schedule(() -> substractSecondsEarnd(1), 1000);
+		timer = new MyTimer().schedule(() -> executeTimer(1), 1000);
 	}
 	
 	public void stopTimer() {
@@ -198,6 +200,10 @@ public class Turn {
 	
 	public void submitTurn() {
 		//TODO: submit to the database
+	}
+	
+	public int getMoment() {
+		return moment;
 	}
 	
 	public void addPlayerAnswer(PlayerAnswer answer) {
