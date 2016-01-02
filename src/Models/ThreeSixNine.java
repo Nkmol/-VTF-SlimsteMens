@@ -106,10 +106,13 @@ public class ThreeSixNine extends Round {
 			updateView();
 		}
 	}
-	
-	public void roundDone() {
+
+	@Override
+	public boolean isCompleted() {
 		int amountUniqueSharedQuestions = DataManager.getInstance().getAmountUniqueSharedQuestionsForRound(this, DataManager.getInstance().getCurrentUser());
 		if(amountUniqueSharedQuestions >= AMOUNT_QUESTIONS)
-			System.out.println("new round");
+			return true;
+		else
+			return false;
 	}
 }

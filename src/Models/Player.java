@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Observable;
+import java.util.regex.Pattern;
 
 import Managers.DataManager;
 
@@ -70,10 +71,14 @@ public class Player extends Observable{
 		return state;
 	}
 	
+	private String regexPattern = "^[a-zA-Z]{3,}[0-9]";
 	public void register(String name, String password) {
 		succesMsg = "";
 		if(name.equals("") || password.equals(""))
 			errorMsg = "Vul alle velden in.";
+		else if(name.matches(regexPattern) && password.matches(regexPattern)) {
+			errorMsg = "Uw accountgegevens moeten minimaal uit 3 letters bestaan en mag geen vreemde tekens bevatten.";
+		}
 		else 
 			if(!DataManager.getInstance().registerUser(name, password, Role.Player))
 				errorMsg = "Er is iets fout gegaan tijdens het registreren.";
