@@ -45,6 +45,7 @@ public class Final extends Round {
 		amountCorrectAnswers = 0;
 		currentTurn = initCurrentTurn(this);
 		DataManager.getInstance().pushTurn(currentTurn);
+		currentTurn.startTimer();
 		updateView();
 	}
 
@@ -66,18 +67,14 @@ public class Final extends Round {
 		
 		System.out.println("Question id: " + currentQuestion.getId());
 		
-		if (currentTurn.getCurrentQuestion().isPlayerAnswerCorrect(answer)){ 
-			amountCorrectAnswers++;
-			setResponseIsRight(true);
-		}else{
-			setResponseIsRight(false);
-		}
-		
 		if (currentQuestion != null) {
 			if (currentQuestion.isPlayerAnswerCorrect(answer)) {
 				amountCorrectAnswers++; 
 				secondsEarned+=POINTS_QUESTION;
-			}
+				currentTurn.addSecondsEarnd(POINTS_QUESTION);
+				setResponseIsRight(true);
+			}else
+				setResponseIsRight(false);
 		}	
 		
 		updateView();
