@@ -1235,9 +1235,9 @@ public class DataManager {
 		PreparedStatement preparedStatement = null;
 		ResultSet data = null;
 		try {
-			String sql = "SELECT COUNT(DISTINCT(d.vraag_id)) total FROM deelvraag d AND b.beurtstatus = 'goed'";
+			String sql = "SELECT COUNT(DISTINCT(d.vraag_id)) total FROM deelvraag d ";
 			sql += "JOIN beurt b ON d.beurt_id = b.beurt_id ";
-			sql += "WHERE b.speler = ? AND d.rondenaam = ? AND d.spel_id = ?";
+			sql += "WHERE b.speler = ? AND d.rondenaam = ? AND d.spel_id = ? AND b.beurtstatus = 'goed'";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, player.getName());
 			preparedStatement.setString(2, round.getRoundType().getValue());
