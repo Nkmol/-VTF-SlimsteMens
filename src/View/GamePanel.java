@@ -90,17 +90,7 @@ public class GamePanel extends JPanel implements Observer{
 		
 		if(model.getCurrentRound() != null && model.getCurrentRound().getCurrentTurn() != null) {
 			lblRoundType.setText(model.getCurrentRound().getRoundType().toString());
-<<<<<<< HEAD
-			String strPlayer1 = player1.getName() + " : ";
-			String strPlayer2 = player2.getName() + " : ";
-			//if(Game.isCurrentUser(player1.getName()))
-				//strPlayer1 += model.getCurrentRound().getCurrentTurn().getTime();
-			//else if(Game.isCurrentUser(player2.getName()))
-				//strPlayer2 += model.getCurrentRound().getCurrentTurn().getTime();
-			
-			lblPlayer1.setText(strPlayer1); // TODO show total time from all turns for a player
-			lblPlayer2.setText(strPlayer2);
-=======
+
 		
 			if(Game.isCurrentUser(player1.getName())) {
 				String strPlayer1 = player1.getName() + " : " + (DataManager.getInstance().getTotalSecondsEarnedInAGame(model.getId(), player1.getName()) + model.getCurrentRound().getCurrentTurn().getSecondsEarned());
@@ -110,7 +100,6 @@ public class GamePanel extends JPanel implements Observer{
 				String strPlayer2 = player2.getName() + " : " + (DataManager.getInstance().getTotalSecondsEarnedInAGame(model.getId(), player2.getName()) + model.getCurrentRound().getCurrentTurn().getSecondsEarned());
 				lblPlayer2.setText(strPlayer2);
 			}
->>>>>>> 176224583849d16058e94287843e63b6d3aa9831
 		}
 		
 		if(!initOpponentTurn)
