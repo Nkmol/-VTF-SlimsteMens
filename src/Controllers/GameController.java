@@ -67,13 +67,14 @@ public class GameController {
 		// TODO switch om terug naar round.getRoundType()
 
 		switch(round.getRoundType()) {
-		//switch(RoundType.Final) {
 		case ThreeSixNine:
 			return new ThreeSixNineController(model, round);
 		case OpenDoor:
 			return new OpenDoorController(model, round);
 		case Final:
 			return new FinalController(model, round);
+		case Framed:
+			return new FramedController(model, round);
 		default:
 			return null;
 		}
@@ -83,8 +84,12 @@ public class GameController {
 		
 		Round round = DataManager.getInstance().getLastRoundForGame(model);
 		
+		// TODO Remove this as it's for testing purposes
+		//round = new Final(model);
+		
 		if(round == null) {	
 			round = new ThreeSixNine(model);
+			
 //			round = new Final(model);
 //			round = new OpenDoor(model); // Add 369 manually to the database in table ronde
 		}

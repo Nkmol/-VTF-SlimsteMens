@@ -9,7 +9,8 @@ public class Final extends Round {
 
 	private final static int POINTS_QUESTION = 20;
 	private static final int amountOfAnswers = 5;
-	private int amountCorrectAnswers = 0;
+	private int amountCorrectAnswers = 0,
+				secondsEarned = 0;
 	private Boolean responseIsRight;
 	
 	public Boolean getResponseIsRight() {
@@ -36,6 +37,15 @@ public class Final extends Round {
 	}
 	
 	public void init() {
+		DataManager.getInstance().pushTurn(currentTurn);
+		updateView();
+	}
+	
+	public void initNewTurn() {
+		amountCorrectAnswers = 0;
+		currentTurn = initCurrentTurn(this);
+		DataManager.getInstance().pushTurn(currentTurn);
+		currentTurn.startTimer();
 		updateView();
 	}
 
@@ -49,25 +59,35 @@ public class Final extends Round {
 		
 		
 		int answerId = playerAnswers.size() + 1;
-		PlayerAnswer playerAnswer = new PlayerAnswer(currentTurn, answerId, answer, 10); //TODO: change the moment
+		PlayerAnswer playerAnswer = new PlayerAnswer(currentTurn, answerId, answer, currentTurn.getMoment()); 
 		DataManager.getInstance().pushPlayerAnswer(playerAnswer);
 		playerAnswers.add(playerAnswer);
 		
-		System.out.println("Question id: " + currentTurn.getCurrentQuestion().getId());
+		Question currentQuestion = (currentTurn.getSkippedQuestion() != null) ? currentTurn.getSkippedQuestion() : currentTurn.getCurrentQuestion();
 		
-		if (currentTurn.getCurrentQuestion().isPlayerAnswerCorrect(answer)){ 
-			amountCorrectAnswers++;
-			setResponseIsRight(true);
-		}else{
-			setResponseIsRight(false);
-		}
+		System.out.println("Question id: " + currentQuestion.getId());
+		
+		if (currentQuestion != null) {
+			if (currentQuestion.isPlayerAnswerCorrect(answer)) {
+				amountCorrectAnswers++; 
+				secondsEarned+=POINTS_QUESTION;
+				currentTurn.addSecondsEarnd(POINTS_QUESTION);
+				setResponseIsRight(true);
+			}else
+				setResponseIsRight(false);
+		}	
 		
 		updateView();
 		
 		if (amountCorrectAnswers == amountOfAnswers) {
 			currentTurn.setTurnState(TurnState.Correct);
+			currentTurn.setSecondsEarned(secondsEarned);
 			DataManager.getInstance().updateTurn(currentTurn);
-			getGame().getController().endTurn();
+			amountCorrectAnswers = 0;
+			if (currentTurn.getSkippedQuestion() == null)
+				getGame().getController().endTurn();
+			else 
+				initNewTurn();
 		}
 	
 	}
@@ -79,6 +99,12 @@ public class Final extends Round {
 	@Override
 	public void onPass() {
 		// TODO Auto-generated method stub
+		currentTurn.setTurnState(TurnState.Pass);
+		DataManager.getInstance().updateTurn(currentTurn);
+		if (currentTurn.getSkippedQuestion() == null)
+			getGame().getController().endTurn();
+		else 
+			initNewTurn();
 		
 	}
 
