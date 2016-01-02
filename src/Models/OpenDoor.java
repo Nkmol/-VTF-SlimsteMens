@@ -15,24 +15,21 @@ public class OpenDoor extends Round {
 	
 	public OpenDoor(Game game) {
 		super(game, RoundType.OpenDoor);
-		init();
+		initNewTurn();
 	}
 	
 	public OpenDoor(ResultSet data, Game game) {
 		super(data, game);
-		init();
-	}
-	
-	public void init() {
-		updateView();
-		DataManager.getInstance().pushTurn(currentTurn);
+		initNewTurn();
 	}
 	
 	public void initNewTurn() {
 		amountCorrectAnswers = 0;
 		currentTurn = initCurrentTurn(this);
 		DataManager.getInstance().pushTurn(currentTurn);
+		currentTurn.startTimer();
 		updateView();
+		
 	}
 
 	@Override
@@ -42,7 +39,7 @@ public class OpenDoor extends Round {
 			playerAnswers = new ArrayList<>();
 		
 		int answerId = playerAnswers.size() + 1;
-		PlayerAnswer playerAnswer = new PlayerAnswer(currentTurn, answerId, answer, 10); //TODO: change the moment
+		PlayerAnswer playerAnswer = new PlayerAnswer(currentTurn, answerId, answer, currentTurn.getMoment());
 		DataManager.getInstance().pushPlayerAnswer(playerAnswer);
 		playerAnswers.add(playerAnswer);
 		
@@ -53,7 +50,8 @@ public class OpenDoor extends Round {
 		if (currentQuestion != null) {
 			if (currentQuestion.isPlayerAnswerCorrect(answer)) {
 				amountCorrectAnswers++; 
-				secondsEarned+=SECONDS_PER_CORRECT_ANSWER;
+				secondsEarned+=SECONDS_PER_CORRECT_ANSWER; // TODO: maybe remove this
+				currentTurn.addSecondsEarnd(SECONDS_PER_CORRECT_ANSWER);
 			}
 		}		
 			
