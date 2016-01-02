@@ -30,7 +30,7 @@ public class Turn {
 		this.parent = parentRound;
 		gameId = parent.getGame().getId();
 //		this.sharedQuestion = DataManager.getInstance().getLastSharedQuestion(this); //TOOD: get last skipped question instead
-		currentQuestion = DataManager.getInstance().getRandomQuestionForRoundType(this.getRound());
+		currentQuestion = DataManager.getInstance().getRandomQuestionForRoundType(this);
 //		this.sharedQuestions = DataManager.getInstance().getSharedQuestions(parentRound, turnId); //Dont need this?
 		//TODO: get last skipped quesiton
 		//1- get last turn
@@ -58,6 +58,7 @@ public class Turn {
 			
 			//in 369 question is from sharedQuestion, will be overridden if null
 			currentQuestion = DataManager.getInstance().getSharedQuestion(this);
+			sharedQuestion = DataManager.getInstance().getSharedQuestion(this); // >.<
 			if(currentQuestion == null)
 				currentQuestion = DataManager.getInstance().getQuestionForId(data.getInt("vraag_id"), parent); 
 
@@ -186,6 +187,8 @@ public class Turn {
 	}
 	
 	public void startTimer() {
+		if(timer != null)
+			timer.cancel();
 		timer = new MyTimer().schedule(() -> substractSecondsEarnd(1), 1000);
 	}
 	
