@@ -28,18 +28,18 @@ public class Final extends Round {
 	
 	public Final(Game game) {
 		super(game, RoundType.Final);
-		init();
+		initNewTurn();
 	}
 	
 	public Final(ResultSet data, Game game) {
 		super(data, game);
-		init();
+		initNewTurn();
 	}
 	
-	public void init() {
+/*	public void init() {
 		DataManager.getInstance().pushTurn(currentTurn);
 		updateView();
-	}
+	}*/
 	
 	public void initNewTurn() {
 		amountCorrectAnswers = 0;

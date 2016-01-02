@@ -50,6 +50,8 @@ public class ChatController {
 	
 		model.send();
 		
+		
+		
 		updateChatMessages(); 
 		
 		view.clearMessageBox();
