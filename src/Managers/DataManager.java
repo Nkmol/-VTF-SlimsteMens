@@ -317,6 +317,32 @@ public class DataManager {
 		return games;
 	}
 	
+	public GameInfo getGameInfoForGame(int gameId) {
+		GameInfo gameInfo = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT * FROM spel WHERE spel_id = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, gameId);
+			data = preparedStatement.executeQuery();
+			while(data.next()) 
+				gameInfo = new GameInfo(data);
+		} catch (SQLException e) { }
+		finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		return gameInfo;
+	}
+	
 	public ArrayList<GameInfo> getAllGameInfosForPlayer(String name) {
 		ArrayList<GameInfo> gameInfos = null;
 		Connection connection = getConnection();

@@ -71,12 +71,18 @@ public class Game extends Observable {
 		if(lastTurn != null) {
 			if(playerAnsweredASkippedQuestion(lastTurn)) 
 				return true;
-			else if(!isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() != TurnState.Busy)
+			else if(!isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() != TurnState.Busy && lastTurn.getTurnState() != TurnState.Bonus)
 				return true;
-			else if(isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() == TurnState.Busy)
+			else if(isCurrentUser(lastTurn.getPlayer().getName()) && (lastTurn.getTurnState() == TurnState.Busy || lastTurn.getTurnState() == TurnState.Bonus))
 				return true;
 			else 
 				return false; 
+		}
+		else {
+			GameInfo gameInfo = DataManager.getInstance().getGameInfoForGame(gameId);
+			
+			if(isCurrentUser(gameInfo.getPlayer1().getName()))
+				return true;
 		}
 		
 		return false;	

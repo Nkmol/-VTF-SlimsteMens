@@ -13,8 +13,7 @@ public class ThreeSixNine extends Round {
 							 BONUS_ITERATION = 3,
 							 POINTS_BONUS  = 60,
 							 POINTS_QUESTION = 20;
-	private int amountQuestions = 0,
-				amountCorrectQuestions = 0;
+	private int amountCorrectQuestions = 0;
 	
 	public ThreeSixNine(Game game) {
 		super(game, RoundType.ThreeSixNine);
@@ -29,9 +28,9 @@ public class ThreeSixNine extends Round {
 	}
 	
 	public void initNewTurn() {
-		amountQuestions = DataManager.getInstance().getAmountUniqueSharedQuestionsForRound(this, DataManager.getInstance().getCurrentUser());
 		amountCorrectQuestions = DataManager.getInstance().getCorrectAmountUniqueSharedQuestionsForRound(this, DataManager.getInstance().getCurrentUser());
-		if(amountCorrectQuestions % 3 == 0)
+		System.out.println(amountCorrectQuestions);
+		if(amountCorrectQuestions > 0 && amountCorrectQuestions % BONUS_ITERATION == 0)
 			currentTurn.setTurnState(TurnState.Bonus);
 		
 		if(lastTurn != null)
@@ -109,6 +108,8 @@ public class ThreeSixNine extends Round {
 	}
 	
 	public void roundDone() {
-
+		int amountUniqueSharedQuestions = DataManager.getInstance().getAmountUniqueSharedQuestionsForRound(this, DataManager.getInstance().getCurrentUser());
+		if(amountUniqueSharedQuestions >= AMOUNT_QUESTIONS)
+			System.out.println("new round");
 	}
 }
