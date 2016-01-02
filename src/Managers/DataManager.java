@@ -1170,6 +1170,43 @@ public class DataManager {
 		return questions;
 	}
 	
+	public ArrayList<Question>  getTheLeastAskedQuestions(Player player, Turn turn, int amountOfQuestion) {
+		ArrayList<Question> questions = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT v.* FROM vraag AS v "
+					+ "JOIN speler_vraag_aantal AS sva "
+					+ "ON v.vraag_id = sva.vraag_id AND v.rondenaam = sva.rondenaam "
+					+ "WHERE sva.speler = ? AND sva.rondenaam = ? "
+					+ "ORDER BY sva.aantal_keer_gebruikt LIMIT ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, player.getName());
+			preparedStatement.setString(2, turn.getRound().getRoundType().getValue());
+			preparedStatement.setInt(3, amountOfQuestion);
+			data = preparedStatement.executeQuery();
+			while (data.next()) 
+				questions.add(new Question(data, turn));
+		} catch (SQLException e) {
+			System.err.println("Error fetching top " + amountOfQuestion + 
+					" for player: " + player.getName() + 
+					" and round: " + turn.getRound().getRoundType().getValue());
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		
+		return questions;
+	}
+	
 	public Question getQuestionForId(int id, Round round) {
 		Question question = null;
 		Connection connection = getConnection();
