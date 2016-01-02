@@ -11,7 +11,10 @@ public class ThreeSixNine extends Round {
 
 	private final static int AMOUNT_QUESTIONS = 9,
 							 BONUS_ITERATION = 3,
+							 POINTS_BONUS  = 60,
 							 POINTS_QUESTION = 20;
+	private int amountQuestions = 0,
+				amountCorrectQuestions = 0;
 	
 	public ThreeSixNine(Game game) {
 		super(game, RoundType.ThreeSixNine);
@@ -26,6 +29,11 @@ public class ThreeSixNine extends Round {
 	}
 	
 	public void initNewTurn() {
+		amountQuestions = DataManager.getInstance().getAmountUniqueSharedQuestionsForRound(this, DataManager.getInstance().getCurrentUser());
+		amountCorrectQuestions = DataManager.getInstance().getCorrectAmountUniqueSharedQuestionsForRound(this, DataManager.getInstance().getCurrentUser());
+		if(amountCorrectQuestions % 3 == 0)
+			currentTurn.setTurnState(TurnState.Bonus);
+		
 		if(lastTurn != null)
 			getCurrentTurn().setSharedSkippedQuestion(initSharedSkippedQuestion());
 		getCurrentTurn().setSharedQuestion(initSharedQuestion());
@@ -71,7 +79,10 @@ public class ThreeSixNine extends Round {
 		TurnState turnState = null;
 		
 		if (currentQuestion.isPlayerAnswerCorrect(answer)) {
-			currentTurn.addSecondsEarnd(POINTS_QUESTION);
+			if(currentTurn.getTurnState() == TurnState.Bonus)
+				currentTurn.addSecondsEarnd(POINTS_BONUS);
+			else
+				currentTurn.addSecondsEarnd(POINTS_QUESTION);
 			turnState = TurnState.Correct;
 		}
 		else 
@@ -95,5 +106,9 @@ public class ThreeSixNine extends Round {
 			initNewTurn();
 			updateView();
 		}
+	}
+	
+	public void roundDone() {
+
 	}
 }

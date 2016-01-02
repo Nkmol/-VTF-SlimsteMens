@@ -1170,6 +1170,72 @@ public class DataManager {
 		return questions;
 	}
 	
+	public int getAmountUniqueSharedQuestionsForRound(Round round, Player player) {
+		int totalAmount = 0;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT COUNT(DISTINCT(d.vraag_id)) total FROM deelvraag d ";
+			sql += "JOIN beurt b ON d.beurt_id = b.beurt_id ";
+			sql += "WHERE b.speler = ? AND d.rondenaam = ? AND d.spel_id = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, player.getName());
+			preparedStatement.setString(2, round.getRoundType().getValue());
+			preparedStatement.setInt(3, round.getGame().getId());
+			data = preparedStatement.executeQuery();
+			if (data.next()) 
+				totalAmount = data.getInt("total");
+		} catch(SQLException e) {
+			System.err.println("Error while fetching unique sharedquestion for gameid: " + round.getGame().getId());
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		
+		return totalAmount;
+	}
+	
+	public int getCorrectAmountUniqueSharedQuestionsForRound(Round round, Player player) {
+		int totalAmount = 0;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT COUNT(DISTINCT(d.vraag_id)) total FROM deelvraag d AND b.beurtstatus = 'goed'";
+			sql += "JOIN beurt b ON d.beurt_id = b.beurt_id ";
+			sql += "WHERE b.speler = ? AND d.rondenaam = ? AND d.spel_id = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, player.getName());
+			preparedStatement.setString(2, round.getRoundType().getValue());
+			preparedStatement.setInt(3, round.getGame().getId());
+			data = preparedStatement.executeQuery();
+			if (data.next()) 
+				totalAmount = data.getInt("total");
+		} catch(SQLException e) {
+			System.err.println("Error while fetching unique sharedquestion for gameid: " + round.getGame().getId());
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		
+		return totalAmount;
+	}
+	
 	public Question getQuestionForId(int id, Round round) {
 		Question question = null;
 		Connection connection = getConnection();
