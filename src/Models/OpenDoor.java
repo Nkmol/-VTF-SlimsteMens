@@ -31,6 +31,17 @@ public class OpenDoor extends Round {
 		updateView();
 		
 	}
+	
+	public void pushAnswers(ArrayList<PlayerAnswer> playerAnswers) {
+		if (playerAnswers != null && playerAnswers.size() > 0) {
+			//Push player's answers
+			for (PlayerAnswer playerAnswer : playerAnswers) {
+				DataManager.getInstance().pushPlayerAnswer(playerAnswer);
+			}
+			
+			this.playerAnswers = null;
+		}
+	}
 
 	@Override
 	public void onSubmit(String answer) {
@@ -40,7 +51,7 @@ public class OpenDoor extends Round {
 		
 		int answerId = playerAnswers.size() + 1;
 		PlayerAnswer playerAnswer = new PlayerAnswer(currentTurn, answerId, answer, currentTurn.getMoment());
-		DataManager.getInstance().pushPlayerAnswer(playerAnswer);
+//		DataManager.getInstance().pushPlayerAnswer(playerAnswer);
 		playerAnswers.add(playerAnswer);
 		
 		Question currentQuestion = (currentTurn.getSkippedQuestion() != null) ? currentTurn.getSkippedQuestion() : currentTurn.getCurrentQuestion();
@@ -62,6 +73,7 @@ public class OpenDoor extends Round {
 			currentTurn.setSecondsEarned(secondsEarned);
 			DataManager.getInstance().updateTurn(currentTurn);
 			amountCorrectAnswers = 0;
+			pushAnswers(playerAnswers);
 			if (currentTurn.getSkippedQuestion() == null)
 				getGame().getController().endTurn();
 			else 
@@ -75,6 +87,7 @@ public class OpenDoor extends Round {
 		//TODO: further implementation
 		currentTurn.setTurnState(TurnState.Pass);
 		DataManager.getInstance().updateTurn(currentTurn);
+		pushAnswers(playerAnswers);
 		if (currentTurn.getSkippedQuestion() == null)
 			getGame().getController().endTurn();
 		else 
