@@ -6,10 +6,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import Controllers.ReplayListController;
 import Models.GameScore;
+import Models.GameState;
 import Models.ReplayList;
 
 @SuppressWarnings("serial")
@@ -22,17 +24,16 @@ public class ReplayListPanel extends JPanel {
 		this.controller = controller;
 		itemList = new ArrayList<>();
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		add(new JLabel("Gespeelde spellen:"));
 	}
 
-	// the first parameter is a Collection<> and not a ArrayList 
-	// because the other constructor gives problems with generic Type Erasure
-	public ReplayListPanel(Collection<ReplayListItem> list, ReplayListController controller) {
+	private ReplayListPanel(ArrayList<ReplayListItem> list, ReplayListController controller) {
 		this(controller);
 		addList(list);
 	}
 	
-	public ReplayListPanel(ArrayList<GameScore> scores, ReplayListController controller) {
-		this(GameScoreListToReplayItemList(scores), controller);
+	public ReplayListPanel(Collection<GameScore> scores, ReplayListController controller) {
+		this(ReplayList.GameScoreListToReplayItemList(scores), controller);
 	}
 	
 	private void setItemList(Collection<ReplayListItem> list) {
@@ -62,15 +63,7 @@ public class ReplayListPanel extends JPanel {
 	}
 
 	private void update(ReplayList model, Object object) {
-		setItemList(GameScoreListToReplayItemList(model.getScore()));
-	}
-	
-	public static ArrayList<ReplayListItem> GameScoreListToReplayItemList(ArrayList<GameScore> scores) {
-		ArrayList<ReplayListItem> items = new ArrayList<>();
-		for (GameScore s : scores) {
-			items.add(new ReplayListItem(s));
-		}
-		return items;
+		setItemList(ReplayList.GameScoreListToReplayItemList(model.getScore()));
 	}
 	
 	private class ReplayMouseAdapter extends MouseAdapter {

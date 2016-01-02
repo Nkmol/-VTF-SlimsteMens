@@ -1,9 +1,11 @@
 package Models;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Observable;
 
 import Managers.DataManager;
+import View.ReplayListItem;
 
 public class ReplayList extends Observable {
 	
@@ -28,5 +30,14 @@ public class ReplayList extends Observable {
 			setChanged();
 			notifyObservers();
 		}
+	}
+	
+	public static ArrayList<ReplayListItem> GameScoreListToReplayItemList(Collection<GameScore> scores) {
+		ArrayList<ReplayListItem> items = new ArrayList<>();
+		for (GameScore s : scores) {
+			if (s.getGameState() == GameState.Finished)
+				items.add(new ReplayListItem(s));
+		}
+		return items;
 	}
 }
