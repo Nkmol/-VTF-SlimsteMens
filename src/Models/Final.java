@@ -58,7 +58,7 @@ public class Final extends Round {
 		
 		
 		int answerId = playerAnswers.size() + 1;
-		PlayerAnswer playerAnswer = new PlayerAnswer(currentTurn, answerId, answer, 10); //TODO: change the moment
+		PlayerAnswer playerAnswer = new PlayerAnswer(currentTurn, answerId, answer, currentTurn.getMoment()); 
 		DataManager.getInstance().pushPlayerAnswer(playerAnswer);
 		playerAnswers.add(playerAnswer);
 		

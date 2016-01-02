@@ -68,25 +68,27 @@ public class ThreeSixNine extends Round {
 	public void onSubmit(String answer) {
 		System.out.println("your answers is " + answer);
 		Question currentQuestion = (currentTurn.getSkippedQuestion() != null) ? currentTurn.getSkippedQuestion() : currentTurn.getCurrentQuestion();
+		TurnState turnState = null;
 		
 		if (currentQuestion.isPlayerAnswerCorrect(answer)) {
 			currentTurn.addSecondsEarnd(POINTS_QUESTION);
-			Turn.pushTurn(currentTurn, TurnState.Correct, answer);
+			turnState = TurnState.Correct;
 		}
 		else 
-			Turn.pushTurn(currentTurn, TurnState.Wrong, answer);
+			turnState = TurnState.Wrong;
 
-		returnScreenCheck();
+		Turn.pushTurn(currentTurn, turnState, answer);
+		returnScreenCheck(turnState);
 	}
 
 	@Override
 	public void onPass() {
 		Turn.pushTurn(getCurrentTurn(), TurnState.Pass, null);
-		returnScreenCheck();
+		returnScreenCheck(TurnState.Pass);
 	}
 	
-	public void returnScreenCheck() {
-		if(currentTurn.getSkippedQuestion() == null) 
+	public void returnScreenCheck(TurnState turnState) {
+		if(currentTurn.getSkippedQuestion() == null && turnState != TurnState.Correct) 
 			getGame().getController().endTurn();
 		else {
 			currentTurn = initCurrentTurn(this);

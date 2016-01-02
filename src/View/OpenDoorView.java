@@ -82,7 +82,7 @@ public class OpenDoorView extends JPanel implements Observer{
 			index++;
 		}
 		
-		repaint();
+//		repaint();
 	}
 	
 	private void checkSubmittedAnswers(ArrayList<PlayerAnswer> submittedAnswers, OpenDoor openDoor) {
