@@ -65,10 +65,10 @@ public class ChatMessageView extends JPanel implements Observer {
 
 	}
 
-	
+/*	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-	}
+	}*/
 
 	public String getMessage(){
 		return messageBox.getText();

@@ -16,7 +16,7 @@ import Models.Player;
 
 public class ActiveGameView extends JPanel {
 	private JLabel playerNameLabel;
-	public JButton goButton;
+	public JButton goButton, chatButton;
 	private Player player;
 	private int gameId;
 	private ActiveGameController controller;
@@ -33,6 +33,7 @@ public class ActiveGameView extends JPanel {
 
 		playerNameLabel = new JLabel();
 		goButton = new JButton();
+		chatButton = new JButton();
 
 		// goButton.setBorder(BorderFactory.createEmptyBorder());
 
@@ -49,21 +50,26 @@ public class ActiveGameView extends JPanel {
 
 		goButton.setText("Go");
 		goButton.addActionListener((e) -> handleButtonClick());
-
+		
+		chatButton.setText("Chat");
+		chatButton.addActionListener((e) -> handleChatButtonClick());
+		chatButton.setVisible(false);
+		
 		GridBagConstraints gridBagConstraintsButton = new GridBagConstraints();
 		gridBagConstraintsButton.gridx = 0;
 		gridBagConstraintsButton.gridy = 1;
 		gridBagConstraintsButton.fill = GridBagConstraints.HORIZONTAL;
 
+		add(chatButton, gridBagConstraintsButton);
 		add(goButton, gridBagConstraintsButton);
 
 		// 135, 171, 255
 		setBackground(new Color(135, 171, 255));
 	}
 	
-	public void hideGoButton() {
+/*	public void hideGoButton() {
 		goButton.setVisible(false);
-	}
+	}*/
 	
 	public void unhideGoButton() {
 		goButton.setVisible(true);
@@ -71,5 +77,19 @@ public class ActiveGameView extends JPanel {
 
 	private void handleButtonClick() { // TODO TEMP
 		controller.handleButtonClick(gameId);
+	}
+	
+	private void handleChatButtonClick() { // TODO TEMP
+		controller.handleChatButtonClick(gameId);
+	}
+
+	public void showChatButton() {
+		goButton.setVisible(false);
+		chatButton.setVisible(true);
+	}
+	
+	public void hideChatButton() {
+		goButton.setVisible(true);
+		chatButton.setVisible(false);
 	}
 }

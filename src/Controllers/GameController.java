@@ -25,8 +25,8 @@ public class GameController {
 		view = new GamePanel();
 		this.parent = parent;
 		
-		ChatController chatcontroller = new ChatController(model);
-		view.setChatPanel(chatcontroller.returnView());
+/*		ChatController chatcontroller = new ChatController(model);
+		view.setChatPanel(chatcontroller.returnView());*/
 		
 		model.addObserver(view);
 		model.setController(this);
