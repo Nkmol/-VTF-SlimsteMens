@@ -717,6 +717,44 @@ public class DataManager {
 		return turn;
 	}
 	
+	public ArrayList<TurnInfo> getTurnInfosForRound(Round round) {
+		ArrayList<TurnInfo> turnInfos = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT b.* FROM ronde AS r "
+					+ "INNER JOIN rondenaam AS rn "
+					+ "ON (SELECT COUNT(spel_id) FROM ronde "
+					+ "WHERE spel_id = r.spel_id AND r.rondenaam = rn.type) = rn.volgnr "
+					+ "INNER JOIN beurt AS b "
+					+ "ON b.spel_id = r.spel_id AND r.rondenaam = b.rondenaam "
+					+ "WHERE r.spel_id = ? AND r.rondenaam = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, round.getGame().getId());
+			preparedStatement.setString(2, round.getRoundType().getValue());
+			data = preparedStatement.executeQuery();
+			turnInfos = new ArrayList<>();
+			while (data.next())
+				turnInfos.add(new TurnInfo(data));
+		} catch (SQLException e) {
+			System.err.println("Error fetching game with id: " + round.getGame().getId() 
+			+" and round: " + round.getGame().getCurrentRound().getRoundType().getValue());
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		
+		return turnInfos;
+	}
+	
 	public boolean pushTurn(Turn turn) {
 		boolean turnPushed = false;
 		Connection connection = getConnection();
@@ -1186,6 +1224,7 @@ public class DataManager {
 			preparedStatement.setString(2, turn.getRound().getRoundType().getValue());
 			preparedStatement.setInt(3, amountOfQuestion);
 			data = preparedStatement.executeQuery();
+			questions = new ArrayList<>();
 			while (data.next()) 
 				questions.add(new Question(data, turn));
 		} catch (SQLException e) {
