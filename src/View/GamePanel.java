@@ -77,10 +77,10 @@ public class GamePanel extends JPanel implements Observer{
 			lblRoundType.setText(model.getCurrentRound().getRoundType().toString());
 			String strPlayer1 = player1.getName() + " : ";
 			String strPlayer2 = player2.getName() + " : ";
-			if(Game.isCurrentUser(player1.getName()))
-				strPlayer1 += model.getCurrentRound().getCurrentTurn().getTime();
-			else if(Game.isCurrentUser(player2.getName()))
-				strPlayer2 += model.getCurrentRound().getCurrentTurn().getTime();
+			//if(Game.isCurrentUser(player1.getName()))
+				//strPlayer1 += model.getCurrentRound().getCurrentTurn().getTime();
+			//else if(Game.isCurrentUser(player2.getName()))
+				//strPlayer2 += model.getCurrentRound().getCurrentTurn().getTime();
 			
 			lblPlayer1.setText(strPlayer1); // TODO show total time from all turns for a player
 			lblPlayer2.setText(strPlayer2);
