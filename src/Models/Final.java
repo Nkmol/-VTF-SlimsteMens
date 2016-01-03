@@ -81,6 +81,7 @@ public class Final extends Round {
 			currentTurn.setTurnState(TurnState.Correct);
 			currentTurn.setSecondsEarned(secondsEarned);
 			DataManager.getInstance().updateTurn(currentTurn);
+			
 			amountCorrectAnswers = 0;
 			if (currentTurn.getSkippedQuestion() == null)
 				getGame().getController().endTurn();
@@ -118,6 +119,9 @@ public class Final extends Round {
 	@Override
 	public boolean isCompleted() {
 		// TODO Auto-generated method stub
+		
+		
+		
 		return false;
 	}
 

@@ -75,6 +75,8 @@ public class GameController {
 			return new FinalController(model, round);
 		case Framed:
 			return new FramedController(model, round);
+		case Puzzle:
+			return new PuzzleController(model, round);
 		default:
 			return null;
 		}
@@ -95,8 +97,10 @@ public class GameController {
 		round = new Final(model);
 
 		if (round != null) {
-			if (round.isCompleted())
+			if (round.isCompleted()) {
+				endTurn(); //Should not happen when it actually is players turn
 				loadNextRound(round.getRoundType());
+			}
 		}
 
 		

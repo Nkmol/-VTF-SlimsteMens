@@ -27,6 +27,7 @@ public class Framed extends Round {
 	
 	public void init() {
 		//questions = DataManager.getInstance().getQuestions(this);
+		handleTurns();
 		updateView();
 		DataManager.getInstance().pushTurn(currentTurn);
 	}
@@ -36,6 +37,14 @@ public class Framed extends Round {
 		currentTurn = initCurrentTurn(this);
 		DataManager.getInstance().pushTurn(currentTurn);
 		updateView();
+	}
+	
+	public void handleTurns() {
+		Question currentQuestion = (getLastTurn() != null) ? getLastTurn().getCurrentQuestion() : currentTurn.getCurrentQuestion();
+		
+		if(getLastTurn() != null) {
+			this.getCurrentTurn().setCurrentQuestion(currentQuestion);
+		}
 	}
 	
 	public void pushSharedQuestion() {
@@ -64,8 +73,8 @@ public class Framed extends Round {
 		PlayerAnswer playerAnswer = new PlayerAnswer(currentTurn, answerId, answer, 10); //TODO: change the moment
 		DataManager.getInstance().pushPlayerAnswer(playerAnswer);
 		playerAnswers.add(playerAnswer);
-		
-		Question currentQuestion = (currentTurn.getSkippedQuestion() != null) ? currentTurn.getSkippedQuestion() : currentTurn.getCurrentQuestion();
+			
+		Question currentQuestion = currentTurn.getCurrentQuestion();
 		
 		System.out.println("Question id: " + currentQuestion.getId());
 		
@@ -123,5 +132,4 @@ public class Framed extends Round {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
 }
