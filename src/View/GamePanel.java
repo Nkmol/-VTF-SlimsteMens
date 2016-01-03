@@ -51,16 +51,31 @@ public class GamePanel extends JPanel implements Observer{
 		//add(chat, BorderLayout.LINE_END);
 		
 		JPanel bottom = new JPanel();
-		bottom.setPreferredSize(new Dimension(0, 50));
+		bottom.setLayout(new BorderLayout());
+		//bottom.setPreferredSize(new Dimension(0, 50));
+
+		JPanel bottomleft = new JPanel();
+		bottomleft.setLayout(new BorderLayout());
+		//bottomleft.setPreferredSize(new Dimension(0, 50));
 
 		txtInput = new JTextField();
-		txtInput.setPreferredSize(new Dimension(100, 20));
-		bottom.add(txtInput);
+		//txtInput.setPreferredSize(new Dimension(100, 20));
+		
+		bottomleft.add(txtInput, BorderLayout.CENTER);
+		
+		bottom.add(bottomleft,  BorderLayout.CENTER);
+		
 		btnSubmit = new JButton("Submit");
-		bottom.add(btnSubmit);
 		btnPass = new JButton("Pass");
-		bottom.add(btnPass);
-		add(bottom, BorderLayout.PAGE_END);
+		
+		JPanel bottomright = new JPanel();
+		bottomright.setLayout(new BorderLayout());
+		bottomright.add(btnSubmit, BorderLayout.WEST);
+		bottomright.add(btnPass, BorderLayout.EAST);
+		
+		bottom.add(bottomright, BorderLayout.EAST);
+		
+		add(bottom, BorderLayout.SOUTH);
 	}
 	
 	public void setRound(JPanel round) {
@@ -90,6 +105,7 @@ public class GamePanel extends JPanel implements Observer{
 		
 		if(model.getCurrentRound() != null && model.getCurrentRound().getCurrentTurn() != null) {
 			lblRoundType.setText(model.getCurrentRound().getRoundType().toString());
+
 		
 			if(Game.isCurrentUser(player1.getName())) {
 				String strPlayer1 = player1.getName() + " : " + (DataManager.getInstance().getTotalSecondsEarnedInAGame(model.getId(), player1.getName()) + model.getCurrentRound().getCurrentTurn().getSecondsEarned());

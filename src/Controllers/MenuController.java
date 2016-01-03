@@ -16,9 +16,14 @@ public class MenuController {
 		ComponentUtility.addActionListener(view, "menuExit", (e) -> Exit_Click());
 		ComponentUtility.addActionListener(view, "menuAccount", (e) -> Account_Click());
 		ComponentUtility.addActionListener(view, "menuPlayers", (e) -> Players_Click());
+		ComponentUtility.addActionListener(view, "menuReplays", (e) -> Replays_Click());
 		ComponentUtility.addActionListener(view, "menuChallenges", (e) -> Challenges_Click());
 		ComponentUtility.addActionListener(view, "menuReplays", (e) -> Replay_Click());
 		ComponentUtility.addActionListener(view, "menuLogout", (e) -> Logout_Click());
+	}
+	
+	private void Replays_Click() {
+		parent.SetViewCategoryPanel(new ReplayListController(parent).getView());
 	}
 	
 	private void Challenges_Click() {

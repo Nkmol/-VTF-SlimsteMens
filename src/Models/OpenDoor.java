@@ -31,6 +31,17 @@ public class OpenDoor extends Round {
 		updateView();
 		
 	}
+	
+	public void pushAnswers(ArrayList<PlayerAnswer> playerAnswers) {
+		if (playerAnswers != null && playerAnswers.size() > 0) {
+			//Push player's answers
+			for (PlayerAnswer playerAnswer : playerAnswers) {
+				DataManager.getInstance().pushPlayerAnswer(playerAnswer);
+			}
+			
+			this.playerAnswers = null;
+		}
+	}
 
 	@Override
 	public void onSubmit(String answer) {
@@ -40,7 +51,7 @@ public class OpenDoor extends Round {
 		
 		int answerId = playerAnswers.size() + 1;
 		PlayerAnswer playerAnswer = new PlayerAnswer(currentTurn, answerId, answer, currentTurn.getMoment());
-		DataManager.getInstance().pushPlayerAnswer(playerAnswer);
+//		DataManager.getInstance().pushPlayerAnswer(playerAnswer);
 		playerAnswers.add(playerAnswer);
 		
 		Question currentQuestion = (currentTurn.getSkippedQuestion() != null) ? currentTurn.getSkippedQuestion() : currentTurn.getCurrentQuestion();
@@ -62,6 +73,9 @@ public class OpenDoor extends Round {
 			currentTurn.setSecondsEarned(secondsEarned);
 			DataManager.getInstance().updateTurn(currentTurn);
 			amountCorrectAnswers = 0;
+			if (isCompleted())
+				game.getController().loadNextRound(roundType);
+			pushAnswers(playerAnswers);
 			if (currentTurn.getSkippedQuestion() == null)
 				getGame().getController().endTurn();
 			else 
@@ -75,6 +89,9 @@ public class OpenDoor extends Round {
 		//TODO: further implementation
 		currentTurn.setTurnState(TurnState.Pass);
 		DataManager.getInstance().updateTurn(currentTurn);
+		pushAnswers(playerAnswers);
+		if (isCompleted()) 
+			game.getController().loadNextRound(roundType);
 		if (currentTurn.getSkippedQuestion() == null)
 			getGame().getController().endTurn();
 		else 
@@ -84,5 +101,41 @@ public class OpenDoor extends Round {
 	public ArrayList<PlayerAnswer> getSubmittedAnswers() {
 		return playerAnswers;
 	}
+	
+	public boolean thereAreBusyTurns(ArrayList<TurnInfo> turnInfos) {
+		ArrayList<TurnInfo> busyTurnInfos = new ArrayList<>();
+		for (TurnInfo turnInfo : turnInfos) {
+			if (turnInfo.getTurnState() == TurnState.Busy)
+				busyTurnInfos.add(turnInfo);
+		}
+		return busyTurnInfos.size() > 0;
+	}
 
+	@Override
+	public boolean isCompleted() {
+		
+		boolean isCompleted = false;
+		
+		ArrayList<TurnInfo> turnInfos = DataManager.getInstance().getTurnInfosForRound(this);		
+		
+		if (turnInfos != null && turnInfos.size() >= 2) {
+			if (turnInfos.size() >= 4 && !thereAreBusyTurns(turnInfos))
+				isCompleted = true;
+			if (turnInfos.size() == 3) {
+				TurnState firstTurnState = turnInfos.get(0).getTurnState();
+				TurnState thirdTurnState = turnInfos.get(2).getTurnState();
+				isCompleted =  ((firstTurnState == TurnState.Pass && thirdTurnState == TurnState.Correct) || 
+						(firstTurnState == TurnState.Correct && thirdTurnState == TurnState.Pass));
+			}
+			if (turnInfos.size() == 2) {
+				if (turnInfos.get(0).getTurnState() == TurnState.Correct && turnInfos.get(1).getTurnState() == TurnState.Correct) 
+					isCompleted =  true;
+			}
+		}
+		
+		if (isCompleted)
+			game.getController().loadNextRound(roundType);
+		
+		return isCompleted;
+	}
 }

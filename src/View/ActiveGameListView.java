@@ -35,7 +35,7 @@ public class ActiveGameListView extends JPanel implements Observer {
 		this.controller = controller;
 		setPreferredSize(new Dimension(150,500));
 		setBackground(new Color(193,212,255));
-		this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		createLayout();
 	}
 	
@@ -95,7 +95,7 @@ public class ActiveGameListView extends JPanel implements Observer {
 				topPanel.add(activeGameViews[i]);
 			}
 			else {
-				activeGameViews[i].hideGoButton();
+				activeGameViews[i].showChatButton();
 				bottomPanel.add(activeGameViews[i]);
 			}
 		}

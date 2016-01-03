@@ -8,121 +8,94 @@ import Managers.DataManager;
 
 public class Puzzle extends Round {
 
-	private final static int QuestionAmount;
-	private final static int AnswerPerQuestionAmount;
-	private final static int AnswerAmount;
-	static {
-		QuestionAmount = 3;
-		AnswerPerQuestionAmount = 4;
-		AnswerAmount = QuestionAmount * AnswerPerQuestionAmount;
-	}
+
+	public final static int AMOUNT_QUESTIONS = 3,
+							CORRECT_POINTS = 60;
 	
-	private int CurrentSharedQuestion;
-	
-	private ArrayList<Answer> PossibleAnswers;
+	private int amountCorrectAnswers = 0;
+	private int secondsEarned = 0;
+	private ArrayList<PlayerAnswer> playerAnswers;
+	private ArrayList<Question> questions;
 	
 	public Puzzle(Game game) {
-		super(game, RoundType.Puzzle);
-		PossibleAnswers = new ArrayList<>();
-		CurrentSharedQuestion = 0;
+		super(game, RoundType.Puzzle);	
+		initNewTurn();
 	}
 	
 	public Puzzle(ResultSet data, Game game) {
-		super(data, game);
-		PossibleAnswers = new ArrayList<>();
-		CurrentSharedQuestion = 0;
+		super(data,game);
+		initNewTurn();
 	}
 	
-	public static int getQuestionAmount() {
-		return QuestionAmount;
-	}
-	
-	public static int getAnswerPerQuestionAmount() {
-		return AnswerPerQuestionAmount;
-	}
-	
-	public static int getAnswerAmount() {
-		return AnswerAmount;
-	}
-
-	public void Submit(String SubmittedAnswer) {
-		PlayerAnswer playerAnswer = new PlayerAnswer(currentTurn, generateAnswerId(), SubmittedAnswer, currentTurn.getSecondsEarned());
-		currentTurn.addPlayerAnswer(playerAnswer);
-		if (GetQuestion().isPlayerAnswerCorrect(playerAnswer)) {
-			NextQuestion();
-		} else {
-			SubmitTurn();
-		}
-		setChanged();
-		notifyObservers();
-	}
-	
-	public void GeneratePossibleAnswers() {
-		// TODO: Generate the list of answers shown in the puzzle
+	public void initNewTurn() {
+		playerAnswers = new ArrayList<PlayerAnswer>();
+		questions = new ArrayList<Question>();
+		questions = loadQuestions();
+		updateView();
 		
-		// just do it randomly for now
-		SharedQuestion question;
-		Random r = new Random();
-		/*for (int I = 0; I < QuestionAmount; I++) {
-			int Index = r.nextInt(getQuestions().size());
-			question = new SharedQuestion(
-					game.getId(), 
-					RoundType.Puzzle, 
-					currentTurn.getTurnId(), 
-					I+1, 
-					getQuestions().get(Index).getId(), 
-					null);
-			currentTurn.getSharedQuestions().add(question);
-		}*/
+		if(!continueCurrentTurn)
+			DataManager.getInstance().pushTurn(currentTurn);
 	}
 	
-	private void NextQuestion() {
-		if (CurrentSharedQuestion == QuestionAmount) {
-			SubmitTurn();
-			return;
+	private ArrayList<Question> loadQuestions() {
+		ArrayList<Question> questions = new ArrayList<Question>();
+		
+		for(int i = 0; i < AMOUNT_QUESTIONS; i++) {
+			Question q = DataManager.getInstance().getRandomQuestionForRoundType(currentTurn);
+			if(!containsQuestion(q))
+				questions.add(q);
+			else
+				i--; //Step back -> generate new question
+			System.out.println(questions.get(i).getId());
 		}
-		CurrentSharedQuestion++;
-	}
-	
-	private void SubmitTurn() {
-		DataManager.getInstance().pushTurn(currentTurn);
-	}
-	
-	public Question[] getPuzzleQuestions() {
-		Question[] puzzleQuestions = new Question[QuestionAmount];
-
-		// TODO load all questions
-		/*for (int I = 0; I < puzzleQuestions.length && I < currentTurn.getSharedQuestions().size(); I++)
-			for (Question question : getQuestions())
-				if (currentTurn.getSharedQuestions().get(I).getId() == question.getId()) {
-					 puzzleQuestions[I] = question;
-					 break;
-				}
-		*/
-		return puzzleQuestions;
-	}
-	
-	public ArrayList<Answer> GetPossibleAnswers() {
-		return PossibleAnswers;
-	}
-	
-	public Question GetQuestion() {
-		SharedQuestion sharedQuestion = getCurrentTurn().getSharedQuestions().get(CurrentSharedQuestion);
-		// TODO load all questions
-		/*for (Question question : getQuestions())
-			if (sharedQuestion.getId() == question.getId())
-				return question;*/
-		return null;
+		
+		return questions;
 	}
 
-	public void onSubmit(String str) {
+	private boolean containsQuestion(Question q) {
+		for(Question question : questions)
+			if(question.getId() == q.getId())
+				return true;
+		return false;
+	}
+	
+	@Override
+	public void onSubmit(String answer) {
 		// TODO Auto-generated method stub
-		
+		System.out.println("your answer is " + answer);
+		for(Question question : questions) 
+			if (question.isPlayerAnswerCorrectPuzzle(answer)) {
+				System.out.println("correct");
+				break;
+			}
+			else 
+				System.out.println("wrong");
+
+		updateView();
 	}
 
 	@Override
 	public void onPass() {
+		//TODO: further implementation
+		currentTurn.setTurnState(TurnState.Pass);
+		DataManager.getInstance().updateTurn(currentTurn);
+		if (currentTurn.getSkippedQuestion() == null)
+			getGame().getController().endTurn();
+		else 
+			initNewTurn();
+	}
+	
+	public ArrayList<PlayerAnswer> getSubmittedAnswers() {
+		return playerAnswers;
+	}
+	
+	public ArrayList<Question> getQuestions() {
+		return questions;
+	}
+	
+	@Override
+	public boolean isCompleted() {
 		// TODO Auto-generated method stub
-		
+		return false;
 	}
 }

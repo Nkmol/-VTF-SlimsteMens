@@ -19,7 +19,6 @@ public class Game extends Observable {
 	private static final int MinimumAnswerPercentage = 80,
 							 BeginAmountTime = 100;
 	
-	
 	private int id;
 	private Player player1;
 	private Player player2; 
@@ -71,12 +70,18 @@ public class Game extends Observable {
 		if(lastTurn != null) {
 			if(playerAnsweredASkippedQuestion(lastTurn)) 
 				return true;
-			else if(!isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() != TurnState.Busy)
+			else if(!isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() != TurnState.Busy && lastTurn.getTurnState() != TurnState.Bonus)
 				return true;
-			else if(isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() == TurnState.Busy)
+			else if(isCurrentUser(lastTurn.getPlayer().getName()) && (lastTurn.getTurnState() == TurnState.Busy || lastTurn.getTurnState() == TurnState.Bonus))
 				return true;
 			else 
 				return false; 
+		}
+		else {
+			GameInfo gameInfo = DataManager.getInstance().getGameInfoForGame(gameId);
+			
+			if(isCurrentUser(gameInfo.getPlayer1().getName()))
+				return true;
 		}
 		
 		return false;	

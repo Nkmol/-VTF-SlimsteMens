@@ -46,6 +46,12 @@ public class MainController {
 		mainFrame.setVisible(true);
 	}
 	
+	public void showReplay() {
+		ReplayListController replay = new ReplayListController(this);
+		mainFrame.setContentPane(replay.getView());
+		mainFrame.setVisible(true);
+	}
+	
 	public void showActiveGames() {
 		ActiveGameController activeGames = new ActiveGameController(this);
 		SetViewSidebar(activeGames.getView());

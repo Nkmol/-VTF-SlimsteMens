@@ -2,36 +2,42 @@ package Controllers;
 
 import javax.swing.JPanel;
 
+import Models.Framed;
 import Models.Game;
-import Models.OpenDoor;
 import Models.Puzzle;
 import Models.Round;
-import View.OpenDoorView;
+import View.FramedView;
 import View.PuzzlePanel;
+import View.PuzzleView;
 
 public class PuzzleController implements RoundController{
-	
-	private PuzzlePanel view;
-	
+
 	private Puzzle model;
+	private PuzzleView view;
+	
+	public PuzzleController(Game parent) {
+		
+		model = new Puzzle(parent);
+		view = new PuzzleView(model);
+		model.addObserver(view);
+	}
 	
 	public PuzzleController(Game parent, Round round) {
-		model = (Puzzle)round;
-		view = new PuzzlePanel(this);
-		view.Observe(model);
+		
+		model = (Puzzle) round;
+		view = new PuzzleView(model);
+		model.addObserver(view);
 	}
-	
-	public JPanel GetView() {
+
+	@Override
+	public PuzzleView getView() {
+		// TODO Auto-generated method stub
 		return view;
 	}
 
 	@Override
-	public JPanel getView() {
-		return view;
-	}
-
-	@Override
-	public Round getModel() {
+	public Puzzle getModel() {
+		// TODO Auto-generated method stub
 		return model;
 	}
 }

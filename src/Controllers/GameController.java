@@ -25,8 +25,8 @@ public class GameController {
 		view = new GamePanel();
 		this.parent = parent;
 		
-		ChatController chatcontroller = new ChatController(model);
-		view.setChatPanel(chatcontroller.returnView());
+/*		ChatController chatcontroller = new ChatController(model);
+		view.setChatPanel(chatcontroller.returnView());*/
 		
 		model.addObserver(view);
 		model.setController(this);
@@ -67,26 +67,40 @@ public class GameController {
 		// TODO switch om terug naar round.getRoundType()
 
 		switch(round.getRoundType()) {
-		//switch(RoundType.Final) {
 		case ThreeSixNine:
 			return new ThreeSixNineController(model, round);
 		case OpenDoor:
 			return new OpenDoorController(model, round);
 		case Final:
 			return new FinalController(model, round);
+		case Framed:
+			return new FramedController(model, round);
+		case Puzzle:
+			return new PuzzleController(model, round);
 		default:
 			return null;
 		}
+	}
+	
+	public void loadNextRound(RoundType currentRoundType) {
+		RoundType nextRoundType = RoundType.nextRoundType(currentRoundType);
+		model.setRound(Round.createRound(nextRoundType, model));
+		loadLastRound();
 	}
 
 	public void loadLastRound() {
 		
 		Round round = DataManager.getInstance().getLastRoundForGame(model);
+		if (round != null) {
+			if (round.isCompleted())
+				loadNextRound(round.getRoundType());
+		}
 		
 		if(round == null) {	
-//			round = new ThreeSixNine(model);
-			//round = new Final(model);
-			round = new OpenDoor(model); // Add 369 manually to the database in table ronde
+			round = new ThreeSixNine(model);
+			
+//			round = new Final(model);
+//			round = new OpenDoor(model); // Add 369 manually to the database in table ronde
 		}
 
 		RoundController roundController = getRoundController(round, model);
