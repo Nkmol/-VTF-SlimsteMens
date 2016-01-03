@@ -114,6 +114,7 @@ public class Puzzle extends Round {
 		currentTurn.setTurnState(TurnState.Pass);
 		DataManager.getInstance().updateTurn(currentTurn);
 		endTurn();
+		isCompleted();
 	}
 	
 	private void pushPlayerAnswers() {
@@ -124,7 +125,16 @@ public class Puzzle extends Round {
 	
 	@Override
 	public boolean isCompleted() {
-		// TODO Auto-generated method stub
-		return false;
+		boolean isCompleted = false;
+		
+		if(Game.isCurrentUser(lastTurn.getPlayer().getName()) || !Game.isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() != TurnState.Pass)
+			isCompleted = true;
+		else
+			isCompleted = false;	
+				
+		if(isCompleted)
+			game.getController().loadNextRound(roundType);
+		
+		return isCompleted;
 	}
 }

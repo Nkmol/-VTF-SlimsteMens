@@ -89,12 +89,14 @@ public class ThreeSixNine extends Round {
 
 		Turn.pushTurn(currentTurn, turnState, answer);
 		returnScreenCheck(turnState);
+		isCompleted();
 	}
 
 	@Override
 	public void onPass() {
 		Turn.pushTurn(getCurrentTurn(), TurnState.Pass, null);
 		returnScreenCheck(TurnState.Pass);
+		isCompleted();
 	}
 	
 	public void returnScreenCheck(TurnState turnState) {
