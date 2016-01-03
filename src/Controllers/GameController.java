@@ -78,10 +78,21 @@ public class GameController {
 			return null;
 		}
 	}
+	
+	public void loadNextRound(RoundType currentRoundType) {
+		RoundType nextRoundType = RoundType.nextRoundType(currentRoundType);
+		model.setRound(Round.createRound(nextRoundType, model));
+		loadLastRound();
+	}
 
 	public void loadLastRound() {
 		
 		Round round = DataManager.getInstance().getLastRoundForGame(model);
+		
+		if (round != null) {
+			if (round.isCompleted())
+				loadNextRound(round.getRoundType());
+		}
 		
 		if(round == null) {	
 //			round = new ThreeSixNine(model);
