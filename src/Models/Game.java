@@ -65,6 +65,19 @@ public class Game extends Observable {
 		return playerName.equals(DataManager.getInstance().getCurrentUser().getName());
 	}
 	
+	public Player getLowestScorePlayer() {
+		int player1score,
+			player2score;
+		
+		player1score = DataManager.getInstance().getTotalSecondsEarnedInAGame(id, player1.getName());
+		player2score = DataManager.getInstance().getTotalSecondsEarnedInAGame(id, player2.getName());
+		
+		if(player1score > player2score)
+			return player2;
+		else 
+			return player1;
+	}
+	
 	public static boolean isCurrentPlayerTurn(int gameId) {
 		TurnInfo lastTurn = DataManager.getInstance().getLastInfoTurnForGame(gameId);
 		if(lastTurn != null) {
@@ -79,7 +92,6 @@ public class Game extends Observable {
 		}
 		else {
 			GameInfo gameInfo = DataManager.getInstance().getGameInfoForGame(gameId);
-			
 			if(isCurrentUser(gameInfo.getPlayer1().getName()))
 				return true;
 		}

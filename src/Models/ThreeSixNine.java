@@ -28,6 +28,7 @@ public class ThreeSixNine extends Round {
 	}
 	
 	public void initNewTurn() {
+		currentTurn.startTimer();
 		amountCorrectQuestions = DataManager.getInstance().getCorrectAmountUniqueSharedQuestionsForRound(this, DataManager.getInstance().getCurrentUser());
 		System.out.println(amountCorrectQuestions);
 		if(amountCorrectQuestions > 0 && amountCorrectQuestions % BONUS_ITERATION == 0)
@@ -114,6 +115,7 @@ public class ThreeSixNine extends Round {
 		boolean isCompleted = false;
 		
 		int amountUniqueSharedQuestions = DataManager.getInstance().getAmountUniqueSharedQuestionsForRound(this, DataManager.getInstance().getCurrentUser());
+		System.out.println("amountUnique: " + amountUniqueSharedQuestions);
 		if(amountUniqueSharedQuestions >= AMOUNT_QUESTIONS)
 			isCompleted = true;
 		else

@@ -42,8 +42,6 @@ public abstract class Round extends Observable {
 		} catch (SQLException e) {
 			System.err.println("Error initializing round");
 		}
-
-		currentTurn.startTimer();
 	}
 	
 	//Generating beginning of turn
@@ -98,7 +96,7 @@ public abstract class Round extends Observable {
 			/*
 			 * We don't have a turn so we need to push a new turn to the database
 			 */
-			turn = new Turn(DataManager.getInstance().getCurrentUser(), this);
+			turn = new Turn(game.getLowestScorePlayer(), this);
 			turn.setTurnState(TurnState.Busy);
 			turn.setTurnId(1);
 
@@ -107,11 +105,6 @@ public abstract class Round extends Observable {
 		
 		return turn;
 	}
-	
-/*	public void startRound() {
-		turns = new ArrayList<Turn>();
-		questions = new ArrayList<Question>();
-	}*/
 	
 	public Game getGame() {
 		return game;
