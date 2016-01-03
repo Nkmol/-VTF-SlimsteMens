@@ -17,6 +17,7 @@ public class MenuController {
 		ComponentUtility.addActionListener(view, "menuAccount", (e) -> Account_Click());
 		ComponentUtility.addActionListener(view, "menuPlayers", (e) -> Players_Click());
 		ComponentUtility.addActionListener(view, "menuChallenges", (e) -> Challenges_Click());
+		ComponentUtility.addActionListener(view, "menuReplays", (e) -> Replay_Click());
 		ComponentUtility.addActionListener(view, "menuLogout", (e) -> Logout_Click());
 	}
 	
@@ -40,6 +41,10 @@ public class MenuController {
 		DataManager.getInstance().getCurrentUser();
 		parent.deleteMenu();
 		parent.showLogin();
+	}
+	
+	private void Replay_Click() {
+		parent.SetViewCategoryPanel(new ReplayListController(parent).getView());
 	}
 	
 	public MenuBar getView() {
