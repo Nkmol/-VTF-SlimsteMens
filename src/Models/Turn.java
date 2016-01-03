@@ -32,14 +32,17 @@ public class Turn {
 		gameId = parent.getGame().getId();
 //		this.sharedQuestion = DataManager.getInstance().getLastSharedQuestion(this); //TOOD: get last skipped question instead
 		currentQuestion = DataManager.getInstance().getRandomQuestionForRoundType(this);
-//		this.sharedQuestions = DataManager.getInstance().getSharedQuestions(parentRound, turnId); //Dont need this?
+		
+		if(parent.roundType == RoundType.Puzzle) { //TODO: load in Puzzle round?
+			sharedQuestions = DataManager.getInstance().getSharedQuestions(this); 
+		}
 		//TODO: get last skipped quesiton
 		//1- get last turn
 		//2- fetch question from turn
 		skippedQuestion = initSkippedQuestion();
 	}
 
-	public Turn(ResultSet data, Round parentRound, boolean setCurrentTurn) { //TODO parent should already be made, so better to already use it right away?
+	public Turn(ResultSet data, Round parentRound, boolean setCurrentTurn) { //TODO setCurrentTurn quick fix for when turn not yet assigned to round, was used for Question init. Can be removed?
 		if(setCurrentTurn)
 			parentRound.setCurrrentTurn(this);
 		parent = parentRound;
@@ -63,7 +66,9 @@ public class Turn {
 			if(currentQuestion == null)
 				currentQuestion = DataManager.getInstance().getQuestionForId(data.getInt("vraag_id"), parent); 
 
-//			setCurrentQuestion();
+			if(parent.roundType == RoundType.Puzzle) { //TODO: load in Puzzle round?
+				sharedQuestions = DataManager.getInstance().getSharedQuestions(this); 
+			}
 			//TODO: turn id
 			playerAnswers = DataManager.getInstance().getPlayerAnswers(gameId, parent.getRoundType(), turnId);
 		} catch (SQLException e) {
@@ -75,8 +80,6 @@ public class Turn {
 	public void startTurn() {
 		playerAnswers = new ArrayList<PlayerAnswer>();
 		sharedQuestions = new ArrayList<SharedQuestion>();
-		
-		startTimer();
 	}
 	
 	public Question initSkippedQuestion() {
@@ -131,10 +134,6 @@ public class Turn {
 		this.sharedQuestion = sharedQuestion;
 	}
 	
-	public void setCurrentQuestion(ArrayList<SharedQuestion> sharedQuestions) {
-		currentQuestion = sharedQuestions.get(sharedQuestions.size() - 1);
-	}
-	
 //	public void setCurrentQuestion() {
 // 		currentQuestion = DataManager.getInstance().getRandomQuestionForRoundType(parent);
 //	}
@@ -169,6 +168,10 @@ public class Turn {
 	
 	public ArrayList<SharedQuestion> getSharedQuestions() {
 		return sharedQuestions;
+	}
+	
+	public void setSharedQuestions(ArrayList<SharedQuestion> sharedQuestions) {
+		this.sharedQuestions = sharedQuestions;
 	}
 	
 	public ArrayList<PlayerAnswer> getPlayerAnswers() {
@@ -214,6 +217,12 @@ public class Turn {
 		playerAnswers.add(answer);
 	}
 	
+	public void addPlayerAnswer(String answer) {
+		int index = playerAnswers == null ? 1 : playerAnswers.size() + 1;
+		PlayerAnswer playerAnswer = new PlayerAnswer(this, index, answer, moment);
+		addPlayerAnswer(playerAnswer);
+	}
+	
 	public int getAmountAnswers() {
 		return playerAnswers == null ? 0 : playerAnswers.size();
 	}
@@ -235,12 +244,10 @@ public class Turn {
 	}
 
 	public static void pushTurn(Turn turn, TurnState turnState, String answer) {
-		//Deelvraag
-		if(turn.getRound().roundType == RoundType.ThreeSixNine || turn.getRound().roundType == RoundType.Puzzle) {
-			//turn.setQuestionId(turn.getCurrentQuestion().getId());
-			turn.setTurnState(turnState);
-			
-			DataManager.getInstance().updateTurn(turn);
+		turn.setTurnState(turnState);
+		DataManager.getInstance().updateTurn(turn);
+		
+		if(turn.getRound().roundType == RoundType.ThreeSixNine) {
 			if(answer != null && !answer.isEmpty())
 				DataManager.getInstance().updateSharedQuestionAnswer(turn.getSharedQuestion(), answer);
 		}

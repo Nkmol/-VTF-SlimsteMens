@@ -20,6 +20,7 @@ import Models.Framed;
 import Models.PlayerAnswer;
 import Models.Puzzle;
 import Models.Question;
+import Models.SharedQuestion;
 import Utilities.StringUtility;
 
 public class PuzzleView extends JPanel implements Observer {
@@ -119,7 +120,7 @@ public class PuzzleView extends JPanel implements Observer {
 		}
 	}
 	
-	private void addAnswers(ArrayList answers, Question question, Color color) {
+	private void addAnswers(ArrayList<Answer> answers, Question question, Color color) {
 		puzzleAnswerViews[index].setAnswer(question);
 		puzzleAnswerViews[index].fillQuestionViews(answers, color);
 		index++;
@@ -137,10 +138,10 @@ public class PuzzleView extends JPanel implements Observer {
 	public void update(Observable o, Object arg) {
 		Puzzle puzzle = (Puzzle)arg;
 		
-		ArrayList<Question> questions = puzzle.getQuestions();
+		ArrayList<SharedQuestion> sharedQuestions = puzzle.getCurrentTurn().getSharedQuestions();
 		
-		for(Question question : questions)
-			addAnswers(question.getAnswers(), question, Color.red);
+		for(SharedQuestion sharedQuestion : sharedQuestions)
+			addAnswers(sharedQuestion.getAnswers(), sharedQuestion, Color.red);
 		index = 0;
 	}
 }
