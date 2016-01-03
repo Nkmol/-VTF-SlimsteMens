@@ -5,6 +5,7 @@ import Models.Game;
 import Models.Replay;
 import Models.ReplayThreeSixNine;
 import Models.Round;
+import Models.RoundType;
 import View.ReplayPanel;
 
 public class ReplayController {
@@ -16,16 +17,27 @@ public class ReplayController {
 		this.parent = parent;
 		view = new ReplayPanel(this);
 		Game game = DataManager.getInstance().getGame(id);
-		model = new Replay(game.getId(), game.getPlayer1(), game.getPlayer2(), game.getGameState());
-		Utilities.ComponentUtility.addActionListener(view, "btnSubmit", (e) -> model.getCurrentRound().onSubmit(model.getCurrentAnswer()));
-		Utilities.ComponentUtility.addActionListener(view, "btnPass", (e) -> model.getCurrentRound().onPass());
+		model = new Replay(game.getId(), game.getPlayer1(), game.getPlayer2(), game.getGameState(), this);
 		Round currentRound = new ReplayThreeSixNine(model, this);
 		currentRoundController = new ThreeSixNineController(model, currentRound);
 		model.setCurrentRound(currentRound);
+		view.setRound(currentRoundController.getView());
+		view.btnSubmit.addActionListener((e) -> model.getCurrentRound().onSubmit(model.getCurrentAnswer()));
+		view.btnSubmit.addActionListener((e) -> model.getCurrentRound().onPass());
 	}
 	
 	public void RoundEnd() {
-		
+		currentRoundController = model.getNextRound();
+		if (currentRoundController == null) {
+			EndReplay();
+		} else {
+			view.setRound(currentRoundController.getView());
+		}
+	}
+	
+	public void EndReplay() {
+		// TODO: Show endresult?
+		parent.ShowMainPanel();
 	}
 	
 	public void ShowView() {
