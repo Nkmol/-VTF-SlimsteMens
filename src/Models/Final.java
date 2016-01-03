@@ -36,14 +36,9 @@ public class Final extends Round {
 		initNewTurn();
 	}
 	
-/*	public void init() {
-		DataManager.getInstance().pushTurn(currentTurn);
-		updateView();
-	}*/
-	
 	public void initNewTurn() {
 		amountCorrectAnswers = 0;
-		currentTurn = initCurrentTurn(this);
+		currentTurn = initCurrentTurn(this);		
 		DataManager.getInstance().pushTurn(currentTurn);
 		currentTurn.startTimer();
 		updateView();
@@ -106,6 +101,12 @@ public class Final extends Round {
 		else 
 			initNewTurn();
 		
+	}
+
+	@Override
+	public boolean isCompleted() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

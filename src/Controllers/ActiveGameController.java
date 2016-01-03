@@ -36,4 +36,10 @@ public class ActiveGameController {
 	public void handleButtonClick(int gameId) {
 		startGame(gameId);
 	}
+	
+	public void handleChatButtonClick(int gameId) {
+		ChatController chatController = new ChatController(DataManager.getInstance().getGameInfoForGame(gameId));
+		
+		parent.SetViewCategoryPanel(chatController.returnView());
+	}
 }

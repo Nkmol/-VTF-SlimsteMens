@@ -12,6 +12,7 @@ import static java.lang.Math.toIntExact;
 
 import Models.ChatMessage;
 import Models.Game;
+import Models.GameInfo;
 import Models.ThreeSixNine;
 import Utilities.ComponentUtility;
 import View.ChatMessageView;
@@ -22,10 +23,10 @@ public class ChatController {
 
 	private ChatMessage model;
 	private ChatMessageView view;
-	private Game parent;
+	private GameInfo parent;
 	private Timer timer;
 	
-	public ChatController(Game parent) {
+	public ChatController(GameInfo parent) {
 		
 		this.parent = parent;
 		view = new ChatMessageView();
@@ -44,7 +45,7 @@ public class ChatController {
 		String playername = DataManager.getInstance().getCurrentUser().getName();
 		
 		// TODO Find out which playername gets used for this
-		model = new ChatMessage(parent.getId(), 
+		model = new ChatMessage(parent.getGameId(), 
 				playername, 
 				view.getMessage());
 	
@@ -60,7 +61,7 @@ public class ChatController {
 	private void updateChatMessages()
 	{
 		ArrayList<ChatMessage> chatMessages = 
-				DataManager.getInstance().getChatMessages(parent.getId());
+				DataManager.getInstance().getChatMessages(parent.getGameId());
 		
 		view.updateChatBehavior(chatMessages);
 	}

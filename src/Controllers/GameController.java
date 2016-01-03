@@ -25,8 +25,8 @@ public class GameController {
 		view = new GamePanel();
 		this.parent = parent;
 		
-		ChatController chatcontroller = new ChatController(model);
-		view.setChatPanel(chatcontroller.returnView());
+/*		ChatController chatcontroller = new ChatController(model);
+		view.setChatPanel(chatcontroller.returnView());*/
 		
 		model.addObserver(view);
 		model.setController(this);
@@ -91,6 +91,7 @@ public class GameController {
 			//round = new ThreeSixNine(model);
 			round = new Final(model);
 			//round = new OpenDoor(model); // Add 369 manually to the database in table ronde
+
 		}
 
 		RoundController roundController = getRoundController(round, model);

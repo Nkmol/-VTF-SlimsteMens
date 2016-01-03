@@ -82,7 +82,9 @@ public class Turn {
 	public Question initSkippedQuestion() {
 		Turn lastTurn = getRound().getLastTurn();
 		
-		if(lastTurn != null && lastTurn.getTurnState() == TurnState.Pass && !Game.isCurrentUser(lastTurn.getPlayer().getName())) 
+		//add wrong also as state of skippedQuestion for the ThreeSixNine round
+		if(lastTurn != null && !Game.isCurrentUser(lastTurn.getPlayer().getName()) && (lastTurn.getTurnState() == TurnState.Pass || 
+				lastTurn.getRound().getRoundType() == RoundType.ThreeSixNine && lastTurn.getTurnState() == TurnState.Wrong)) 
 			return lastTurn.getCurrentQuestion();
 		else
 			return null;

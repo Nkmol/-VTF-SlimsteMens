@@ -125,4 +125,10 @@ public class Puzzle extends Round {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public boolean isCompleted() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
