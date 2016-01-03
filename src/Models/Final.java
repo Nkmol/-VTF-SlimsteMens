@@ -7,7 +7,7 @@ import Managers.DataManager;
 
 public class Final extends Round {
 
-	private final static int POINTS_QUESTION = 20;
+	private final static int POINTS_QUESTION = 30;
 	private static final int amountOfAnswers = 5;
 	private int amountCorrectAnswers = 0,
 				secondsEarned = 0;
@@ -38,7 +38,7 @@ public class Final extends Round {
 	
 	public void initNewTurn() {
 		amountCorrectAnswers = 0;
-		currentTurn = initCurrentTurn(this);		
+		currentTurn = initCurrentTurn(this);
 		DataManager.getInstance().pushTurn(currentTurn);
 		currentTurn.startTimer();
 		updateView();
@@ -65,8 +65,11 @@ public class Final extends Round {
 		if (currentQuestion != null) {
 			if (currentQuestion.isPlayerAnswerCorrect(answer)) {
 				amountCorrectAnswers++; 
+				
 				secondsEarned+=POINTS_QUESTION;
-				currentTurn.addSecondsEarnd(POINTS_QUESTION);
+				currentTurn.setSecondsFinalLost(secondsEarned);
+				
+				
 				setResponseIsRight(true);
 			}else
 				setResponseIsRight(false);
@@ -86,6 +89,15 @@ public class Final extends Round {
 		}
 	
 	}
+	
+	
+/*	public void substractsSecondsfromOpponent()
+	{
+		Turn lastTurn = DataManager.getInstance().getLastTurnForGame(this);
+		int opponentSeconds = lastTurn.getSecondsEarned() - POINTS_QUESTION;
+		lastTurn.setSecondsEarned(opponentSeconds);
+		DataManager.getInstance().updateTurn(lastTurn);
+	}*/
 	
 	public ArrayList<PlayerAnswer> getSubmittedAnswers() {
 		return playerAnswers;
