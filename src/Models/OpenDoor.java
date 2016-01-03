@@ -100,8 +100,30 @@ public class OpenDoor extends Round {
 
 	@Override
 	public boolean isCompleted() {
-		// TODO Auto-generated method stub
-		return false;
+		
+		boolean isCompleted = false;
+		
+		ArrayList<TurnInfo> turnInfos = DataManager.getInstance().getTurnInfosForRound(this);		
+		
+		if (turnInfos != null && turnInfos.size() >= 2) {
+			if (turnInfos.size() >= 4)
+				isCompleted = true;
+			if (turnInfos.size() == 3) {
+				TurnState firstTurnState = turnInfos.get(0).getTurnState();
+				TurnState thirdTurnState = turnInfos.get(2).getTurnState();
+				isCompleted =  ((firstTurnState == TurnState.Pass && thirdTurnState == TurnState.Correct) || 
+						(firstTurnState == TurnState.Correct && thirdTurnState == TurnState.Pass));
+			}
+			if (turnInfos.size() == 2) {
+				if (turnInfos.get(0).getTurnState() == TurnState.Correct && turnInfos.get(1).getTurnState() == TurnState.Correct) 
+					isCompleted =  true;
+			}
+			
+		}
+		
+		if (isCompleted)
+			game.getController().loadNextRound(roundType);
+		
+		return isCompleted;
 	}
-
 }
