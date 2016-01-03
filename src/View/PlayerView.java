@@ -232,10 +232,10 @@ public class PlayerView extends JPanel {
 		challengeButton = new JButton();
 
 		try {
-			Image img = ImageIO.read(new File("Assets/duel.png"));
-			Image img2 = ImageIO.read(new File("Assets/duelPressed.png"));
-			Image img3 = ImageIO.read(new File("Assets/duelSelected.png"));
-			Image img4 = ImageIO.read(new File("Assets/duelDisabled.png"));
+			Image img = ImageIO.read(getClass().getResource("/duel.png"));
+			Image img2 = ImageIO.read(getClass().getResource("/duelPressed.png"));
+			Image img3 = ImageIO.read(getClass().getResource("/duelSelected.png"));
+			Image img4 = ImageIO.read(getClass().getResource("/duelDisabled.png"));
 			challengeButton.setIcon(new ImageIcon(img));
 			challengeButton.setPressedIcon(new ImageIcon(img2));
 			challengeButton.setRolloverIcon(new ImageIcon(img3));

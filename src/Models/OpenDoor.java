@@ -15,18 +15,21 @@ public class OpenDoor extends Round {
 	
 	public OpenDoor(Game game) {
 		super(game, RoundType.OpenDoor);
-		initNewTurn();
+		initNewTurn(false);
 	}
 	
 	public OpenDoor(ResultSet data, Game game) {
 		super(data, game);
-		initNewTurn();
+		initNewTurn(false);
 	}
 	
-	public void initNewTurn() {
+	public void initNewTurn(boolean initCurrentTurn) {
 		AnswersHandled = new ArrayList<>();
-		currentTurn = initCurrentTurn(this);
-		DataManager.getInstance().pushTurn(currentTurn);
+		
+		if(initCurrentTurn)
+			currentTurn = initCurrentTurn(this);
+		if(!continueCurrentTurn)
+			DataManager.getInstance().pushTurn(currentTurn);
 		currentTurn.startTimer();
 		updateView();
 		
@@ -85,7 +88,7 @@ public class OpenDoor extends Round {
 			if (currentTurn.getSkippedQuestion() == null)
 				getGame().getController().endTurn();
 			else 
-				initNewTurn();
+				initNewTurn(true);
 		}
 	
 	}
@@ -100,7 +103,7 @@ public class OpenDoor extends Round {
 		if (currentTurn.getSkippedQuestion() == null)
 			getGame().getController().endTurn();
 		else 
-			initNewTurn();
+			initNewTurn(true);
 	}
 	
 	public ArrayList<PlayerAnswer> getSubmittedAnswers() {
