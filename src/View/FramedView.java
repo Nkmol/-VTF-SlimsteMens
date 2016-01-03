@@ -31,10 +31,11 @@ public class FramedView extends JPanel implements Observer{
 	private FramedAnswerView[][] framedAnswerViews;
 	private int index;
 	private int currentQuestionId = 0;
+	private Boolean loaded;
 	
 	public FramedView(Framed currentRound) {
 		createRoundFourPanel();
-		
+		loaded = false;
 		index = 0;
 	}
 	
@@ -146,7 +147,7 @@ public class FramedView extends JPanel implements Observer{
 	private ArrayList<PlayerAnswer> calculatePlayerAnswersForTurn(Framed framed) {
 		ArrayList<PlayerAnswer> playerAnswers = new ArrayList<PlayerAnswer>();
 		
-		ArrayList<Turn> allTurnsForRound = DataManager.getInstance().getTurns(framed);
+		ArrayList<Turn> allTurnsForRound = DataManager.getInstance().getTurnsForQuestion(framed, framed.getCurrentTurn().getCurrentQuestion());
 		
 		for(int i = 0; i < allTurnsForRound.size(); i++) {
 			Turn turn = allTurnsForRound.get(i);
@@ -189,10 +190,14 @@ public class FramedView extends JPanel implements Observer{
 			checkAnswer(playerAnswers);
 		}
 		
-		ArrayList<PlayerAnswer> submittedAnswers = calculatePlayerAnswersForTurn(framed);
-		
-		if (submittedAnswers != null && submittedAnswers.size() > 0) {
-			checkAnswer(submittedAnswers);
+		if(!loaded) {
+			ArrayList<PlayerAnswer> submittedAnswers = calculatePlayerAnswersForTurn(framed);
+			
+			if (submittedAnswers != null && submittedAnswers.size() > 0) {
+				checkAnswer(submittedAnswers);
+			}
+			
+			loaded = true;
 		}
 		
 	}

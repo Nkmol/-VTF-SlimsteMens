@@ -646,6 +646,36 @@ public class DataManager {
 		return turns;
 	}
 	
+	public ArrayList<Turn> getTurnsForQuestion(Round round, Question question) {
+		ArrayList<Turn> turns = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT * FROM beurt WHERE spel_id = ? AND rondenaam = ? AND vraag_id = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, round.getGame().getId());
+			preparedStatement.setString(2, round.getRoundType().getValue());
+			preparedStatement.setInt(3, question.getId());
+			data = preparedStatement.executeQuery();
+			turns = new ArrayList<>();
+			while (data.next())
+				turns.add(new Turn(data, round, false));
+		} catch (SQLException e) {
+			System.err.println("Error fetching turns for game id: " + round.getGame().getId());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		return turns;
+	}
+	
 	public Turn getLastTurnForGame(Round round) {
 		Turn turn = null;
 		Connection connection = getConnection();
@@ -691,6 +721,101 @@ public class DataManager {
 					+ " WHERE r.spel_id = ? ORDER BY b.beurt_id DESC LIMIT 1";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, gameId);
+			data = preparedStatement.executeQuery();
+			if (data.next())
+				turn = new Turn(data, round, false);
+		} catch (SQLException e) {
+			System.err.println("Error fetching last turn for game id: " + gameId);
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		return turn;
+	}
+	
+	public int getAmountCorrectAnswersForQuestion(int gameId, Question question) {
+		int amount = 0;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT Count(Antwoord) as 'count' FROM spelerAntwoord"
+					+ " WHERE beurt_id IN (Select Beurt_id FROM beurt WHERE vraag_id = ? and spel_id = ?)";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, gameId);
+			preparedStatement.setInt(2, question.getId());
+			
+			data = preparedStatement.executeQuery();
+			if (data.next())
+				amount = data.getInt("count");
+		} catch (SQLException e) {
+			System.err.println("Error amount of answers for question for game id: " + gameId);
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		return amount;
+	}
+	
+	public int getAmountAskedQuestionsForRound(Round round) {
+		int amount = 0;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT Count(vraag_id) as 'count' FROM beurt"
+					+ " WHERE spel_id = ? AND rondenaam = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, round.getGame().getId());
+			preparedStatement.setString(2, round.getRoundType().getValue());
+			
+			data = preparedStatement.executeQuery();
+			if (data.next())
+				amount = data.getInt("count");
+		} catch (SQLException e) {
+			System.err.println("Error amount of questions for round for game id: " + round.getGame().getId());
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		return amount;
+	}
+	
+	public Turn getXLastTurnForGame(int gameId, Round round, int index) {
+		Turn turn = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT b.* FROM ronde AS r"
+					+ " INNER JOIN rondenaam AS rn ON"
+					+ " (SELECT COUNT(spel_id) FROM ronde WHERE spel_id = r.spel_id AND r.rondenaam = rn.type) = rn.volgnr"
+					+ " INNER JOIN beurt AS b ON b.spel_id = r.spel_id AND r.rondenaam = b.rondenaam"
+					+ " WHERE r.spel_id = ? ORDER BY b.beurt_id DESC LIMIT ?,1";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, gameId);
+			preparedStatement.setInt(2, index);
 			data = preparedStatement.executeQuery();
 			if (data.next())
 				turn = new Turn(data, round, false);
