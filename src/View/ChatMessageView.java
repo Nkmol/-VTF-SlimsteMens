@@ -39,6 +39,8 @@ public class ChatMessageView extends JPanel implements Observer {
 		
 		//this.setLayout(new MigLayout());
 		
+		setLayout(new BorderLayout());
+		
 		chatBox = new JTextArea(17,16);
 		chatBox.setEditable(false);
 		chatBox.setFont(new Font("Serif", Font.PLAIN, 15));
@@ -47,8 +49,12 @@ public class ChatMessageView extends JPanel implements Observer {
 		
 		JScrollPane scroll = new JScrollPane(chatBox);
 	    //scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		
+		JPanel topContainer = new JPanel();
+		topContainer.setLayout(new BorderLayout());
+		topContainer.add(scroll, BorderLayout.CENTER);
 	    
-		this.add(scroll, BorderLayout.NORTH);
+		add(topContainer, BorderLayout.CENTER);
 
 		//this.add(chatBox, "wrap");
 
@@ -56,13 +62,17 @@ public class ChatMessageView extends JPanel implements Observer {
 		messageBox = new JTextField(10);
 		messageBox.requestFocusInWindow();
 		
+		//this.add(messageBox, BorderLayout.SOUTH);
+		//this.add(btnSendMessage);
 		
-		this.add(messageBox, BorderLayout.SOUTH);
-
 		btnSendMessage = new JButton("Send");
 		
-		this.add(btnSendMessage);
-
+		JPanel bottomContainer = new JPanel();
+		bottomContainer.setLayout(new BorderLayout());
+		bottomContainer.add(messageBox, BorderLayout.CENTER);
+		bottomContainer.add(btnSendMessage, BorderLayout.EAST);
+		
+		add(bottomContainer, BorderLayout.SOUTH);
 	}
 
 /*	
