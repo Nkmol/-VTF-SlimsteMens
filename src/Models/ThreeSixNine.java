@@ -11,7 +11,9 @@ public class ThreeSixNine extends Round {
 
 	private final static int AMOUNT_QUESTIONS = 9,
 							 BONUS_ITERATION = 3,
+							 POINTS_BONUS  = 60,
 							 POINTS_QUESTION = 20;
+	private int amountCorrectQuestions = 0;
 	
 	public ThreeSixNine(Game game) {
 		super(game, RoundType.ThreeSixNine);
@@ -26,6 +28,11 @@ public class ThreeSixNine extends Round {
 	}
 	
 	public void initNewTurn() {
+		amountCorrectQuestions = DataManager.getInstance().getCorrectAmountUniqueSharedQuestionsForRound(this, DataManager.getInstance().getCurrentUser());
+		System.out.println(amountCorrectQuestions);
+		if(amountCorrectQuestions > 0 && amountCorrectQuestions % BONUS_ITERATION == 0)
+			currentTurn.setTurnState(TurnState.Bonus);
+		
 		if(lastTurn != null)
 			getCurrentTurn().setSharedSkippedQuestion(initSharedSkippedQuestion());
 		getCurrentTurn().setSharedQuestion(initSharedQuestion());
@@ -68,30 +75,44 @@ public class ThreeSixNine extends Round {
 	public void onSubmit(String answer) {
 		System.out.println("your answers is " + answer);
 		Question currentQuestion = (currentTurn.getSkippedQuestion() != null) ? currentTurn.getSkippedQuestion() : currentTurn.getCurrentQuestion();
+		TurnState turnState = null;
 		
 		if (currentQuestion.isPlayerAnswerCorrect(answer)) {
-			currentTurn.addSecondsEarnd(POINTS_QUESTION);
-			Turn.pushTurn(currentTurn, TurnState.Correct, answer);
+			if(currentTurn.getTurnState() == TurnState.Bonus)
+				currentTurn.addSecondsEarnd(POINTS_BONUS);
+			else
+				currentTurn.addSecondsEarnd(POINTS_QUESTION);
+			turnState = TurnState.Correct;
 		}
 		else 
-			Turn.pushTurn(currentTurn, TurnState.Wrong, answer);
+			turnState = TurnState.Wrong;
 
-		returnScreenCheck();
+		Turn.pushTurn(currentTurn, turnState, answer);
+		returnScreenCheck(turnState);
 	}
 
 	@Override
 	public void onPass() {
 		Turn.pushTurn(getCurrentTurn(), TurnState.Pass, null);
-		returnScreenCheck();
+		returnScreenCheck(TurnState.Pass);
 	}
 	
-	public void returnScreenCheck() {
-		if(currentTurn.getSkippedQuestion() == null) 
+	public void returnScreenCheck(TurnState turnState) {
+		if(currentTurn.getSkippedQuestion() == null && turnState != TurnState.Correct) 
 			getGame().getController().endTurn();
 		else {
 			currentTurn = initCurrentTurn(this);
 			initNewTurn();
 			updateView();
 		}
+	}
+
+	@Override
+	public boolean isCompleted() {
+		int amountUniqueSharedQuestions = DataManager.getInstance().getAmountUniqueSharedQuestionsForRound(this, DataManager.getInstance().getCurrentUser());
+		if(amountUniqueSharedQuestions >= AMOUNT_QUESTIONS)
+			return true;
+		else
+			return false;
 	}
 }

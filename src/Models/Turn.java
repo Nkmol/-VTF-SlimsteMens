@@ -16,6 +16,7 @@ public class Turn {
 	private Player player;
 	private TimerTask timer;
 	private int secondsEarnd;
+	private int moment;
 	private Integer secondsFinalLost;
 	private ArrayList<SharedQuestion> sharedQuestions;
 	private ArrayList<PlayerAnswer> playerAnswers;
@@ -81,7 +82,9 @@ public class Turn {
 	public Question initSkippedQuestion() {
 		Turn lastTurn = getRound().getLastTurn();
 		
-		if(lastTurn != null && lastTurn.getTurnState() == TurnState.Pass && !Game.isCurrentUser(lastTurn.getPlayer().getName())) 
+		//add wrong also as state of skippedQuestion for the ThreeSixNine round
+		if(lastTurn != null && !Game.isCurrentUser(lastTurn.getPlayer().getName()) && (lastTurn.getTurnState() == TurnState.Pass || 
+				lastTurn.getRound().getRoundType() == RoundType.ThreeSixNine && lastTurn.getTurnState() == TurnState.Wrong)) 
 			return lastTurn.getCurrentQuestion();
 		else
 			return null;
@@ -180,16 +183,17 @@ public class Turn {
 		secondsEarnd += value;
 	}
 	
-	public void substractSecondsEarnd(int value) {
+	public void executeTimer(int value) {
 		secondsEarnd -= value;
-		
+		moment++;
 		parent.getGame().updateView();
 	}
 	
 	public void startTimer() {
+		moment = 0;
 		if(timer != null)
 			timer.cancel();
-		timer = new MyTimer().schedule(() -> substractSecondsEarnd(1), 1000);
+		timer = new MyTimer().schedule(() -> executeTimer(1), 1000);
 	}
 	
 	public void stopTimer() {
@@ -198,6 +202,10 @@ public class Turn {
 	
 	public void submitTurn() {
 		//TODO: submit to the database
+	}
+	
+	public int getMoment() {
+		return moment;
 	}
 	
 	public void addPlayerAnswer(PlayerAnswer answer) {

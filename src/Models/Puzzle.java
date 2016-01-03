@@ -66,4 +66,11 @@ public class Puzzle extends Round {
 		return playerAnswers;
 	}
 
+
+	@Override
+	public boolean isCompleted() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
 }

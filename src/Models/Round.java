@@ -60,8 +60,8 @@ public abstract class Round extends Observable {
 			 * AND the last turn has the state busy
 			 * RESULT: last turn continues
 			 */
-			if(Game.isCurrentPlayerTurn(round.getGame().getId()) && Game.isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() == TurnState.Busy) {
-				System.out.println("continue last turn as it was on TurnState.BUSY");
+			if(Game.isCurrentPlayerTurn(round.getGame().getId()) && Game.isCurrentUser(lastTurn.getPlayer().getName()) && (lastTurn.getTurnState() == TurnState.Busy || lastTurn.getTurnState() == TurnState.Bonus)) {
+				System.out.println("continue last turn as it was on TurnState.BUSY or TurnState.Bonus");
 				// MEEH ...
 				continueCurrentTurn = true;
 			}
@@ -178,6 +178,8 @@ public abstract class Round extends Observable {
 	public abstract void onSubmit(String answer);
 	
 	public abstract void onPass();
+	
+	public abstract boolean isCompleted();
 	
 	private void updateCurrentTurn(TurnState pass, int i) {
 		currentTurn.setTurnState(pass);

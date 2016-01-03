@@ -118,4 +118,10 @@ public class Framed extends Round {
 		return playerAnswers;
 	}
 
+	@Override
+	public boolean isCompleted() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

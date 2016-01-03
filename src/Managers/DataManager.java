@@ -10,10 +10,9 @@ import Models.*;
 
 public class DataManager {
 
-
-//	private static final String dbUrl = "jdbc:mysql://localhost/slimsteMens";
-//	private static final String username = "root";
-//	private static final String password = "root";
+/*	private static final String dbUrl = "jdbc:mysql://localhost/slimsteMens";
+	private static final String username = "root";
+	private static final String password = "root";*/
 	private static final String dbUrl = "jdbc:mysql://databases.aii.avans.nl:3306/spmol_db2";
 	private static final String username = "spmol";
 	private static final String password = "Ab12345";
@@ -315,6 +314,32 @@ public class DataManager {
 			} catch(SQLException ex) {} 
 		}
 		return games;
+	}
+	
+	public GameInfo getGameInfoForGame(int gameId) {
+		GameInfo gameInfo = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT * FROM spel WHERE spel_id = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, gameId);
+			data = preparedStatement.executeQuery();
+			while(data.next()) 
+				gameInfo = new GameInfo(data);
+		} catch (SQLException e) { }
+		finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		return gameInfo;
 	}
 	
 	public ArrayList<GameInfo> getAllGameInfosForPlayer(String name) {
@@ -715,6 +740,44 @@ public class DataManager {
 			} catch(SQLException ex) {} 
 		}
 		return turn;
+	}
+	
+	public ArrayList<TurnInfo> getTurnInfosForRound(Round round) {
+		ArrayList<TurnInfo> turnInfos = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT b.* FROM ronde AS r "
+					+ "INNER JOIN rondenaam AS rn "
+					+ "ON (SELECT COUNT(spel_id) FROM ronde "
+					+ "WHERE spel_id = r.spel_id AND r.rondenaam = rn.type) = rn.volgnr "
+					+ "INNER JOIN beurt AS b "
+					+ "ON b.spel_id = r.spel_id AND r.rondenaam = b.rondenaam "
+					+ "WHERE r.spel_id = ? AND r.rondenaam = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, round.getGame().getId());
+			preparedStatement.setString(2, round.getRoundType().getValue());
+			data = preparedStatement.executeQuery();
+			turnInfos = new ArrayList<>();
+			while (data.next())
+				turnInfos.add(new TurnInfo(data));
+		} catch (SQLException e) {
+			System.err.println("Error fetching game with id: " + round.getGame().getId() 
+			+" and round: " + round.getGame().getCurrentRound().getRoundType().getValue());
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		
+		return turnInfos;
 	}
 	
 	public boolean pushTurn(Turn turn) {
@@ -1167,6 +1230,110 @@ public class DataManager {
 					connection.close();
 			} catch(SQLException ex) {} 
 		}
+		return questions;
+	}
+	
+	public int getAmountUniqueSharedQuestionsForRound(Round round, Player player) {
+		int totalAmount = 0;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT COUNT(DISTINCT(d.vraag_id)) total FROM deelvraag d ";
+			sql += "JOIN beurt b ON d.beurt_id = b.beurt_id ";
+			sql += "WHERE b.speler = ? AND d.rondenaam = ? AND d.spel_id = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, player.getName());
+			preparedStatement.setString(2, round.getRoundType().getValue());
+			preparedStatement.setInt(3, round.getGame().getId());
+			data = preparedStatement.executeQuery();
+			if (data.next()) 
+				totalAmount = data.getInt("total");
+		} catch(SQLException e) {
+			System.err.println("Error while fetching unique sharedquestion for gameid: " + round.getGame().getId());
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		
+		return totalAmount;
+	}
+	
+	public int getCorrectAmountUniqueSharedQuestionsForRound(Round round, Player player) {
+		int totalAmount = 0;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT COUNT(DISTINCT(d.vraag_id)) total FROM deelvraag d ";
+			sql += "JOIN beurt b ON d.beurt_id = b.beurt_id ";
+			sql += "WHERE b.speler = ? AND d.rondenaam = ? AND d.spel_id = ? AND b.beurtstatus = 'goed'";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, player.getName());
+			preparedStatement.setString(2, round.getRoundType().getValue());
+			preparedStatement.setInt(3, round.getGame().getId());
+			data = preparedStatement.executeQuery();
+			if (data.next()) 
+				totalAmount = data.getInt("total");
+		} catch(SQLException e) {
+			System.err.println("Error while fetching unique sharedquestion for gameid: " + round.getGame().getId());
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		
+		return totalAmount;
+	}
+	
+	public ArrayList<Question>  getTheLeastAskedQuestions(Player player, Turn turn, int amountOfQuestion) {
+		ArrayList<Question> questions = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT v.* FROM vraag AS v "
+					+ "JOIN speler_vraag_aantal AS sva "
+					+ "ON v.vraag_id = sva.vraag_id AND v.rondenaam = sva.rondenaam "
+					+ "WHERE sva.speler = ? AND sva.rondenaam = ? "
+					+ "ORDER BY sva.aantal_keer_gebruikt LIMIT ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, player.getName());
+			preparedStatement.setString(2, turn.getRound().getRoundType().getValue());
+			preparedStatement.setInt(3, amountOfQuestion);
+			data = preparedStatement.executeQuery();
+			questions = new ArrayList<>();
+			while (data.next()) 
+				questions.add(new Question(data, turn));
+		} catch (SQLException e) {
+			System.err.println("Error fetching top " + amountOfQuestion + 
+					" for player: " + player.getName() + 
+					" and round: " + turn.getRound().getRoundType().getValue());
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		
 		return questions;
 	}
 	

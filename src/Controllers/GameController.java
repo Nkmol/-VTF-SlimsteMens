@@ -4,11 +4,9 @@ import javax.swing.JPanel;
 
 import Managers.DataManager;
 import Models.Final;
-import Models.Framed;
 import Models.Game;
 import Models.OpenDoor;
 import Models.PlayerAnswer;
-import Models.Puzzle;
 import Models.Round;
 import Models.RoundType;
 import Models.ThreeSixNine;
@@ -27,8 +25,8 @@ public class GameController {
 		view = new GamePanel();
 		this.parent = parent;
 		
-		ChatController chatcontroller = new ChatController(model);
-		view.setChatPanel(chatcontroller.returnView());
+/*		ChatController chatcontroller = new ChatController(model);
+		view.setChatPanel(chatcontroller.returnView());*/
 		
 		model.addObserver(view);
 		model.setController(this);
@@ -69,7 +67,6 @@ public class GameController {
 		// TODO switch om terug naar round.getRoundType()
 
 		switch(round.getRoundType()) {
-		//switch(RoundType.Final) {
 		case ThreeSixNine:
 			return new ThreeSixNineController(model, round);
 		case OpenDoor:
@@ -78,8 +75,6 @@ public class GameController {
 			return new FinalController(model, round);
 		case Framed:
 			return new FramedController(model, round);
-		case Puzzle:
-			return new PuzzleController(model, round);
 		default:
 			return null;
 		}
@@ -89,11 +84,13 @@ public class GameController {
 		
 		Round round = DataManager.getInstance().getLastRoundForGame(model);
 		
+		// TODO Remove this as it's for testing purposes
+		//round = new Final(model);
+		
 		if(round == null) {	
-			//round = new ThreeSixNine(model);
-			//round = new Final(model);
-			//round = new Framed(model);
-			round = new Puzzle(model);
+			round = new ThreeSixNine(model);
+			
+//			round = new Final(model);
 //			round = new OpenDoor(model); // Add 369 manually to the database in table ronde
 		}
 
