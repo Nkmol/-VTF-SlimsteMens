@@ -109,10 +109,17 @@ public class ThreeSixNine extends Round {
 
 	@Override
 	public boolean isCompleted() {
+		boolean isCompleted = false;
+		
 		int amountUniqueSharedQuestions = DataManager.getInstance().getAmountUniqueSharedQuestionsForRound(this, DataManager.getInstance().getCurrentUser());
 		if(amountUniqueSharedQuestions >= AMOUNT_QUESTIONS)
-			return true;
+			isCompleted = true;
 		else
-			return false;
+			isCompleted = false;
+		
+		if(isCompleted)
+			game.getController().loadNextRound(roundType);
+		
+		return isCompleted;
 	}
 }
