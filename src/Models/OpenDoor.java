@@ -73,6 +73,8 @@ public class OpenDoor extends Round {
 			currentTurn.setSecondsEarned(secondsEarned);
 			DataManager.getInstance().updateTurn(currentTurn);
 			amountCorrectAnswers = 0;
+			if (isCompleted())
+				game.getController().loadNextRound(roundType);
 			pushAnswers(playerAnswers);
 			if (currentTurn.getSkippedQuestion() == null)
 				getGame().getController().endTurn();
@@ -88,6 +90,8 @@ public class OpenDoor extends Round {
 		currentTurn.setTurnState(TurnState.Pass);
 		DataManager.getInstance().updateTurn(currentTurn);
 		pushAnswers(playerAnswers);
+		if (isCompleted()) 
+			game.getController().loadNextRound(roundType);
 		if (currentTurn.getSkippedQuestion() == null)
 			getGame().getController().endTurn();
 		else 
@@ -96,6 +100,15 @@ public class OpenDoor extends Round {
 	
 	public ArrayList<PlayerAnswer> getSubmittedAnswers() {
 		return playerAnswers;
+	}
+	
+	public boolean thereAreBusyTurns(ArrayList<TurnInfo> turnInfos) {
+		ArrayList<TurnInfo> busyTurnInfos = new ArrayList<>();
+		for (TurnInfo turnInfo : turnInfos) {
+			if (turnInfo.getTurnState() == TurnState.Busy)
+				busyTurnInfos.add(turnInfo);
+		}
+		return busyTurnInfos.size() > 0;
 	}
 
 	@Override
@@ -106,7 +119,7 @@ public class OpenDoor extends Round {
 		ArrayList<TurnInfo> turnInfos = DataManager.getInstance().getTurnInfosForRound(this);		
 		
 		if (turnInfos != null && turnInfos.size() >= 2) {
-			if (turnInfos.size() >= 4)
+			if (turnInfos.size() >= 4 && !thereAreBusyTurns(turnInfos))
 				isCompleted = true;
 			if (turnInfos.size() == 3) {
 				TurnState firstTurnState = turnInfos.get(0).getTurnState();
@@ -118,7 +131,6 @@ public class OpenDoor extends Round {
 				if (turnInfos.get(0).getTurnState() == TurnState.Correct && turnInfos.get(1).getTurnState() == TurnState.Correct) 
 					isCompleted =  true;
 			}
-			
 		}
 		
 		if (isCompleted)
