@@ -1,30 +1,41 @@
 package View;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.JLabel;
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.border.EmptyBorder;
 
+import Managers.DataManager;
+import Models.Answer;
 import Models.Framed;
+import Models.OpenDoor;
+import Models.PlayerAnswer;
 import Models.Question;
+import Models.RoundType;
 import Models.Turn;
+import Utilities.StringUtility;
 
 public class FramedView extends JPanel implements Observer{
 
-	JPanel questionView;
-	JPanel answersView;
-	JPanel container;
-	
-	JTextArea questionTextArea;
+	private JPanel container;
+	private JTextArea questionTextArea;
+	private FramedAnswerView[][] framedAnswerViews;
+	private int index;
+	private int currentQuestionId = 0;
 	
 	public FramedView(Framed currentRound) {
 		createRoundFourPanel();
+		
+		index = 0;
 	}
 	
 	private void createRoundFourPanel() {
@@ -32,11 +43,14 @@ public class FramedView extends JPanel implements Observer{
 		
 		container = new JPanel();
 		container.setLayout(new BorderLayout());
+		container.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
 		add(container, BorderLayout.CENTER);
 		
 		JPanel questionView = new JPanel();
 		questionView.setLayout(new BorderLayout());
+		questionView.setBackground(new Color(193,212,255));
+		questionView.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		
 		JPanel answersView = new JPanel();
 		answersView.setLayout(new GridBagLayout());
@@ -50,24 +64,22 @@ public class FramedView extends JPanel implements Observer{
 		
 		questionView.add(questionTextArea, BorderLayout.CENTER);
 		
-		for(int x = 0; x < 4; x+=2) {
+		framedAnswerViews = new FramedAnswerView[2][5];
+		
+		for(int x = 0; x < 2; x++) {
 			for(int y = 0; y < 5; y++) {
 				
-				JLabel points  = new JLabel(x + " 10");
-				GridBagConstraints c = new GridBagConstraints();
-				c.fill = GridBagConstraints.HORIZONTAL;
-				c.weightx = 0.5;
-				c.gridx = x;
-				c.gridy = y;
-				answersView.add(points, c);
+				FramedAnswerView framedAnswerView = new FramedAnswerView("00", "-");
+				framedAnswerViews[x][y] = framedAnswerView;
 				
-				JLabel answer  = new JLabel(y + " answer");
+				GridBagConstraints c = new GridBagConstraints();
 				c = new GridBagConstraints();
 				c.fill = GridBagConstraints.HORIZONTAL;
 				c.weightx = 2;
-				c.gridx = x + 1;
+				c.gridx = x;
 				c.gridy = y;
-				answersView.add(answer, c);
+				
+				answersView.add(framedAnswerView, c);
 			}
 		}
 	}
@@ -82,15 +94,89 @@ public class FramedView extends JPanel implements Observer{
 	    return textArea;
 	}
 	
+	private void addAnswer(Answer answer, String points) {
+		int x;
+		int y;
+		
+		if(index < 5) {
+			x = 0;
+			y = index;
+		}
+		else {
+			x = 1;
+			y = index - 5;
+		}
+		
+		framedAnswerViews[x][y].setAnswer(answer);
+		framedAnswerViews[x][y].setPoints(points);
+		
+		index++;
+		
+	}
+	
+	private void addAnswerArray(ArrayList<Answer> answers) {
+		for(int i = 0; i < answers.size(); i++) {
+			addAnswer(answers.get(i), "20");
+		}
+	}
+	
+	private void checkAnswer(ArrayList<PlayerAnswer> submittedAnswers, Framed openDoor) {
+		for (PlayerAnswer submittedAnswer : submittedAnswers) {
+			for (FramedAnswerView[] framedAnswerViewCollection : framedAnswerViews) {
+				for (FramedAnswerView framedAnswerView : framedAnswerViewCollection) {
+					if (isPlayerAnswerCorrect(submittedAnswer, framedAnswerView.getAnswer())) {
+						framedAnswerView.revealAnswer();
+					}
+				}
+			}
+		}
+	}
+	
+	private boolean isPlayerAnswerCorrect(PlayerAnswer playerAnswer, Answer answer) {
+		if (StringUtility.CalculateMatchPercentage(playerAnswer.getAnswer(), answer.getAnswer()) >=  80)
+			return true;
+
+		for (String alternative : answer.getAlternatives())
+			if (StringUtility.CalculateMatchPercentage(playerAnswer.getAnswer(), alternative) >=  80)
+				return true;
+
+		return false;
+	}
+	
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
 		Framed framed = (Framed)arg;
 		Turn currentTurn = framed.getCurrentTurn();
-		Question currentQuestion = currentTurn.getCurrentQuestion();
+		Question currentQuestion = null;
+		
+		if (currentTurn.getCurrentQuestion() != null) {
+			currentQuestion = currentTurn.getCurrentQuestion();
+			System.out.println("question: " + currentQuestion.getId());
+			
+			ArrayList<PlayerAnswer> playerAnswers = DataManager.getInstance().getPlayerAnswers(framed.getGame().getId(), RoundType.Framed, framed.getCurrentTurn().getTurnId());
+			checkAnswer(playerAnswers, framed);
+		}
 		
 		if (currentQuestion != null) 
 			questionTextArea.setText(currentQuestion.getText());
+			
+		
+		if (currentQuestion != null) {
+			if(currentQuestionId != currentQuestion.getId()) {
+				questionTextArea.setText(currentQuestion.getText());
+				ArrayList<Answer> answers = currentQuestion.getAnswers();
+				addAnswerArray(answers);
+				currentQuestionId = currentQuestion.getId();
+				index = 0;
+			}
+		}
+		
+		ArrayList<PlayerAnswer> submittedAnswers = framed.getSubmittedAnswers();
+		
+		if (submittedAnswers != null && submittedAnswers.size() > 0) {
+			checkAnswer(submittedAnswers, framed);
+		}
 		
 	}
 }
