@@ -26,8 +26,12 @@ public abstract class Round extends Observable {
 		//questions =  DataManager.getInstance().getQuestions(this);
 		// We've new round so we need to push id to the database immediately
 		// So we can init the current turn and push it to this round
-		DataManager.getInstance().pushRound(this);  
-		currentTurn = initCurrentTurn(this);
+		if (game.getGameState() != GameState.Finished) {
+			DataManager.getInstance().pushRound(this);  
+			currentTurn = initCurrentTurn(this);	
+		} else {
+			currentTurn = null;
+		}
 	}
 	
 	public Round(ResultSet data, Game game) {
@@ -38,17 +42,22 @@ public abstract class Round extends Observable {
 			this.game = game;
 			//turns = DataManager.getInstance().getTurns(this);
 			//currentTurn = DataManager.getInstance().getLastTurnForGame(game.getId());
-			currentTurn = initCurrentTurn(this);
+			if (game.getGameState() != GameState.Finished) {
+				DataManager.getInstance().pushRound(this);  
+				currentTurn = initCurrentTurn(this);
+				currentTurn.startTimer();
+			} else {
+				currentTurn = null;
+			}
 		} catch (SQLException e) {
 			System.err.println("Error initializing round");
 		}
-
-		currentTurn.startTimer();
 	}
 	
 	//Generating beginning of turn
 	//TODO add other round func
 	public Turn initCurrentTurn(Round round) {
+		
 		lastTurn = DataManager.getInstance().getLastTurnForGame(round);
 		Turn turn = lastTurn;
 		

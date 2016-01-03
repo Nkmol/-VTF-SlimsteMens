@@ -19,12 +19,14 @@ public class Puzzle extends Round {
 	
 	public Puzzle(Game game) {
 		super(game, RoundType.Puzzle);	
-		initNewTurn();
+		if (game.getGameState() != GameState.Finished)
+			initNewTurn();
 	}
 	
 	public Puzzle(ResultSet data, Game game) {
 		super(data,game);
-		initNewTurn();
+		if (game.getGameState() != GameState.Finished)
+			initNewTurn();
 	}
 	
 	public void initNewTurn() {
