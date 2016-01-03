@@ -82,4 +82,10 @@ public class Final extends Round {
 		
 	}
 
+	@Override
+	public boolean isCompleted() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

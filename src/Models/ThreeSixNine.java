@@ -96,4 +96,10 @@ public class ThreeSixNine extends Round {
 			updateView();
 		}
 	}
+
+	@Override
+	public boolean isCompleted() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
