@@ -56,7 +56,7 @@ public class Question {
 	
 	public boolean isPlayerAnswerCorrect(PlayerAnswer playerAnswer) {
 		
-		for(Answer answer : answers){
+		for(Answer answer : answers) {
 			
 			if (StringUtility.CalculateMatchPercentage(playerAnswer.getAnswer(), answer.getAnswer()) >=  MinimumAnswerPercentage)
 				return true;
@@ -70,6 +70,8 @@ public class Question {
 	}
 	
 	public boolean isPlayerAnswerCorrect(String answerString) {
+		answerString = answerString.toLowerCase();
+		
 		for(Answer answer : answers){
 			
 			if (StringUtility.CalculateMatchPercentage(answerString, answer.getAnswer()) >=  MinimumAnswerPercentage)
