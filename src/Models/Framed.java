@@ -212,7 +212,11 @@ public class Framed extends Round {
 				DataManager.getInstance().updateTurn(currentTurn);
 				DataManager.getInstance().pushPlayerAnswer(playerAnswer);
 				if (isCompleted()) {
-					getGame().getController().loadLastRound();
+					getGame().getController().endTurn();
+					getGame().getController().loadNextRound(this.roundType);
+				}
+				else {
+					updateView();
 				}
 			}
 			else {
@@ -221,7 +225,8 @@ public class Framed extends Round {
 				DataManager.getInstance().updateTurn(currentTurn);
 				amountCorrectAnswers = 0;
 				if (isCompleted()) {
-					getGame().getController().loadLastRound();
+					getGame().getController().endTurn();
+					getGame().getController().loadNextRound(this.roundType);
 				}
 				else {
 					getGame().getController().endTurn();
@@ -230,7 +235,7 @@ public class Framed extends Round {
 			}
 		}		
 			
-		updateView();
+
 
 		/*
 		if (amountCorrectAnswers == AMOUNT_ANSWERS) {
@@ -259,16 +264,11 @@ public class Framed extends Round {
 
 	@Override
 	public void onPass() {
-		//TODO: AFMAKEN
 		currentTurn.setTurnState(TurnState.Pass);
 		DataManager.getInstance().updateTurn(currentTurn);
-		if (currentTurn.getSkippedQuestion() == null)
-			getGame().getController().endTurn();
-		else 
-			initNewTurn();
-		
 		if (isCompleted()) {
-			getGame().getController().loadLastRound();
+			getGame().getController().endTurn();
+			getGame().getController().loadNextRound(this.roundType);
 		}
 		else {
 			getGame().getController().endTurn();

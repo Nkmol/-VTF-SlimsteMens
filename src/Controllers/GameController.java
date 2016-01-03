@@ -93,7 +93,7 @@ public class GameController {
 		Round round = DataManager.getInstance().getLastRoundForGame(model);
 		if (round != null) {
 			if (round.isCompleted()) {
-				endTurn(); //Should not happen when it actually is players turn
+				//endTurn(); //Should not happen when it actually is players turn
 				loadNextRound(round.getRoundType());
 			}
 		}
