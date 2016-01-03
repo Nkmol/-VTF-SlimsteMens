@@ -75,6 +75,8 @@ public class GameController {
 			return new FinalController(model, round);
 		case Framed:
 			return new FramedController(model, round);
+		case Puzzle:
+			return new PuzzleController(model, round);
 		default:
 			return null;
 		}

@@ -83,6 +83,13 @@ public class Question {
 		return false;
 	}
 	
+	public boolean isPlayerAnswerCorrectPuzzle(String answerString) {
+		if (StringUtility.CalculateMatchPercentage(answerString, text) >=  MinimumAnswerPercentage)
+			return true;
+		else 
+			return false;
+	}
+	
 	public int getId() {
 		return id;
 	}

@@ -19,7 +19,6 @@ public class Game extends Observable {
 	private static final int MinimumAnswerPercentage = 80,
 							 BeginAmountTime = 100;
 	
-	
 	private int id;
 	private Player player1;
 	private Player player2; 

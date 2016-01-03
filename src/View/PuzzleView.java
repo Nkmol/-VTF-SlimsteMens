@@ -2,6 +2,7 @@ package View;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import Utilities.StringUtility;
 
 public class PuzzleView extends JPanel implements Observer {
 
+	private final Dimension d = new Dimension(4, 3);
 	private JPanel container;
 	private JTextArea questionTextArea;
 	private FramedAnswerView[][] framedAnswerViews;
@@ -60,8 +62,8 @@ public class PuzzleView extends JPanel implements Observer {
 		
 		ArrayList<PuzzleQuestionView> questionPanels = new ArrayList<PuzzleQuestionView>();
 		
-		for(int x = 0; x < 4; x++) {
-			for(int y = 0; y < 3; y++) {
+		for(int x = 0; x < d.width; x++) {
+			for(int y = 0; y < d.height; y++) {
 				
 				PuzzleQuestionView questionPanel = new PuzzleQuestionView("Vraag");
 				
@@ -77,7 +79,7 @@ public class PuzzleView extends JPanel implements Observer {
 			}
 		}
 		
-		PuzzleQuestionView[][] answerQuestions = new PuzzleQuestionView[3][4];
+		PuzzleQuestionView[][] answerQuestions = new PuzzleQuestionView[d.height][d.width];
 		
 		int temp = questionPanels.size();
 		
@@ -98,11 +100,11 @@ public class PuzzleView extends JPanel implements Observer {
 			}
 		}
 		
-		puzzleAnswerViews = new PuzzleAnswerView[3];
+		puzzleAnswerViews = new PuzzleAnswerView[Puzzle.AMOUNT_QUESTIONS];
 		
-		for(int y = 0; y < 3; y++) {
+		for(int y = 0; y < d.height; y++) {
 			
-			PuzzleAnswerView puzzleAnswerView = new PuzzleAnswerView("00", "Antwoord");
+			PuzzleAnswerView puzzleAnswerView = new PuzzleAnswerView(""+Puzzle.CORRECT_POINTS, "-");
 			puzzleAnswerView.setQuestionViews(answerQuestions[y]);
 			puzzleAnswerViews[y] = puzzleAnswerView;
 			
@@ -117,7 +119,7 @@ public class PuzzleView extends JPanel implements Observer {
 		}
 	}
 	
-	private void addAnswers(Answer[] answers, Question question, Color color) {
+	private void addAnswers(ArrayList answers, Question question, Color color) {
 		puzzleAnswerViews[index].setAnswer(question);
 		puzzleAnswerViews[index].fillQuestionViews(answers, color);
 		index++;
@@ -131,10 +133,14 @@ public class PuzzleView extends JPanel implements Observer {
 		}
 	}
 	
-	
 	@Override
 	public void update(Observable o, Object arg) {
 		Puzzle puzzle = (Puzzle)arg;
 		
+		ArrayList<Question> questions = puzzle.getQuestions();
+		
+		for(Question question : questions)
+			addAnswers(question.getAnswers(), question, Color.red);
+		index = 0;
 	}
 }

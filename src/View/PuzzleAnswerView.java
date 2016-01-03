@@ -3,6 +3,7 @@ package View;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -60,9 +61,9 @@ public class PuzzleAnswerView extends JPanel{
 		this.questionViews = questionViews;
 	}
 	
-	public void fillQuestionViews(Answer[] questions, Color color) {
-		for(int i = 0; i < questions.length; i++) {
-			questionViews[i].setQuestion(questions[i]);
+	public void fillQuestionViews(ArrayList<Answer> questions, Color color) {
+		for(int i = 0; i < questions.size(); i++) {
+			questionViews[i].setQuestion(questions.get(i));
 		}
 		
 		this.color = color;
