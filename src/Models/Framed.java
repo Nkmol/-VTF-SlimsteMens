@@ -37,11 +37,20 @@ public class Framed extends Round {
 		DataManager.getInstance().pushTurn(currentTurn);
 		updateView();
 	}
+	
+	public void pushSharedQuestion() {
+		if (lastTurn == null) {
+			SharedQuestion sharedQuestion = new SharedQuestion(currentTurn.getCurrentQuestion(), 1);
+		}
+		else {
+			SharedQuestion sharedQuestion = new SharedQuestion(currentTurn.getCurrentQuestion(), lastTurn.getSharedQuestion().getIndexNumber() + 1);
+		}
+	}
 
 	@Override
 	public void onSubmit(String answer) {
 		// TODO Auto-generated method stub
-		System.out.println("your answers is " + answer);
+		System.out.println("your answer is " + answer);
 		if (currentTurn.getCurrentQuestion().isPlayerAnswerCorrect(answer)) 
 			Turn.pushTurn(currentTurn, TurnState.Correct, answer);
 		else 
@@ -64,11 +73,23 @@ public class Framed extends Round {
 			if (currentQuestion.isPlayerAnswerCorrect(answer)) {
 				amountCorrectAnswers++; 
 				secondsEarned+=POINTS_QUESTION;
+				currentTurn.setTurnState(TurnState.Correct);
+				currentTurn.setSecondsEarned(secondsEarned);
+				DataManager.getInstance().updateTurn(currentTurn);
+				getGame().getController().endTurn();
+				
+			}
+			else {
+				currentTurn.setTurnState(TurnState.Wrong);
+				currentTurn.setSecondsEarned(secondsEarned);
+				DataManager.getInstance().updateTurn(currentTurn);
+				amountCorrectAnswers = 0;
+				getGame().getController().endTurn();
 			}
 		}		
 			
 		updateView();
-		
+
 		if (amountCorrectAnswers == AMOUNT_ANSWERS) {
 			currentTurn.setTurnState(TurnState.Correct);
 			currentTurn.setSecondsEarned(secondsEarned);

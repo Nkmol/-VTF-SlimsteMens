@@ -8,6 +8,7 @@ import Models.Framed;
 import Models.Game;
 import Models.OpenDoor;
 import Models.PlayerAnswer;
+import Models.Puzzle;
 import Models.Round;
 import Models.RoundType;
 import Models.ThreeSixNine;
@@ -77,6 +78,8 @@ public class GameController {
 			return new FinalController(model, round);
 		case Framed:
 			return new FramedController(model, round);
+		case Puzzle:
+			return new PuzzleController(model, round);
 		default:
 			return null;
 		}
@@ -89,7 +92,8 @@ public class GameController {
 		if(round == null) {	
 			//round = new ThreeSixNine(model);
 			//round = new Final(model);
-			round = new Framed(model);
+			//round = new Framed(model);
+			round = new Puzzle(model);
 //			round = new OpenDoor(model); // Add 369 manually to the database in table ronde
 		}
 

@@ -14,11 +14,13 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 
+import Managers.DataManager;
 import Models.Answer;
 import Models.Framed;
 import Models.OpenDoor;
 import Models.PlayerAnswer;
 import Models.Question;
+import Models.RoundType;
 import Models.Turn;
 import Utilities.StringUtility;
 
@@ -151,6 +153,9 @@ public class FramedView extends JPanel implements Observer{
 		if (currentTurn.getCurrentQuestion() != null) {
 			currentQuestion = currentTurn.getCurrentQuestion();
 			System.out.println("question: " + currentQuestion.getId());
+			
+			ArrayList<PlayerAnswer> playerAnswers = DataManager.getInstance().getPlayerAnswers(framed.getGame().getId(), RoundType.Framed, framed.getCurrentTurn().getTurnId());
+			checkAnswer(playerAnswers, framed);
 		}
 		
 		if (currentQuestion != null) 

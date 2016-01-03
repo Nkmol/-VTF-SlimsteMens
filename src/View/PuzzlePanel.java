@@ -13,6 +13,7 @@ import java.awt.GridLayout;
 
 @SuppressWarnings("serial")
 public class PuzzlePanel extends JPanel {
+	/*
 	private JLabel[] lblQuestionPositions;
 	private JLabel[] lblQuestion;
 	
@@ -59,4 +60,5 @@ public class PuzzlePanel extends JPanel {
 		revalidate();
 		repaint();
 	}
+	*/
 }
