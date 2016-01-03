@@ -80,6 +80,12 @@ public class Turn {
 		}
 	}
 	
+	public int getTotalActualTime() {
+		return Game.BeginAmountTime - 
+				DataManager.getInstance().getTotalSecondsEarnedInAGame(parent.getGame().getId(), player.getName()) + getSecondsEarned() 
+				- DataManager.getInstance().getTotalSecFinaleAf(this);
+	}
+	
 	public void startTurn() {
 		playerAnswers = new ArrayList<PlayerAnswer>();
 		sharedQuestions = new ArrayList<SharedQuestion>();
