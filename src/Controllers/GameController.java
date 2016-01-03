@@ -89,16 +89,10 @@ public class GameController {
 	public void loadLastRound() {
 		
 		Round round = DataManager.getInstance().getLastRoundForGame(model);
-		
-<<<<<<< HEAD
-		// TODO Remove this as it's for testing purposes
-		//round = new Final(model);
-=======
 		if (round != null) {
 			if (round.isCompleted())
 				loadNextRound(round.getRoundType());
 		}
->>>>>>> 41c520f1b8440696d1d75b05c3836fb6dc509a26
 		
 		if(round == null) {	
 			round = new ThreeSixNine(model);
