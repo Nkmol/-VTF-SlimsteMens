@@ -3,7 +3,6 @@ package Models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import Managers.DataManager;
 import Utilities.StringUtility;
 
@@ -98,6 +97,32 @@ public class Question {
 				return true;
 			}
 		return false;
+	}
+
+	public static boolean isPlayerAnswerCorrect(String answerString, ArrayList<Answer> answers) {
+		for(Answer answer : answers){
+			
+			if (StringUtility.CalculateMatchPercentage(answerString, answer.getAnswer()) >=  MinimumAnswerPercentage)
+				return true;
+			
+			for (String alternative : answer.getAlternatives())
+				if (StringUtility.CalculateMatchPercentage(answerString, alternative) >=  MinimumAnswerPercentage)
+					return true;
+		}
+		
+		return false;
+	}
+	
+	public Answer isAnswerCorrect(String answerString) {
+		for(Answer answer : answers){
+			if (StringUtility.CalculateMatchPercentage(answerString, answer.getAnswer()) >=  MinimumAnswerPercentage)
+				return answer;
+
+			for (String alternative : answer.getAlternatives())
+				if (StringUtility.CalculateMatchPercentage(answerString, alternative) >=  MinimumAnswerPercentage)
+					return answer;
+		}
+		return null;
 	}
 	
 	public int getId() {
