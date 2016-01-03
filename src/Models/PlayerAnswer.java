@@ -53,7 +53,7 @@ public class PlayerAnswer {
 	}
 
 	public String getAnswer() {
-		return answer;
+		return answer.toLowerCase();
 	}
 
 	public int getMoment() {

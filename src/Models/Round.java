@@ -42,8 +42,6 @@ public abstract class Round extends Observable {
 		} catch (SQLException e) {
 			System.err.println("Error initializing round");
 		}
-
-		currentTurn.startTimer();
 	}
 	
 	//Generating beginning of turn
@@ -51,6 +49,12 @@ public abstract class Round extends Observable {
 	public Turn initCurrentTurn(Round round) {
 		lastTurn = DataManager.getInstance().getLastTurnForGame(round);
 		Turn turn = lastTurn;
+		
+		Player player = null;
+		if(round.getRoundType() == RoundType.Final)
+			player = round.getGame().getLowestScorePlayer();
+		else
+			player = DataManager.getInstance().getCurrentUser();
 		
 		// Make sure we have a last turn
 		if (lastTurn != null) {
@@ -72,7 +76,7 @@ public abstract class Round extends Observable {
 			 */
 			else if(Game.isCurrentPlayerTurn(round.getGame().getId()) && Game.isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() != TurnState.Busy) {
 				System.out.println("continue answering");
-				turn = new Turn( DataManager.getInstance().getCurrentUser(), round);
+				turn = new Turn(player, round);
 				turn.setTurnId(lastTurn.getTurnId()+1);
 				turn.setSkippedQuestion(null);
 				turn.setTurnState(TurnState.Busy);
@@ -84,7 +88,7 @@ public abstract class Round extends Observable {
 			 */
 			else if(Game.isCurrentPlayerTurn(round.getGame().getId()) && !Game.isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() != TurnState.Busy) {
 				System.out.print("Other player ended turn ");
-				turn = new Turn(DataManager.getInstance().getCurrentUser(), round);
+				turn = new Turn(player, round);
 				
 				turn.setTurnId(lastTurn.getTurnId() + 1);
 				turn.setTurnState(TurnState.Busy);
@@ -98,7 +102,7 @@ public abstract class Round extends Observable {
 			/*
 			 * We don't have a turn so we need to push a new turn to the database
 			 */
-			turn = new Turn(DataManager.getInstance().getCurrentUser(), this);
+			turn = new Turn(game.getLowestScorePlayer(), this);
 			turn.setTurnState(TurnState.Busy);
 			turn.setTurnId(1);
 
@@ -107,11 +111,6 @@ public abstract class Round extends Observable {
 		
 		return turn;
 	}
-	
-/*	public void startRound() {
-		turns = new ArrayList<Turn>();
-		questions = new ArrayList<Question>();
-	}*/
 	
 	public Game getGame() {
 		return game;

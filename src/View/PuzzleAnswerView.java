@@ -3,6 +3,7 @@ package View;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -12,6 +13,9 @@ import Models.Answer;
 import Models.Question;
 
 public class PuzzleAnswerView extends JPanel{
+	private String defaultPointsText,
+				   defaultAnswerText;
+	
 	private JPanel pointsPanel;
 	private JPanel answerPanel;
 	
@@ -26,6 +30,8 @@ public class PuzzleAnswerView extends JPanel{
 	private Color color;
 	
 	public PuzzleAnswerView(String pointsText, String answerText) {
+		defaultAnswerText = answerText;
+		defaultPointsText = pointsText;
 		
 		pointsPanel = new JPanel();
 		pointsPanel.setBackground(new Color(135,171,255));
@@ -60,9 +66,9 @@ public class PuzzleAnswerView extends JPanel{
 		this.questionViews = questionViews;
 	}
 	
-	public void fillQuestionViews(Answer[] questions, Color color) {
-		for(int i = 0; i < questions.length; i++) {
-			questionViews[i].setQuestion(questions[i]);
+	public void fillQuestionViews(ArrayList<Answer> questions, Color color) {
+		for(int i = 0; i < questions.size(); i++) {
+			questionViews[i].setQuestion(questions.get(i));
 		}
 		
 		this.color = color;
@@ -81,5 +87,10 @@ public class PuzzleAnswerView extends JPanel{
 	public void revealAnswer() {
 		pointsLabel.setText(correctPoints);
 		answerLabel.setText(correctAnswer.getText());
+	}
+	
+	public void hideAnswer() {
+		pointsLabel.setText(defaultPointsText);
+		answerLabel.setText(defaultAnswerText);
 	}
 }

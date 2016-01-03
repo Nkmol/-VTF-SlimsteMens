@@ -1028,8 +1028,8 @@ public class DataManager {
 		return turnBefore;
 	}
 	
-	//TODO do i ever need to push all shared questions?
-	public boolean pushSharedQuestions(Turn turn) throws SQLException {
+
+	public boolean pushSharedQuestions(Turn turn) {
 		boolean pushed = false;
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;
@@ -1044,7 +1044,8 @@ public class DataManager {
 					preparedStatement.setInt(3, sharedQuestion.getTurn().getRound().getCurrentTurn().getTurnId());
 					preparedStatement.setInt(4, sharedQuestion.getIndexNumber());
 					preparedStatement.setInt(5, sharedQuestion.getId());
-					//preparedStatement.setString(6, sharedQuestion.getAnswer());
+					preparedStatement.setNull(6, Types.CHAR);
+					
 					if (preparedStatement.executeUpdate() > 0) {
 						pushed = true;
 						connection.commit();
@@ -1052,7 +1053,7 @@ public class DataManager {
 				}
 			}
 		}catch (SQLException e) {
-			// TODO: handle exception
+			System.err.println(e.getMessage());
 		} finally {
 			try {
 				if (preparedStatement != null) 
@@ -1266,7 +1267,7 @@ public class DataManager {
 	}
 	
 	//TODO does this need to be an Array?
-	public ArrayList<SharedQuestion> getSharedQuestions(Round round, int turnId) {
+	public ArrayList<SharedQuestion> getSharedQuestions(Turn turn) {
 		ArrayList<SharedQuestion> sharedQuestions = null;
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;
@@ -1275,13 +1276,13 @@ public class DataManager {
 			
 			String sql = "SELECT * FROM deelvraag WHERE spel_id = ? AND rondenaam = ? AND beurt_id = ?";
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, round.getGame().getId());
-			preparedStatement.setString(2, round.getRoundType().getValue());
-			preparedStatement.setInt(3, turnId);
+			preparedStatement.setInt(1, turn.getRound().getGame().getId());
+			preparedStatement.setString(2, turn.getRound().getRoundType().getValue());
+			preparedStatement.setInt(3, turn.getTurnId());
 			data = preparedStatement.executeQuery();
 			sharedQuestions = new ArrayList<>();
 			while (data.next())
-				sharedQuestions.add(new SharedQuestion(data, round.getCurrentTurn()));
+				sharedQuestions.add(new SharedQuestion(data, turn));
 		} catch (SQLException e) {
 			System.err.println("Error fetching shared questions");
 			System.err.println(e.getMessage());

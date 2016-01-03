@@ -28,6 +28,7 @@ public class ThreeSixNine extends Round {
 	}
 	
 	public void initNewTurn() {
+		currentTurn.startTimer();
 		amountCorrectQuestions = DataManager.getInstance().getCorrectAmountUniqueSharedQuestionsForRound(this, DataManager.getInstance().getCurrentUser());
 		System.out.println(amountCorrectQuestions);
 		if(amountCorrectQuestions > 0 && amountCorrectQuestions % BONUS_ITERATION == 0)
@@ -88,13 +89,19 @@ public class ThreeSixNine extends Round {
 			turnState = TurnState.Wrong;
 
 		Turn.pushTurn(currentTurn, turnState, answer);
-		returnScreenCheck(turnState);
+		if(!isCompleted())
+			returnScreenCheck(TurnState.Pass);
+		else
+			game.getController().loadNextRound(roundType);
 	}
 
 	@Override
 	public void onPass() {
 		Turn.pushTurn(getCurrentTurn(), TurnState.Pass, null);
-		returnScreenCheck(TurnState.Pass);
+		if(!isCompleted())
+			returnScreenCheck(TurnState.Pass);
+		else
+			game.getController().loadNextRound(roundType);
 	}
 	
 	public void returnScreenCheck(TurnState turnState) {
@@ -109,10 +116,6 @@ public class ThreeSixNine extends Round {
 
 	@Override
 	public boolean isCompleted() {
-		int amountUniqueSharedQuestions = DataManager.getInstance().getAmountUniqueSharedQuestionsForRound(this, DataManager.getInstance().getCurrentUser());
-		if(amountUniqueSharedQuestions >= AMOUNT_QUESTIONS)
-			return true;
-		else
-			return false;
+		return DataManager.getInstance().getAmountUniqueSharedQuestionsForRound(this, DataManager.getInstance().getCurrentUser()) >= AMOUNT_QUESTIONS;
 	}
 }
