@@ -133,4 +133,10 @@ public class Framed extends Round {
 		return false;
 	}
 
+	@Override
+	public boolean isCompleted() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
