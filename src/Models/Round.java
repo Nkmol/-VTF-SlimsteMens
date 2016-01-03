@@ -50,6 +50,12 @@ public abstract class Round extends Observable {
 		lastTurn = DataManager.getInstance().getLastTurnForGame(round);
 		Turn turn = lastTurn;
 		
+		Player player = null;
+		if(round.getRoundType() == RoundType.Final)
+			player = round.getGame().getLowestScorePlayer();
+		else
+			player = DataManager.getInstance().getCurrentUser();
+		
 		// Make sure we have a last turn
 		if (lastTurn != null) {
 			/*
@@ -70,7 +76,7 @@ public abstract class Round extends Observable {
 			 */
 			else if(Game.isCurrentPlayerTurn(round.getGame().getId()) && Game.isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() != TurnState.Busy) {
 				System.out.println("continue answering");
-				turn = new Turn( DataManager.getInstance().getCurrentUser(), round);
+				turn = new Turn(player, round);
 				turn.setTurnId(lastTurn.getTurnId()+1);
 				turn.setSkippedQuestion(null);
 				turn.setTurnState(TurnState.Busy);
@@ -82,7 +88,7 @@ public abstract class Round extends Observable {
 			 */
 			else if(Game.isCurrentPlayerTurn(round.getGame().getId()) && !Game.isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() != TurnState.Busy) {
 				System.out.print("Other player ended turn ");
-				turn = new Turn(DataManager.getInstance().getCurrentUser(), round);
+				turn = new Turn(player, round);
 				
 				turn.setTurnId(lastTurn.getTurnId() + 1);
 				turn.setTurnState(TurnState.Busy);

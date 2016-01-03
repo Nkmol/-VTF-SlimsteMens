@@ -92,15 +92,19 @@ public class Puzzle extends Round {
 		//TODO ELSE - wrong answer (?)
 				
 		if(currentTurn.getAmountAnswers() == 3) {
-			endTurn();
+			pushPlayerAnswers();
 			currentTurn.setTurnState(TurnState.Correct);
 			DataManager.getInstance().updateTurn(currentTurn); // TODO only when turn is ending
+			
+			if(!isCompleted()) 
+				endTurn();
+			else
+				game.getController().loadNextRound(roundType);
 		}
 		updateView();
 	}
 	
 	public void endTurn() {
-		pushPlayerAnswers();
 		if(lastTurn != null && lastTurn.getTurnState() == TurnState.Pass && !Game.isCurrentUser(lastTurn.getPlayer().getName())) {
 			currentTurn = initCurrentTurn(this);
 			initNewTurn();
@@ -113,8 +117,12 @@ public class Puzzle extends Round {
 	public void onPass() {
 		currentTurn.setTurnState(TurnState.Pass);
 		DataManager.getInstance().updateTurn(currentTurn);
-		endTurn();
-		isCompleted();
+		pushPlayerAnswers();
+		if(!isCompleted()) 
+			endTurn();
+		else
+			game.getController().loadNextRound(roundType);
+
 	}
 	
 	private void pushPlayerAnswers() {
@@ -125,16 +133,6 @@ public class Puzzle extends Round {
 	
 	@Override
 	public boolean isCompleted() {
-		boolean isCompleted = false;
-		
-		if(Game.isCurrentUser(lastTurn.getPlayer().getName()) || !Game.isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() != TurnState.Pass)
-			isCompleted = true;
-		else
-			isCompleted = false;	
-				
-		if(isCompleted)
-			game.getController().loadNextRound(roundType);
-		
-		return isCompleted;
+		return Game.isCurrentUser(lastTurn.getPlayer().getName()) || !Game.isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() != TurnState.Pass;
 	}
 }
