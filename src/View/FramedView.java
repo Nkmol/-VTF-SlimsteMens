@@ -120,7 +120,7 @@ public class FramedView extends JPanel implements Observer{
 		}
 	}
 	
-	private void checkAnswer(ArrayList<PlayerAnswer> submittedAnswers, Framed openDoor) {
+	private void checkAnswer(ArrayList<PlayerAnswer> submittedAnswers) {
 		for (PlayerAnswer submittedAnswer : submittedAnswers) {
 			for (FramedAnswerView[] framedAnswerViewCollection : framedAnswerViews) {
 				for (FramedAnswerView framedAnswerView : framedAnswerViewCollection) {
@@ -143,6 +143,21 @@ public class FramedView extends JPanel implements Observer{
 		return false;
 	}
 	
+	private ArrayList<PlayerAnswer> calculatePlayerAnswersForTurn(Framed framed) {
+		ArrayList<PlayerAnswer> playerAnswers = new ArrayList<PlayerAnswer>();
+		
+		ArrayList<Turn> allTurnsForRound = DataManager.getInstance().getTurns(framed);
+		
+		for(int i = 0; i < allTurnsForRound.size(); i++) {
+			Turn turn = allTurnsForRound.get(i);
+			if(turn.getCurrentQuestion().getText().equals(framed.getCurrentTurn().getCurrentQuestion().getText())) {
+				playerAnswers.addAll(turn.getPlayerAnswers());
+			}
+		}
+		
+		return playerAnswers;
+	}
+	
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
@@ -153,9 +168,6 @@ public class FramedView extends JPanel implements Observer{
 		if (currentTurn.getCurrentQuestion() != null) {
 			currentQuestion = currentTurn.getCurrentQuestion();
 			System.out.println("question: " + currentQuestion.getId());
-			
-			ArrayList<PlayerAnswer> playerAnswers = DataManager.getInstance().getPlayerAnswers(framed.getGame().getId(), RoundType.Framed, framed.getCurrentTurn().getTurnId());
-			checkAnswer(playerAnswers, framed);
 		}
 		
 		if (currentQuestion != null) 
@@ -172,10 +184,15 @@ public class FramedView extends JPanel implements Observer{
 			}
 		}
 		
-		ArrayList<PlayerAnswer> submittedAnswers = framed.getSubmittedAnswers();
+		if(currentQuestion != null) {
+			ArrayList<PlayerAnswer> playerAnswers = DataManager.getInstance().getPlayerAnswers(framed.getGame().getId(), RoundType.Framed, framed.getCurrentTurn().getTurnId());
+			checkAnswer(playerAnswers);
+		}
+		
+		ArrayList<PlayerAnswer> submittedAnswers = calculatePlayerAnswersForTurn(framed);
 		
 		if (submittedAnswers != null && submittedAnswers.size() > 0) {
-			checkAnswer(submittedAnswers, framed);
+			checkAnswer(submittedAnswers);
 		}
 		
 	}
