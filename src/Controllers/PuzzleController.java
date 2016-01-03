@@ -9,7 +9,7 @@ import Models.Round;
 import View.OpenDoorView;
 import View.PuzzlePanel;
 
-public class PuzzleController{
+public class PuzzleController implements RoundController{
 	
 	private PuzzlePanel view;
 	
@@ -23,5 +23,15 @@ public class PuzzleController{
 	
 	public JPanel GetView() {
 		return view;
+	}
+
+	@Override
+	public JPanel getView() {
+		return view;
+	}
+
+	@Override
+	public Round getModel() {
+		return model;
 	}
 }
