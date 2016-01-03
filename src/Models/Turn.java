@@ -175,6 +175,8 @@ public class Turn {
 	}
 	
 	public ArrayList<PlayerAnswer> getPlayerAnswers() {
+		if(playerAnswers == null)
+			playerAnswers = new ArrayList<PlayerAnswer>();
 		return playerAnswers;
 	}
 	

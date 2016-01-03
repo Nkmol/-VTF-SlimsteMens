@@ -14,7 +14,6 @@ public class Puzzle extends Round {
 	
 	private int amountCorrectAnswers = 0;
 	private int secondsEarned = 0;
-	private ArrayList<Question> questions;
 	
 	public Puzzle(Game game) {
 		super(game, RoundType.Puzzle);	
@@ -40,38 +39,36 @@ public class Puzzle extends Round {
 		ArrayList<SharedQuestion> sharedQuestions = new ArrayList<SharedQuestion>();
 		if(continueCurrentTurn) // Continue turn -> load current sharedQuestions
 			sharedQuestions = currentTurn.getSharedQuestions();
-		else if(lastTurn != null && lastTurn.getTurnState() == TurnState.Pass && !Game.isCurrentUser(lastTurn.getPlayer().getName())) // start new turn with a previous turn of puzzle played -> load previous questions
+		else if(lastTurn != null && lastTurn.getTurnState() == TurnState.Pass && !Game.isCurrentUser(lastTurn.getPlayer().getName())) { // start new turn with a previous turn of puzzle played -> load previous questions
 			sharedQuestions = lastTurn.getSharedQuestions();
-		else { // start new turn without a previous turn -> load new questions
-			questions = new ArrayList<Question>();
-			questions = loadQuestions();
-			for(int i = 0; i < questions.size(); i++) 
-				sharedQuestions.add(new SharedQuestion(questions.get(i), i+1));
+			currentTurn.setPlayerAnswers(lastTurn.getPlayerAnswers());
 		}
-		
-		//TODO puzzle round is played ONCE each player. When one player passes the other can continue with his turn
+		else { // start new turn without a previous turn -> load new questions
+			sharedQuestions = loadNewQuestions();
+		}
 
 		return sharedQuestions;
 	}
 	
-	private ArrayList<Question> loadQuestions() {
-		ArrayList<Question> questions = new ArrayList<Question>();
+	private ArrayList<SharedQuestion> loadNewQuestions() {
+		ArrayList<SharedQuestion> sharedQuestions = new ArrayList<SharedQuestion>();
 		
 		for(int i = 0; i < AMOUNT_QUESTIONS; i++) {
 			Question q = DataManager.getInstance().getRandomQuestionForRoundType(currentTurn);
-			if(!containsQuestion(q))
-				questions.add(q);
+			if(!containsQuestion(q, sharedQuestions))
+				sharedQuestions.add(new SharedQuestion(q, i+1));
 			else
 				i--; //Step back -> generate new question
-			System.out.println(questions.get(i).getId());
+			
+			System.out.println(sharedQuestions.get(i).getId());
 		}
 		
-		return questions;
+		return sharedQuestions;
 	}
 
-	private boolean containsQuestion(Question q) {
-		for(Question question : questions)
-			if(question.getId() == q.getId())
+	private boolean containsQuestion(Question q, ArrayList<SharedQuestion> SharedQuestions) {
+		for(SharedQuestion sharedQuestion : SharedQuestions)
+			if(sharedQuestion.getId() == q.getId())
 				return true;
 		return false;
 	}
@@ -81,27 +78,25 @@ public class Puzzle extends Round {
 		// TODO Auto-generated method stub
 		System.out.println("your answer is " + answer);
 		
-		Question questionCorrect = null;
-		for(Question question : questions) 
-			if (question.isPlayerAnswerCorrectPuzzle(answer)) {
-				questionCorrect = question;
+		SharedQuestion questionCorrect = null;
+		for(SharedQuestion sharedQuestion : currentTurn.getSharedQuestions()) 
+			if (sharedQuestion.isPlayerAnswerCorrectPuzzle(answer) && !sharedQuestion.hasAnswer(answer)) {
+				questionCorrect = sharedQuestion;
 				break;
 			}
 		
-		if(questionCorrect != null)
-			pushTurn(questionCorrect, TurnState.Correct, answer);
+		if(questionCorrect != null) {
+			currentTurn.addSecondsEarnd(CORRECT_POINTS);
+			currentTurn.addPlayerAnswer(answer);
+		}
 		//TODO ELSE - wrong answer (?)
 				
-		if(currentTurn.getAmountAnswers() == 3)
+		if(currentTurn.getAmountAnswers() == 3) {
 			endTurn();
+			currentTurn.setTurnState(TurnState.Correct);
+			DataManager.getInstance().updateTurn(currentTurn); // TODO only when turn is ending
+		}
 		updateView();
-	}
-
-	public void pushTurn(Question q, TurnState turnState, String answer) { //TODO merge with Turn.pushTurn ??
-		currentTurn.setTurnState(turnState);
-		
-		DataManager.getInstance().updateTurn(currentTurn);
-		currentTurn.addPlayerAnswer(answer);
 	}
 	
 	public void endTurn() {
@@ -119,10 +114,6 @@ public class Puzzle extends Round {
 		currentTurn.setTurnState(TurnState.Pass);
 		DataManager.getInstance().updateTurn(currentTurn);
 		endTurn();
-	}
-	
-	public ArrayList<Question> getQuestions() {
-		return questions;
 	}
 	
 	private void pushPlayerAnswers() {

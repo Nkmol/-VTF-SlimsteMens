@@ -21,6 +21,7 @@ import Models.PlayerAnswer;
 import Models.Puzzle;
 import Models.Question;
 import Models.SharedQuestion;
+import Models.Turn;
 import Utilities.StringUtility;
 
 public class PuzzleView extends JPanel implements Observer {
@@ -126,22 +127,40 @@ public class PuzzleView extends JPanel implements Observer {
 		index++;
 	}
 	
-	private void revealAnswer(Question question) {
+/*	private void revealAnswer(Question question) {
 		for(int i = 0; i < 3; i++) {
 			if (puzzleAnswerViews[i].getAnswer().getText().equals(question.getText())) {
 				puzzleAnswerViews[i].revealAnswer();
 			}
 		}
 	}
+	*/
+	private void revealAnswer(PlayerAnswer answer) {
+		for(int i = 0; i < puzzleAnswerViews.length; i++) {
+			if(StringUtility.CalculateMatchPercentage(puzzleAnswerViews[i].getAnswer().getText(), answer.getAnswer()) >=  Question.MinimumAnswerPercentage) {
+				puzzleAnswerViews[i].revealAnswer();
+			}
+		}
+	}
+	
+	private void hideAnswers() {
+		for(int i = 0; i < puzzleAnswerViews.length; i++) {
+			puzzleAnswerViews[i].hideAnswer();
+		}
+	}
 	
 	@Override
 	public void update(Observable o, Object arg) {
+		hideAnswers(); //TODO not always? only new turn
 		Puzzle puzzle = (Puzzle)arg;
+		Turn currentTurn = puzzle.getCurrentTurn();
 		
-		ArrayList<SharedQuestion> sharedQuestions = puzzle.getCurrentTurn().getSharedQuestions();
-		
-		for(SharedQuestion sharedQuestion : sharedQuestions)
+		for(SharedQuestion sharedQuestion : currentTurn.getSharedQuestions())
 			addAnswers(sharedQuestion.getAnswers(), sharedQuestion, Color.red);
 		index = 0;
+		
+		for(PlayerAnswer answer : currentTurn.getPlayerAnswers())
+			revealAnswer(answer);
+			
 	}
 }

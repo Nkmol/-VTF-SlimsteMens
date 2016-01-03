@@ -9,7 +9,7 @@ import Utilities.StringUtility;
 
 public class Question {
 	
-	private static final int MinimumAnswerPercentage = 80;
+	public static final int MinimumAnswerPercentage = 80;
 	
 	private int id;
 	protected Turn turn;
@@ -88,6 +88,14 @@ public class Question {
 			return true;
 		else 
 			return false;
+	}
+	
+	public boolean hasAnswer(String answer) {
+		for(Answer a : answers) 
+			if(a.getAnswer().equals(answer)) {
+				return true;
+			}
+		return false;
 	}
 	
 	public int getId() {
