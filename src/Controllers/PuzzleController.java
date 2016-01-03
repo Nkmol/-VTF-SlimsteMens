@@ -3,8 +3,10 @@ package Controllers;
 import javax.swing.JPanel;
 
 import Models.Game;
+import Models.OpenDoor;
 import Models.Puzzle;
-
+import Models.Round;
+import View.OpenDoorView;
 import View.PuzzlePanel;
 
 public class PuzzleController{
@@ -13,9 +15,9 @@ public class PuzzleController{
 	
 	private Puzzle model;
 	
-	public PuzzleController(Game game, GameController parent) {
+	public PuzzleController(Game parent, Round round) {
+		model = (Puzzle)round;
 		view = new PuzzlePanel(this);
-		model = new Puzzle(game);
 		view.Observe(model);
 	}
 	
