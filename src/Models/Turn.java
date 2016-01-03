@@ -31,11 +31,14 @@ public class Turn {
 		this.parent = parentRound;
 		gameId = parent.getGame().getId();
 //		this.sharedQuestion = DataManager.getInstance().getLastSharedQuestion(this); //TOOD: get last skipped question instead
-		currentQuestion = DataManager.getInstance().getRandomQuestionForRoundType(this);
-		
 		if(parent.roundType == RoundType.Puzzle) { //TODO: load in Puzzle round?
 			sharedQuestions = DataManager.getInstance().getSharedQuestions(this); 
 		}
+//		currentQuestion = DataManager.getInstance().getRandomQuestionForRoundType(this);
+		ArrayList<Question> questions = DataManager.getInstance().getTheLeastAskedQuestions(this.player, this, 1);
+		if (questions != null && questions.size() > 0)
+			currentQuestion = questions.get(0);
+//		this.sharedQuestions = DataManager.getInstance().getSharedQuestions(parentRound, turnId); //Dont need this?
 		//TODO: get last skipped quesiton
 		//1- get last turn
 		//2- fetch question from turn
