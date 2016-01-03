@@ -89,15 +89,19 @@ public class ThreeSixNine extends Round {
 			turnState = TurnState.Wrong;
 
 		Turn.pushTurn(currentTurn, turnState, answer);
-		returnScreenCheck(turnState);
-		isCompleted();
+		if(!isCompleted())
+			returnScreenCheck(TurnState.Pass);
+		else
+			game.getController().loadNextRound(roundType);
 	}
 
 	@Override
 	public void onPass() {
 		Turn.pushTurn(getCurrentTurn(), TurnState.Pass, null);
-		returnScreenCheck(TurnState.Pass);
-		isCompleted();
+		if(!isCompleted())
+			returnScreenCheck(TurnState.Pass);
+		else
+			game.getController().loadNextRound(roundType);
 	}
 	
 	public void returnScreenCheck(TurnState turnState) {
@@ -112,18 +116,6 @@ public class ThreeSixNine extends Round {
 
 	@Override
 	public boolean isCompleted() {
-		boolean isCompleted = false;
-		
-		int amountUniqueSharedQuestions = DataManager.getInstance().getAmountUniqueSharedQuestionsForRound(this, DataManager.getInstance().getCurrentUser());
-		System.out.println("amountUnique: " + amountUniqueSharedQuestions);
-		if(amountUniqueSharedQuestions >= AMOUNT_QUESTIONS)
-			isCompleted = true;
-		else
-			isCompleted = false;
-		
-		if(isCompleted)
-			game.getController().loadNextRound(roundType);
-		
-		return isCompleted;
+		return DataManager.getInstance().getAmountUniqueSharedQuestionsForRound(this, DataManager.getInstance().getCurrentUser()) >= AMOUNT_QUESTIONS;
 	}
 }
