@@ -94,7 +94,7 @@ public class GameController {
 
 		
 		// TODO Remove this as it's for testing purposes
-		round = new Final(model);
+		//round = new Final(model);
 
 		if (round != null) {
 			if (round.isCompleted()) {
@@ -103,12 +103,8 @@ public class GameController {
 			}
 		}
 
-		
 		if(round == null) {	
-			//round = new ThreeSixNine(model);
-			round = new Final(model);
-			//round = new OpenDoor(model); // Add 369 manually to the database in table ronde
-
+			round = new ThreeSixNine(model); // Add 369 manually to the database in table ronde
 		}
 
 		RoundController roundController = getRoundController(round, model);
