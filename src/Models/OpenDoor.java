@@ -121,7 +121,7 @@ public class OpenDoor extends Round {
 
 	@Override
 	public boolean isCompleted() {
-		
+
 		boolean isCompleted = false;
 		
 		ArrayList<TurnInfo> turnInfos = DataManager.getInstance().getTurnInfosForRound(this);		
@@ -146,4 +146,5 @@ public class OpenDoor extends Round {
 		
 		return isCompleted;
 	}
+
 }

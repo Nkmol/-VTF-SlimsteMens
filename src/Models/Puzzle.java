@@ -135,4 +135,5 @@ public class Puzzle extends Round {
 	public boolean isCompleted() {
 		return Game.isCurrentUser(lastTurn.getPlayer().getName()) || !Game.isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() != TurnState.Pass;
 	}
+
 }
