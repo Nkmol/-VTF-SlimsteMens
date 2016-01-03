@@ -1,10 +1,14 @@
 package Models;
 
+import Controllers.ReplayController;
+
 public class ReplayFinal extends Final {
 	
-	int turnIndex;
-	public ReplayFinal(Game game) {
+	private int turnIndex;
+	private ReplayController parent;
+	public ReplayFinal(Game game, ReplayController parent) {
 		super(game);
+		this.parent = parent;
 		turnIndex = 0;
 		currentTurn = turns.get(turnIndex);
 	}
@@ -15,7 +19,10 @@ public class ReplayFinal extends Final {
 	}
 	
 	private void NextTurn() {
-		currentTurn = turns.get(++turnIndex);
+		if (turnIndex < turns.size()-1)
+			currentTurn = turns.get(++turnIndex);
+		else
+			parent.RoundEnd();
 		updateView();
 	}
 }

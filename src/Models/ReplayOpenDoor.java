@@ -1,10 +1,14 @@
 package Models;
 
+import Controllers.ReplayController;
+
 public class ReplayOpenDoor extends OpenDoor {
 
 	int turnIndex;
-	public ReplayOpenDoor(Game game) {
+	private ReplayController parent;
+	public ReplayOpenDoor(Game game, ReplayController parent) {
 		super(game);
+		this.parent = parent;
 		turnIndex = 0;
 		currentTurn = turns.get(turnIndex);
 	}
@@ -15,7 +19,10 @@ public class ReplayOpenDoor extends OpenDoor {
 	}
 	
 	private void NextTurn() {
-		currentTurn = turns.get(++turnIndex);
+		if (turnIndex < turns.size()-1)
+			currentTurn = turns.get(++turnIndex);
+		else
+			parent.RoundEnd();
 		updateView();
 	}
 	

@@ -1,10 +1,14 @@
 package Models;
 
+import Controllers.ReplayController;
+
 public class ReplayFramed extends Framed {
 	
 	int turnIndex;
-	public ReplayFramed(Game game) {
+	private ReplayController parent;
+	public ReplayFramed(Game game, ReplayController parent)  {
 		super(game);
+		this.parent = parent;
 		turnIndex = 0;
 		currentTurn = turns.get(turnIndex);
 	}
@@ -15,7 +19,10 @@ public class ReplayFramed extends Framed {
 	}
 	
 	private void NextTurn() {
-		currentTurn = turns.get(++turnIndex);
+		if (turnIndex < turns.size()-1)
+			currentTurn = turns.get(++turnIndex);
+		else
+			parent.RoundEnd();
 		updateView();
 	}
 }

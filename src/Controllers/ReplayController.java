@@ -19,9 +19,13 @@ public class ReplayController {
 		model = new Replay(game.getId(), game.getPlayer1(), game.getPlayer2(), game.getGameState());
 		Utilities.ComponentUtility.addActionListener(view, "btnSubmit", (e) -> model.getCurrentRound().onSubmit(model.getCurrentAnswer()));
 		Utilities.ComponentUtility.addActionListener(view, "btnPass", (e) -> model.getCurrentRound().onPass());
-		Round currentRound = new ReplayThreeSixNine(model);
+		Round currentRound = new ReplayThreeSixNine(model, this);
 		currentRoundController = new ThreeSixNineController(model, currentRound);
 		model.setCurrentRound(currentRound);
+	}
+	
+	public void RoundEnd() {
+		
 	}
 	
 	public void ShowView() {

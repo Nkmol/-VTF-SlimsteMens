@@ -1,10 +1,14 @@
 package Models;
 
+import Controllers.ReplayController;
+
 public class ReplayThreeSixNine extends ThreeSixNine {
 
 	int turnIndex;
-	public ReplayThreeSixNine(Game game) {
+	private ReplayController parent;
+	public ReplayThreeSixNine(Game game, ReplayController parent) {
 		super(game);
+		this.parent = parent;
 		turnIndex = 0;
 		currentTurn = turns.get(turnIndex);
 	}
@@ -15,7 +19,10 @@ public class ReplayThreeSixNine extends ThreeSixNine {
 	}
 	
 	private void NextTurn() {
-		currentTurn = turns.get(++turnIndex);
+		if (turnIndex < turns.size()-1)
+			currentTurn = turns.get(++turnIndex);
+		else
+			parent.RoundEnd();
 		updateView();
 	}
 }
