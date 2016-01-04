@@ -11,9 +11,9 @@ public class Framed extends Round {
 							 BONUS_ITERATION = 3,
 							 POINTS_QUESTION = 20,
 							 AMOUNT_ANSWERS = 10;
-	private int amountCorrectAnswers = 0;
 	private int secondsEarned = 0;
 	private ArrayList<PlayerAnswer> playerAnswers;
+	private ArrayList<Answer> answersHandled;
 	
 	private Boolean stay;
 	
@@ -38,10 +38,10 @@ public class Framed extends Round {
 		}
 		updateView();
 		DataManager.getInstance().pushTurn(currentTurn);
+		initPlayerAnswers();
 	}
 	
 	public void initNewTurn() {
-		amountCorrectAnswers = 0;
 		currentTurn = initCurrentTurn(this);
 		DataManager.getInstance().pushTurn(currentTurn);
 		updateView();
@@ -164,56 +164,75 @@ public class Framed extends Round {
 		*/
 	}
 	
-	public Boolean checkQuestionDone() {
-		int amount = DataManager.getInstance().getAmountCorrectAnswersForQuestion(currentTurn.getGameId(), currentTurn.getCurrentQuestion());
-		if(amount == AMOUNT_ANSWERS) {
-			return true;
-		}
-		return false;
-	}
-	
 	public void checkRoundDone() {
 		
 	}
-
-	public void checkUsedAnswer() {
+	
+	public void initPlayerAnswers() {
+		if(playerAnswers == null) {
+			playerAnswers = new ArrayList<PlayerAnswer>();
+		}
 		
+		if(answersHandled == null) {
+			answersHandled = new ArrayList<Answer>();
+		}
 	}
+
+	private boolean answerIsValid(String answerString) {
+		return !Question.isPlayerAnswerCorrect(answerString, answersHandled);
+	}
+	
+	public void pushAnswers(ArrayList<PlayerAnswer> playerAnswers) {
+		if (playerAnswers != null && playerAnswers.size() > 0) {
+			//Push player's answers
+			for (PlayerAnswer playerAnswer : playerAnswers) {
+				DataManager.getInstance().pushPlayerAnswer(playerAnswer);
+			}
+			
+			this.playerAnswers = null;
+		}
+	}
+
 
 	@Override
 	public void onSubmit(String answer) {
 		// TODO Auto-generated method stub
 		System.out.println("your answer is " + answer);
-		if (currentTurn.getCurrentQuestion().isPlayerAnswerCorrect(answer)) 
+		
+		/*
+		if (currentTurn.getCurrentQuestion().isPlayerAnswerCorrect(answer))  //TODO IDK zeker of nodig
 			Turn.pushTurn(currentTurn, TurnState.Correct, answer);
 		else 
 			Turn.pushTurn(currentTurn, TurnState.Wrong, answer);
-		
-
-		if (playerAnswers == null)
-			playerAnswers = new ArrayList<>();
+			*/
 		
 		int answerId = playerAnswers.size() + 1;
-		PlayerAnswer playerAnswer = new PlayerAnswer(currentTurn, answerId, answer, 10); //TODO: change the moment
-	
+		PlayerAnswer playerAnswer = new PlayerAnswer(currentTurn, answerId, answer, currentTurn.getMoment());
+		
 		playerAnswers.add(playerAnswer);
-			
+		
 		Question currentQuestion = currentTurn.getCurrentQuestion();
 		
 		System.out.println("Question id: " + currentQuestion.getId());
 		
 		//TODO maybe feedback of je het goed had of niet?
 		if (currentQuestion != null) {
-			if (currentQuestion.isPlayerAnswerCorrect(answer)) {
-				amountCorrectAnswers++; 
-				//secondsEarned+=POINTS_QUESTION;
-				currentTurn.setTurnState(TurnState.Correct);
+			Answer answerCorrect = getCurrentTurn().getCurrentQuestion().isAnswerCorrect(answer);
+			if (answerCorrect != null && answerIsValid(answer)) {
+				answersHandled.add(answerCorrect);
 				currentTurn.addSecondsEarnd(POINTS_QUESTION);
-				DataManager.getInstance().updateTurn(currentTurn);
-				DataManager.getInstance().pushPlayerAnswer(playerAnswer);
-				if (isCompleted()) {
-					getGame().getController().endTurn();
-					getGame().getController().loadNextRound(this.roundType);
+				
+				if(answersHandled.size() == AMOUNT_ANSWERS) {
+					pushAnswers(playerAnswers);
+					currentTurn.setTurnState(TurnState.Correct);
+					DataManager.getInstance().updateTurn(currentTurn);
+					if (isCompleted()) {
+						getGame().getController().endTurn();
+						getGame().getController().loadNextRound(this.roundType);
+					}
+					else {
+						getGame().getController().endTurn();
+					}
 				}
 				else {
 					updateView();
@@ -223,9 +242,8 @@ public class Framed extends Round {
 				currentTurn.setTurnState(TurnState.Wrong);
 				//currentTurn.addSecondsEarnd(secondsEarned);
 				DataManager.getInstance().updateTurn(currentTurn);
-				amountCorrectAnswers = 0;
+				pushAnswers(playerAnswers);
 				if (isCompleted()) {
-					getGame().getController().endTurn();
 					getGame().getController().loadNextRound(this.roundType);
 				}
 				else {
@@ -266,8 +284,8 @@ public class Framed extends Round {
 	public void onPass() {
 		currentTurn.setTurnState(TurnState.Pass);
 		DataManager.getInstance().updateTurn(currentTurn);
+		pushAnswers(playerAnswers);
 		if (isCompleted()) {
-			getGame().getController().endTurn();
 			getGame().getController().loadNextRound(this.roundType);
 		}
 		else {
@@ -275,8 +293,8 @@ public class Framed extends Round {
 		}
 	}
 	
-	public ArrayList<PlayerAnswer> getSubmittedAnswers() {
-		return playerAnswers;
+	public ArrayList<Answer> getSubmittedAnswers() {
+		return answersHandled;
 	}
 
 	@Override
@@ -302,9 +320,6 @@ public class Framed extends Round {
 					secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
 				return true;
 			}	
-			else if (checkQuestionDone()) {
-				return true;
-			}
 		
 		
 		return false;
