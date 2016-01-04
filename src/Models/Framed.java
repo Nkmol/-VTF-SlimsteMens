@@ -19,12 +19,14 @@ public class Framed extends Round {
 	
 	public Framed(Game game) {
 		super(game, RoundType.Framed);	
-		init();
+		if (game.getGameState() != GameState.Finished)
+			init();
 	}
 	
 	public Framed(ResultSet data, Game game) {
 		super(data,game);
-		init();
+		if (game.getGameState() != GameState.Finished)
+			init();
 	}
 	
 	public void init() {

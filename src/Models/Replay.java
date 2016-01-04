@@ -20,8 +20,9 @@ public class Replay extends Game {
 	}
 	
 	public RoundController getNextRound() {
+		Round prevRound = currentRound;
 		currentRound = rounds.get(++currentRoundIndex);
-		switch (currentRound.roundType) {
+		switch (prevRound.roundType) {
 			case ThreeSixNine:
 				currentRound = new ReplayOpenDoor(this, parent);
 				return new OpenDoorController(this, currentRound);
@@ -40,6 +41,8 @@ public class Replay extends Game {
 	}
 	
 	public String getCurrentAnswer() {
+		if (currentRound.getRoundType() == RoundType.ThreeSixNine) {
+		}
 		StringBuilder builder = new StringBuilder();
 		for (PlayerAnswer answer : currentRound.getCurrentTurn().getPlayerAnswers()) {
 			builder.append(answer.getAnswer());

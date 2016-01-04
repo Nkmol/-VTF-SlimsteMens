@@ -106,7 +106,6 @@ public class GamePanel extends JPanel implements Observer{
 		if(model.getCurrentRound() != null && model.getCurrentRound().getCurrentTurn() != null) {
 			lblRoundType.setText(model.getCurrentRound().getRoundType().toString());
 
-		
 			if(Game.isCurrentUser(player1.getName())) {
 				String strPlayer1 = player1.getName() + " : " + (model.getCurrentRound().getCurrentTurn().getTotalActualTime());
 				lblPlayer1.setText(strPlayer1); 

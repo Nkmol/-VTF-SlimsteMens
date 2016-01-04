@@ -21,9 +21,7 @@ public class ReplayPanel extends GamePanel {
 	public void update(Observable arg0, Object arg1){
 		super.update(arg0, arg1);
 		Replay replay = (Replay)arg1;
-		lblPlayer1.setText(""+replay.GetSecondsEarnedPlayer1());
-		lblPlayer2.setText(""+replay.GetSecondsEarnedPlayer2());
-		
+		System.out.println(replay.getCurrentRound().getCurrentTurn().getTurnState().getValue());
 		if (replay.getCurrentRound().getCurrentTurn().getTurnState() == TurnState.Pass) {
 			btnPass.setEnabled(true);
 			btnSubmit.setEnabled(false);
@@ -41,6 +39,8 @@ public class ReplayPanel extends GamePanel {
 			txtInput.setText(replay.getCurrentAnswer());
 		}
 		
+		lblPlayer1.setText(""+replay.GetSecondsEarnedPlayer1());
+		lblPlayer2.setText(""+replay.GetSecondsEarnedPlayer2());
 		if (replay.getCurrentRound().getCurrentTurn().getPlayer().getName().equals(lblPlayer1.getText())) {
 			lblPlayer1.setForeground(Color.RED);
 			lblPlayer2.setForeground(null);

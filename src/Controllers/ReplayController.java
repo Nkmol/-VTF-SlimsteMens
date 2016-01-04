@@ -32,10 +32,12 @@ public class ReplayController {
 	
 	public void OnSubmit() {
 		model.getCurrentRound().onSubmit(model.getCurrentAnswer());
+		model.updateView();
 	}
 	
 	public void OnPass() {
 		model.getCurrentRound().onPass();
+		model.updateView();
 	}
 	
 	public void RoundEnd() {
