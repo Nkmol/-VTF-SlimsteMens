@@ -12,7 +12,7 @@ import Utilities.StringUtility;
 public class Game extends Observable {
 	
 	public static final int MinimumAnswerPercentage = 80,
-							 BeginAmountTime = 100;
+							BeginAmountTime = 0;
 	
 	private int id;
 	private Player player1;

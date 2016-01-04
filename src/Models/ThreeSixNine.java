@@ -9,10 +9,11 @@ import Managers.DataManager;
 
 public class ThreeSixNine extends Round {
 
-	private final static int AMOUNT_QUESTIONS = 9,
+	private final static int AMOUNT_QUESTIONS = 15,
 							 BONUS_ITERATION = 3,
-							 POINTS_BONUS  = 60,
-							 POINTS_QUESTION = 20;
+							 POINTS_BONUS  = 10,
+							 POINTS_QUESTION = 5,
+							 SECONDS_TURN = 25;
 	private int amountCorrectQuestions = 0;
 	
 	public ThreeSixNine(Game game) {
@@ -28,7 +29,7 @@ public class ThreeSixNine extends Round {
 	}
 	
 	public void initNewTurn() {
-		currentTurn.startTimer();
+		//currentTurn.startTimer();
 		amountCorrectQuestions = DataManager.getInstance().getCorrectAmountUniqueSharedQuestionsForRound(this, DataManager.getInstance().getCurrentUser());
 		System.out.println(amountCorrectQuestions);
 		if(amountCorrectQuestions > 0 && amountCorrectQuestions % BONUS_ITERATION == 0)
