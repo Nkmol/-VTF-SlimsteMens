@@ -593,6 +593,38 @@ public class DataManager {
 		return round;
 	}
 	
+	public Turn getLastTurnForPlayerRound(Round round, Player player) {
+		Turn turn = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT * from beurt  "
+					+ "where spel_id = ? and rondenaam = ? and speler = ? "
+					+ "order by beurt_id desc limit 1";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, round.getGame().getId());
+			preparedStatement.setString(2, round.getRoundType().getValue());
+			preparedStatement.setString(3, player.getName());
+			data = preparedStatement.executeQuery();
+			if (data.next()) 
+				turn = new Turn(data, round, false);
+		} catch (SQLException e) {
+			System.err.println("Error fetching last round for game id: " + round.getGame().getId());
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		return turn;
+	}
+	
 	private Round getRoundForRoundType(RoundType roundType, ResultSet data, Game game) {
 		Round round = null;
 		switch (roundType) {
@@ -1548,13 +1580,13 @@ public class DataManager {
 		return totalSecEarned;
 	}
 	
-	public int getTotalSecFinaleAf(Turn turn) {
+	public int getTotalSecFinaleAfOtherPlayer(Turn turn) {
 		int totalSecFinalAf = 0;
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;
 		ResultSet data = null;
 		try {
-			String sql = "SELECT SUM(sec_finale_af) totalAf FROM beurt WHERE spel_id = ? AND rondenaam = ? AND Speler = ?";
+			String sql = "SELECT SUM(sec_finale_af) totalAf FROM beurt WHERE spel_id = ? AND rondenaam = ? AND NOT Speler = ?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, turn.getRound().getGame().getId());
 			preparedStatement.setString(2, turn.getRound().getRoundType().getValue());

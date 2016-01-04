@@ -18,7 +18,7 @@ import Models.Round;
 public class GamePanel extends JPanel implements Observer{
 	
 	private JPanel middle;
-	protected JLabel lblPlayer1, lblPlayer2, lblRoundType;
+	private JLabel lblPlayer1, lblPlayer2, lblRoundType;
 	public JButton btnSubmit, btnPass;
 	public JTextField txtInput;
 	private boolean initOpponentTurn;
@@ -44,11 +44,6 @@ public class GamePanel extends JPanel implements Observer{
 		middle = new JPanel();
 		middle.setLayout(new BorderLayout());
 		add(middle, BorderLayout.CENTER);
-		
-		// CHAT PART
-		//JPanel chat = new JPanel();
-		//chat.setPreferredSize(new Dimension(80, 0));
-		//add(chat, BorderLayout.LINE_END);
 		
 		JPanel bottom = new JPanel();
 		bottom.setLayout(new BorderLayout());
@@ -105,24 +100,26 @@ public class GamePanel extends JPanel implements Observer{
 		
 		if(model.getCurrentRound() != null && model.getCurrentRound().getCurrentTurn() != null) {
 			lblRoundType.setText(model.getCurrentRound().getRoundType().toString());
-
+			
 			if(Game.isCurrentUser(player1.getName())) {
-				String strPlayer1 = player1.getName() + " : " + (model.getCurrentRound().getCurrentTurn().getTotalActualTime());
+				String strPlayer1 = player1.getName() + " : " + (model.getCurrentRound().getCurrentTurn().getPlayerTime());
 				lblPlayer1.setText(strPlayer1); 
 			}
 			else if(Game.isCurrentUser(player2.getName())) {
-				String strPlayer2 = player2.getName() + " : " + (model.getCurrentRound().getCurrentTurn().getTotalActualTime());
+				String strPlayer2 = player2.getName() + " : " + (model.getCurrentRound().getCurrentTurn().getPlayerTime());
 				lblPlayer2.setText(strPlayer2);
 			}
+			
+//			if(Game.isCurrentUser(player1.getName())) {
+//				String strPlayer1 = player1.getName() + " : " + (model.getCurrentRound().getCurrentTurn().getTotalActualTime());
+//				lblPlayer1.setText(strPlayer1); 
+//			}
+//			else if(Game.isCurrentUser(player2.getName())) {
+//				String strPlayer2 = player2.getName() + " : " + (model.getCurrentRound().getCurrentTurn().getTotalActualTime());
+//				lblPlayer2.setText(strPlayer2);
+//			}
 		}
 		if(!initOpponentTurn)
 			setOponnonentTime(player1, player2, model.getId());
 	}
-	
-	public void setChatPanel(ChatMessageView chatPanel){
-		JPanel chat = chatPanel;
-		chat.setPreferredSize(new Dimension(200, 200));
-		add(chat, BorderLayout.LINE_END);
-	}
-	
 }

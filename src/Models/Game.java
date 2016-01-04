@@ -12,7 +12,7 @@ import Utilities.StringUtility;
 public class Game extends Observable {
 	
 	public static final int MinimumAnswerPercentage = 80,
-							 BeginAmountTime = 100;
+							BeginAmountTime = 0;
 	
 	private int id;
 	private Player player1;
@@ -71,10 +71,10 @@ public class Game extends Observable {
 		player1score = DataManager.getInstance().getTotalSecondsEarnedInAGame(id, player1.getName());
 		player2score = DataManager.getInstance().getTotalSecondsEarnedInAGame(id, player2.getName());
 		
-		if(player1score > player2score)
-			return player2;
-		else 
+		if(player1score == player2score || player1score < player2score)
 			return player1;
+		else 
+			return player2;
 	}
 	
 	public static boolean isCurrentPlayerTurn(int gameId) {

@@ -99,8 +99,6 @@ public class GameController {
 	public void loadLastRound() {
 		
 		Round round = DataManager.getInstance().getLastRoundForGame(model);
-
-		
 		// TODO Remove this as it's for testing purposes
 		//round = new Final(model);
 
@@ -119,6 +117,7 @@ public class GameController {
 		model.setRound(roundController.getModel());
 		view.setRound(roundController.getView());
 		
+		model.updateView();
 		roundController.getModel().updateView();
 	}
 }

@@ -127,18 +127,20 @@ public class PuzzleView extends JPanel implements Observer {
 		index++;
 	}
 	
-/*	private void revealAnswer(Question question) {
-		for(int i = 0; i < 3; i++) {
-			if (puzzleAnswerViews[i].getAnswer().getText().equals(question.getText())) {
-				puzzleAnswerViews[i].revealAnswer();
-			}
-		}
-	}
-	*/
-	private void revealAnswer(PlayerAnswer answer) {
+/*	private void revealAnswer(PlayerAnswer answer) {
 		for(int i = 0; i < puzzleAnswerViews.length; i++) {
 			if(StringUtility.CalculateMatchPercentage(puzzleAnswerViews[i].getAnswer().getText(), answer.getAnswer()) >=  Question.MinimumAnswerPercentage) {
 				puzzleAnswerViews[i].revealAnswer();
+			}
+		}
+	}*/
+	
+	private void checkHandledAnswers(ArrayList<Answer> handledAnswers) {
+		for (Answer handledAnswer : handledAnswers) {
+			for (PuzzleAnswerView puzzleAnswerView : puzzleAnswerViews) {
+				if (puzzleAnswerView.getAnswer().equals(handledAnswer.getAnswer())) {
+					puzzleAnswerView.revealAnswer();
+				}
 			}
 		}
 	}
@@ -159,8 +161,6 @@ public class PuzzleView extends JPanel implements Observer {
 			addAnswers(sharedQuestion.getAnswers(), sharedQuestion, Color.red);
 		index = 0;
 		
-		for(PlayerAnswer answer : currentTurn.getPlayerAnswers())
-			revealAnswer(answer);
-			
+		checkHandledAnswers(puzzle.getHandledAnswers());
 	}
 }

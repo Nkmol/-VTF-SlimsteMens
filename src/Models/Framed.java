@@ -314,7 +314,15 @@ public class Framed extends Round {
 					secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
 				return true;
 			}
+			else if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Correct && secondLastTurn.getTurnState() == TurnState.Correct &&
+					secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
+				return true;
+			}
 			else if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Correct && secondLastTurn.getTurnState() == TurnState.Pass &&
+					secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
+				return true;
+			}
+			else if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Pass && secondLastTurn.getTurnState() == TurnState.Correct &&
 					secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
 				return true;
 			}
@@ -322,9 +330,24 @@ public class Framed extends Round {
 					secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
 				return true;
 			}	
+			else if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Wrong && secondLastTurn.getTurnState() == TurnState.Pass &&
+					secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
+				return true;
+			}	
+			else if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Pass && secondLastTurn.getTurnState() == TurnState.Wrong &&
+					secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
+				return true;
+			}	
 		
 		
 		return false;
+	}
+
+	@Override
+	public void playerTimeIsOver() {
+		// TODO Auto-generated method stub
+		getGame().getController().endTurn();
+		getGame().stopGame();
 	}
 
 

@@ -174,4 +174,11 @@ public class OpenDoor extends Round {
 		return isCompleted;
 	}
 
+	@Override
+	public void playerTimeIsOver() {
+		getGame().getController().endTurn();
+		getGame().stopGame();
+		
+	}
+
 }
