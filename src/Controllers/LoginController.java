@@ -32,9 +32,6 @@ public class LoginController {
 		if(model.login(view.txtUsername.getText(), view.txtPassword.getText())) {
 			// Show main frame
 			parent.ShowMainPanel();
-			
-			// Save logged player to file
-			model.saveName();
 
 			//TODO: Use ScreenManager?
 			

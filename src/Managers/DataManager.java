@@ -1423,6 +1423,37 @@ public class DataManager {
 		return totalSecEarned;
 	}
 	
+	public int getTotalSecFinaleAf(Turn turn) {
+		int totalSecFinalAf = 0;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT SUM(sec_finale_af) totalAf FROM beurt WHERE spel_id = ? AND rondenaam = ? AND Speler = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, turn.getRound().getGame().getId());
+			preparedStatement.setString(2, turn.getRound().getRoundType().getValue());
+			preparedStatement.setString(3, turn.getPlayer().getName());
+			data = preparedStatement.executeQuery();
+			if (data.next())
+				totalSecFinalAf = data.getInt("totalAf");
+		} catch(SQLException e) {
+			System.err.println("Error fetching total seconds final af in a game with id: " + turn.getRound().getGame().getId() + " and player name: " + turn.getPlayer().getName());
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		
+		return totalSecFinalAf;
+	}
+	
 	public int numberOfTimesQuestionAskedTo(String playerName, int questionId) {
 		int amountOfTimes = 0;
 		Connection connection = getConnection();

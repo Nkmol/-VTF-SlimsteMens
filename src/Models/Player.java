@@ -119,26 +119,4 @@ public class Player extends Observable{
 	public String getPassword() {
 		return password;
 	}
-
-	public void saveName() {
-		try {
-			PrintWriter out = new PrintWriter("playerName.txt");
-			out.println(name);
-			out.close();
-		}
-		catch (FileNotFoundException e) {
-			
-		}
-	}
-	
-	public void loadName() {
-		try {
-			BufferedReader br = new BufferedReader(new FileReader("playerName.txt"));
-			System.out.println(br.readLine());
-			br.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 }
