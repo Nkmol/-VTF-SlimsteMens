@@ -85,9 +85,6 @@ public class Turn {
 	}
 	
 	public int getTotalActualTime() {
-		if (parent instanceof OpenDoor) {
-			System.out.println("");
-		}
 		int secondsEarnedInTheGame = DataManager.getInstance().getTotalSecondsEarnedInAGame(parent.getGame().getId(), player.getName()) + getSecondsEarned();
 		int finalAf = DataManager.getInstance().getTotalSecFinaleAfOtherPlayer(this);
 		System.err.println("Actual time = " + (secondsEarnedInTheGame - finalAf)); 
