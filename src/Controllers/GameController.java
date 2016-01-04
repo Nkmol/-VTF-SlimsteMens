@@ -84,9 +84,16 @@ public class GameController {
 	
 	public void loadNextRound(RoundType currentRoundType) {
 		endTurn();
-		RoundType nextRoundType = RoundType.nextRoundType(currentRoundType);
-		model.setRound(Round.createRound(nextRoundType, model));
-		loadLastRound();
+		
+		if (currentRoundType != RoundType.Final) {
+			RoundType nextRoundType = RoundType.nextRoundType(currentRoundType);
+			model.setRound(Round.createRound(nextRoundType, model));
+			loadLastRound();
+		} else {
+			// Stop the game 
+			endTurn();
+			model.stopGame();
+		}
 	}
 
 	public void loadLastRound() {
