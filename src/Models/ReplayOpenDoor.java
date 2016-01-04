@@ -1,6 +1,7 @@
 package Models;
 
 import Controllers.ReplayController;
+import Managers.DataManager;
 
 public class ReplayOpenDoor extends OpenDoor {
 
@@ -10,12 +11,22 @@ public class ReplayOpenDoor extends OpenDoor {
 		super(game);
 		this.parent = parent;
 		turnIndex = 0;
+		turns = DataManager.getInstance().getTurns(this);
 		currentTurn = turns.get(turnIndex);
+		continueCurrentTurn = true;
+		updateView();
 	}
 	
 	@Override
 	public void onSubmit(String answer) {
 		NextTurn();
+		updateView();
+	}
+	
+	@Override
+	public void onPass() {
+		NextTurn();
+		updateView();
 	}
 	
 	private void NextTurn() {
@@ -23,7 +34,6 @@ public class ReplayOpenDoor extends OpenDoor {
 			currentTurn = turns.get(++turnIndex);
 		else
 			parent.RoundEnd();
-		updateView();
 	}
 	
 }

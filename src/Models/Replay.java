@@ -9,15 +9,18 @@ import Managers.DataManager;
 
 public class Replay extends Game {
 	private int AnswerNumber;
-	ReplayController parent;
+	private ReplayController parent;
+	private int currentRoundIndex;
 	public Replay(int gameId, Player player1, Player player2, GameState gameState, ReplayController parent) {
 		super(gameId, player1, player2, gameState);
 		rounds = DataManager.getInstance().getRounds(this);
+		currentRoundIndex = 0;
 		this.parent = parent;
 		AnswerNumber = 0;
 	}
 	
 	public RoundController getNextRound() {
+		currentRound = rounds.get(++currentRoundIndex);
 		switch (currentRound.roundType) {
 			case ThreeSixNine:
 				currentRound = new ReplayOpenDoor(this, parent);
@@ -37,11 +40,31 @@ public class Replay extends Game {
 	}
 	
 	public String getCurrentAnswer() {
-		return getCurrentRound()
-				.currentTurn
-				.getCurrentQuestion()
-				.getAnswers()
-				.get(AnswerNumber)
-				.getAnswer();
+		StringBuilder builder = new StringBuilder();
+		for (PlayerAnswer answer : currentRound.getCurrentTurn().getPlayerAnswers()) {
+			builder.append(answer.getAnswer());
+			builder.append(" ");
+		}
+		builder.trimToSize();
+		return builder.toString();
+	}
+	
+	private int getSecondsEarnedForPlayer(Player player) {
+		int seconds = 0;
+		for (Turn turn: currentRound.getTurns()) {
+			if (turn.getPlayer().getName().equals(player.getName()))
+				seconds += turn.getSecondsEarned();
+			if (turn.getTurnId() == currentRound.getCurrentTurn().getTurnId())
+				break;
+		}
+		return seconds;	
+	}
+	
+	public int GetSecondsEarnedPlayer1() {
+		return getSecondsEarnedForPlayer(getPlayer1());
+	}
+	
+	public int GetSecondsEarnedPlayer2() {
+		return getSecondsEarnedForPlayer(getPlayer2());
 	}
 }

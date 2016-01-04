@@ -16,6 +16,13 @@ public class ReplayFinal extends Final {
 	@Override
 	public void onSubmit(String answer) {
 		NextTurn();
+		updateView();
+	}
+	
+	@Override
+	public void onPass() {
+		NextTurn();
+		updateView();
 	}
 	
 	private void NextTurn() {

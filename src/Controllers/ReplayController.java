@@ -9,10 +9,11 @@ import Models.RoundType;
 import View.ReplayPanel;
 
 public class ReplayController {
-	MainController parent;
-	RoundController currentRoundController;
-	ReplayPanel view;
-	Replay model; 
+	private MainController parent;
+	private RoundController currentRoundController;
+	private ReplayPanel view;
+	private Replay model;
+	private Round currentRound;
 	public ReplayController(int id, MainController parent) {
 		this.parent = parent;
 		view = new ReplayPanel(this);
@@ -20,10 +21,21 @@ public class ReplayController {
 		model = new Replay(game.getId(), game.getPlayer1(), game.getPlayer2(), game.getGameState(), this);
 		Round currentRound = new ReplayThreeSixNine(model, this);
 		currentRoundController = new ThreeSixNineController(model, currentRound);
+		
 		model.setCurrentRound(currentRound);
 		view.setRound(currentRoundController.getView());
-		view.btnSubmit.addActionListener((e) -> model.getCurrentRound().onSubmit(model.getCurrentAnswer()));
-		view.btnSubmit.addActionListener((e) -> model.getCurrentRound().onPass());
+		view.btnSubmit.addActionListener((e) -> OnSubmit());
+		view.btnPass.addActionListener((e) -> OnPass());	
+		model.addObserver(view);
+		model.updateView();
+	}
+	
+	public void OnSubmit() {
+		model.getCurrentRound().onSubmit(model.getCurrentAnswer());
+	}
+	
+	public void OnPass() {
+		model.getCurrentRound().onPass();
 	}
 	
 	public void RoundEnd() {
@@ -31,7 +43,11 @@ public class ReplayController {
 		if (currentRoundController == null) {
 			EndReplay();
 		} else {
+			view.btnSubmit.addActionListener((e) -> model.getCurrentRound().onSubmit(model.getCurrentAnswer()));
+			view.btnPass.addActionListener((e) -> model.getCurrentRound().onPass());
 			view.setRound(currentRoundController.getView());
+			view.revalidate();
+			view.repaint();
 		}
 	}
 	
