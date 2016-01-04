@@ -25,6 +25,7 @@ public class Turn {
 	private Question skippedQuestion;
 	private SharedQuestion sharedQuestion;
 	private SharedQuestion sharedSkippedQuestion;
+	private int totalActualTime;
 	private Round parent;
 	
 	public Turn(Player player, Round parentRound) {
@@ -44,6 +45,7 @@ public class Turn {
 		//1- get last turn
 		//2- fetch question from turn
 		skippedQuestion = initSkippedQuestion();
+		totalActualTime = getTotalActualTime();
 	}
 
 	public Turn(ResultSet data, Round parentRound, boolean setCurrentTurn) { //TODO setCurrentTurn quick fix for when turn not yet assigned to round, was used for Question init. Can be removed?
@@ -51,6 +53,7 @@ public class Turn {
 			parentRound.setCurrrentTurn(this);
 		parent = parentRound;
 		readResultSet(data);
+		totalActualTime = getTotalActualTime();
 	}
 	
 	private void readResultSet(ResultSet data) {
@@ -85,6 +88,10 @@ public class Turn {
 		return Game.BeginAmountTime - 
 				DataManager.getInstance().getTotalSecondsEarnedInAGame(parent.getGame().getId(), player.getName()) + getSecondsEarned() 
 				- DataManager.getInstance().getTotalSecFinaleAfOtherPlayer(this);
+	}
+	
+	public int getPlayerTime() {
+		return totalActualTime;
 	}
 	
 	public void startTurn() {
@@ -200,7 +207,14 @@ public class Turn {
 	private void executeTimer(int value) {
 		secondsEarnd -= value;
 		moment++;
+		totalActualTime-=1;
 		parent.getGame().updateView();
+		
+		if (totalActualTime <= 0) {
+			parent.playerTimeIsOver();
+			timer.cancel();
+		}
+		
 	}
 	
 	public void startTimer() {

@@ -150,4 +150,11 @@ public class Final extends Round {
 		return true;
 	}
 
+	@Override
+	public void playerTimeIsOver() {
+		// TODO Auto-generated method stub
+		
+		
+	}
+
 }
