@@ -48,7 +48,7 @@ public class Final extends Round {
 		DataManager.getInstance().pushTurn(currentTurn);
 		currentTurn.startTimer();
 		
-		checkIfGameEnds = new MyTimer().schedule(() -> isCompleted(), 1000);
+		//checkIfGameEnds = new MyTimer().schedule(() -> isCompleted(), 1000);
 		
 		updateView();
 	}
@@ -90,11 +90,12 @@ public class Final extends Round {
 			Answer answerCorrect = currentQuestion.isAnswerCorrect(answer);
 			if (answerCorrect != null && answerIsValid(answer)) {
 				AnswersHandled.add(answerCorrect);
-				//amountCorrectAnswers++; 
 				
 				secondsEarned+=POINTS_QUESTION;
 				currentTurn.setSecondsFinalLost(secondsEarned);
 				
+
+				checkOpponentScore(secondsEarned);
 				
 				setResponseIsRight(true);
 			}else
@@ -118,6 +119,25 @@ public class Final extends Round {
 	
 	}
 	
+	public void checkOpponentScore(int secondsToBeSubstracted){
+		// CHECK HERE IF OPPONENTS SCORE WENT TO 0
+			
+		Player currentPlayer = DataManager.getInstance().getCurrentUser();
+		
+		// Check which player is playing
+		if(currentPlayer.equals(getGame().getController().getModel().getPlayer1())){
+			
+			if(DataManager.getInstance().getTotalSecondsEarnedInAGame(getGame().getId(), getGame().getController().getModel().getPlayer2().getName())
+			- secondsToBeSubstracted <= 0)
+				getGame().getController().loadNextRound(getRoundType());
+			
+		}else{ // current turn is for player 2
+			
+			if(DataManager.getInstance().getTotalSecondsEarnedInAGame(getGame().getId(), getGame().getController().getModel().getPlayer1().getName())
+					- secondsToBeSubstracted <= 0)
+						getGame().getController().loadNextRound(getRoundType());			
+		}
+	}
 	
 	public ArrayList<PlayerAnswer> getSubmittedAnswers() {
 		return playerAnswers;
