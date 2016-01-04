@@ -84,11 +84,14 @@ public class OpenDoor extends Round {
 //			amountCorrectAnswers = 0;
 			if (isCompleted())
 				game.getController().loadNextRound(roundType);
-			pushAnswers(playerAnswers);
-			if (currentTurn.getSkippedQuestion() == null)
-				getGame().getController().endTurn();
-			else 
-				initNewTurn(true);
+			else {
+				pushAnswers(playerAnswers);
+				if (currentTurn.getSkippedQuestion() == null)
+					getGame().getController().endTurn();
+				else 
+					initNewTurn(true);
+			}
+			
 		}
 	
 	}
@@ -100,10 +103,13 @@ public class OpenDoor extends Round {
 		pushAnswers(playerAnswers);
 		if (isCompleted()) 
 			game.getController().loadNextRound(roundType);
-		if (currentTurn.getSkippedQuestion() == null)
-			getGame().getController().endTurn();
-		else 
-			initNewTurn(true);
+		else {
+			if (currentTurn.getSkippedQuestion() == null)
+				getGame().getController().endTurn();
+			else 
+				initNewTurn(true);
+		}
+		
 	}
 	
 	public ArrayList<PlayerAnswer> getSubmittedAnswers() {
