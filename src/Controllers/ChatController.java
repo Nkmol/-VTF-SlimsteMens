@@ -13,6 +13,7 @@ import static java.lang.Math.toIntExact;
 import Models.ChatMessage;
 import Models.Game;
 import Models.GameInfo;
+import Models.MyTimer;
 import Models.ThreeSixNine;
 import Utilities.ComponentUtility;
 import View.ChatMessageView;
@@ -24,7 +25,9 @@ public class ChatController {
 	private ChatMessage model;
 	private ChatMessageView view;
 	private GameInfo parent;
-	private Timer timer;
+	//private Timer timer;
+	
+	private TimerTask timer;
 	
 	public ChatController(GameInfo parent) {
 		
@@ -33,9 +36,7 @@ public class ChatController {
 		
 		ComponentUtility.addActionListener(view, "btnSendMessage", (e) -> btnSendMessage_Press());
 
-		timer = new Timer();
-		timer.scheduleAtFixedRate(new PerformRepeatedTask(), 1000 ,1000);
-		
+		timer = new MyTimer().schedule(() -> updateChatMessages(), 1000);
 	}
 	
 	private void btnSendMessage_Press()
@@ -69,14 +70,5 @@ public class ChatController {
 	public ChatMessageView returnView(){
 		return view;
 	}
-	
-
-	class PerformRepeatedTask extends TimerTask {
-	    public void run() {
-	    	updateChatMessages();
-	    }
-	  }
-	
-	
 	
 }
