@@ -131,7 +131,7 @@ public class FramedView extends JPanel implements Observer{
 					}
 					*/
 					
-					if (submittedAnswer.getAnswer().equals(framedAnswerView.getAnswer())) {
+					if (submittedAnswer.getAnswer().equals(framedAnswerView.getAnswer().getAnswer())) {
 						framedAnswerView.revealAnswer();
 					}
 				}
