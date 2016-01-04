@@ -132,6 +132,9 @@ public class Final extends Round {
 	public boolean isCompleted() {
 		// TODO Auto-generated method stub
 		
+		boolean isCompleted = false;
+		
+		
 		
 		
 		return false;
