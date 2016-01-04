@@ -118,4 +118,10 @@ public class ThreeSixNine extends Round {
 	public boolean isCompleted() {
 		return DataManager.getInstance().getAmountUniqueSharedQuestionsForRound(this, DataManager.getInstance().getCurrentUser()) >= AMOUNT_QUESTIONS;
 	}
+
+	@Override
+	public void playerTimeIsOver() {
+		// TODO Auto-generated method stub
+		
+	}
 }
