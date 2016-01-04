@@ -341,5 +341,11 @@ public class Framed extends Round {
 		return false;
 	}
 
+	@Override
+	public void playerTimeIsOver() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }
