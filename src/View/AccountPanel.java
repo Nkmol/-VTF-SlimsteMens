@@ -31,9 +31,9 @@ public class AccountPanel extends JPanel implements Observer{
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
-		panel.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Change Password"), new EmptyBorder(10, 10, 10, 10))); 
+		panel.setBorder(new CompoundBorder(BorderFactory.createTitledBorder("Verrander wachtwoord"), new EmptyBorder(10, 10, 10, 10))); 
 		
-		panel.add(new JLabel("old password: "), c);
+		panel.add(new JLabel("Oud wachtwoord: "), c);
 		c.gridx = 1;
 		fieldOldPass = new JPasswordField();
 		panel.add(fieldOldPass, c);
@@ -41,7 +41,7 @@ public class AccountPanel extends JPanel implements Observer{
 		c.gridx = 0;
 		c.gridy = 1;
 		c.insets = new Insets(10, 0, 0, 0);
-		panel.add(new JLabel("new password: "), c);
+		panel.add(new JLabel("Nieuw wachtwoord: "), c);
 		c.gridx = 1;
 		fieldNewPass = new JPasswordField();
 		panel.add(fieldNewPass, c);
@@ -49,7 +49,7 @@ public class AccountPanel extends JPanel implements Observer{
 		c.insets = new Insets(0, 0, 0, 0);
 		c.gridx = 0;
 		c.gridy = 2;
-		panel.add(new JLabel("confirm password: "), c);
+		panel.add(new JLabel("Bevestig wachtwoord: "), c);
 		c.gridx = 1;
 		fieldNewPassRe = new JPasswordField();
 		panel.add(fieldNewPassRe, c);
@@ -61,7 +61,7 @@ public class AccountPanel extends JPanel implements Observer{
 		
 		c.gridy = 4;
 		c.insets = new Insets(10, 0, 0, 0);
-		btnConfirm = new JButton("Confirm");
+		btnConfirm = new JButton("Bevestig");
 		panel.add(btnConfirm, c);
 		add(panel);
 	}

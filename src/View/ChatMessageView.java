@@ -65,7 +65,7 @@ public class ChatMessageView extends JPanel implements Observer {
 		//this.add(messageBox, BorderLayout.SOUTH);
 		//this.add(btnSendMessage);
 		
-		btnSendMessage = new JButton("Send");
+		btnSendMessage = new JButton("Verzend");
 		
 		JPanel bottomContainer = new JPanel();
 		bottomContainer.setLayout(new BorderLayout());
