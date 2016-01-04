@@ -239,7 +239,7 @@ public class Turn {
 	private void executeQuestionTimer() {
 		questionTime--;
 		moment++;
-		if(questionTime < 0) {
+		if(questionTime <= 0) {
 			getRound().onPass();
 			timer.cancel();
 		}
