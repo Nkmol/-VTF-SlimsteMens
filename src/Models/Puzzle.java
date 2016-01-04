@@ -172,7 +172,8 @@ public class Puzzle extends Round {
 	@Override
 	public void playerTimeIsOver() {
 		// TODO Auto-generated method stub
-		
+		getGame().getController().endTurn();
+		getGame().stopGame();
 	}
 
 }
