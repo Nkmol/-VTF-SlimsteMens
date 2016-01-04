@@ -31,8 +31,27 @@ public class OpenDoor extends Round {
 		if(!continueCurrentTurn)
 			DataManager.getInstance().pushTurn(currentTurn);
 		currentTurn.startTimer();
+		if (currentTurn.getSkippedQuestion() != null) {
+			showAnswersForSkippedQuestion(currentTurn.getSkippedQuestion());
+		}
 		updateView();
 		
+	}
+	
+	public void showAnswersForSkippedQuestion(Question skippedQuestion) {
+		ArrayList<PlayerAnswer> playerAnswers = DataManager.getInstance().getPlayerAnswers(getGame().getId(), roundType, currentTurn.getTurnId()-1);
+		
+		for (PlayerAnswer playerAnswer : playerAnswers) {
+			Answer answerCorrect = skippedQuestion.isAnswerCorrect(playerAnswer.getAnswer());
+			if (answerCorrect != null && answerIsValid(playerAnswer.getAnswer())) { // The answer is correct
+				answersHandled.add(answerCorrect);
+			}
+		}
+		
+	}
+	
+	public ArrayList<Answer> getHandledAnswers() {
+		return answersHandled;
 	}
 	
 	public void pushAnswers(ArrayList<PlayerAnswer> playerAnswers) {

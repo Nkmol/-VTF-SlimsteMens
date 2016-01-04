@@ -1,7 +1,6 @@
 package View;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -19,6 +18,7 @@ import Models.Question;
 import Models.Turn;
 import Utilities.StringUtility;
 
+@SuppressWarnings("serial")
 public class OpenDoorView extends JPanel implements Observer{
 
 	private JTextArea questionTextArea;
@@ -95,6 +95,19 @@ public class OpenDoorView extends JPanel implements Observer{
 		}
 	}
 	
+	private void checkHandledAnswers(ArrayList<Answer> handledAnswers) {
+		for (Answer handledAnswer : handledAnswers) {
+			for (AnswerView answerView : answerViews) {
+				if (answerView.getAnswer().getAnswer().equals(handledAnswer.getAnswer())) {
+					answerView.unhideAnswer();
+				}
+//				if (playerAnswerCorrect(submittedAnswer, answerView.getAnswer()))
+//					answerView.unhideAnswer();
+
+			}
+		}
+	}
+	
 	private boolean playerAnswerCorrect(PlayerAnswer playerAnswer, Answer answer) {
 		if (StringUtility.CalculateMatchPercentage(playerAnswer.getAnswer(), answer.getAnswer()) >=  80)
 			return true;
@@ -122,6 +135,12 @@ public class OpenDoorView extends JPanel implements Observer{
 		if (currentQuestion != null) {
 			questionTextArea.setText(currentQuestion.getText());
 			placeAnswers(currentQuestion.getAnswers());
+		}
+		
+		ArrayList<Answer> handledAnswers = openDoor.getHandledAnswers();
+		
+		if (handledAnswers != null && handledAnswers.size() > 0) {
+			checkHandledAnswers(handledAnswers);
 		}
 		
 		ArrayList<PlayerAnswer> submittedAnswers = openDoor.getSubmittedAnswers();
