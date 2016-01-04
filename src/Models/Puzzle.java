@@ -10,7 +10,7 @@ public class Puzzle extends Round {
 
 
 	public final static int AMOUNT_QUESTIONS = 3,
-							CORRECT_POINTS = 60;
+							CORRECT_POINTS = 30;
 	
 	private int amountCorrectAnswers = 0;
 	private int secondsEarned = 0;

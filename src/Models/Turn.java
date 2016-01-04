@@ -101,7 +101,6 @@ public class Turn {
 			return lastTurn.getCurrentQuestion();
 		else
 			return null;
-
 	}
 	
 	public void setSkippedQuestion(Question question) {
