@@ -1548,13 +1548,13 @@ public class DataManager {
 		return totalSecEarned;
 	}
 	
-	public int getTotalSecFinaleAf(Turn turn) {
+	public int getTotalSecFinaleAfOtherPlayer(Turn turn) {
 		int totalSecFinalAf = 0;
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;
 		ResultSet data = null;
 		try {
-			String sql = "SELECT SUM(sec_finale_af) totalAf FROM beurt WHERE spel_id = ? AND rondenaam = ? AND Speler = ?";
+			String sql = "SELECT SUM(sec_finale_af) totalAf FROM beurt WHERE spel_id = ? AND rondenaam = ? AND NOT Speler = ?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, turn.getRound().getGame().getId());
 			preparedStatement.setString(2, turn.getRound().getRoundType().getValue());

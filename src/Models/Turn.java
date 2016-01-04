@@ -83,7 +83,7 @@ public class Turn {
 	public int getTotalActualTime() {
 		return Game.BeginAmountTime - 
 				DataManager.getInstance().getTotalSecondsEarnedInAGame(parent.getGame().getId(), player.getName()) + getSecondsEarned() 
-				- DataManager.getInstance().getTotalSecFinaleAf(this);
+				- DataManager.getInstance().getTotalSecFinaleAfOtherPlayer(this);
 	}
 	
 	public void startTurn() {
