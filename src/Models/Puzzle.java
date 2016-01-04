@@ -10,10 +10,11 @@ public class Puzzle extends Round {
 
 
 	public final static int AMOUNT_QUESTIONS = 3,
-							CORRECT_POINTS = 60;
+							CORRECT_POINTS = 30;
 	
 	private int amountCorrectAnswers = 0;
 	private int secondsEarned = 0;
+	private ArrayList<Answer> answersHandled;
 	
 	public Puzzle(Game game) {
 		super(game, RoundType.Puzzle);	
@@ -27,6 +28,7 @@ public class Puzzle extends Round {
 	
 	public void initNewTurn() {
 		currentTurn.setSharedQuestions(generateSharedQuestions());
+		showAnswersForSkippedQuestion();
 		updateView();
 		
 		if(!continueCurrentTurn) {
@@ -35,6 +37,10 @@ public class Puzzle extends Round {
 		}
 	}
 
+	public ArrayList<Answer> getHandledAnswers() {
+		return answersHandled;
+	}
+	
 	private ArrayList<SharedQuestion> generateSharedQuestions() {
 		ArrayList<SharedQuestion> sharedQuestions = new ArrayList<SharedQuestion>();
 		if(continueCurrentTurn) // Continue turn -> load current sharedQuestions
@@ -48,6 +54,24 @@ public class Puzzle extends Round {
 		}
 
 		return sharedQuestions;
+	}
+	
+	public void showAnswersForSkippedQuestion() {
+		ArrayList<PlayerAnswer> playerAnswers = lastTurn.getPlayerAnswers();
+		
+		for (PlayerAnswer playerAnswer : playerAnswers) {
+			for(SharedQuestion sharedQuestion : currentTurn.getSharedQuestions()) {
+				Answer answerCorrect = sharedQuestion.isAnswerCorrect(playerAnswer.getAnswer());
+				if (answerCorrect != null && answerIsValid(playerAnswer.getAnswer())) { // The answer is correct
+					answersHandled.add(answerCorrect);
+					break;
+				}
+			}
+		}	
+	}
+	
+	private boolean answerIsValid(String answerString) {
+		return !Question.isPlayerAnswerCorrect(answerString, answersHandled);
 	}
 	
 	private ArrayList<SharedQuestion> loadNewQuestions() {

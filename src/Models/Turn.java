@@ -15,7 +15,8 @@ public class Turn {
 	private TurnState turnState;
 	private Player player;
 	private TimerTask timer;
-	private int secondsEarnd;
+	private int secondsEarnd,
+				questionTime;
 	private int moment;
 	private Integer secondsFinalLost;
 	private ArrayList<SharedQuestion> sharedQuestions;
@@ -83,7 +84,7 @@ public class Turn {
 	public int getTotalActualTime() {
 		return Game.BeginAmountTime - 
 				DataManager.getInstance().getTotalSecondsEarnedInAGame(parent.getGame().getId(), player.getName()) + getSecondsEarned() 
-				- DataManager.getInstance().getTotalSecFinaleAf(this);
+				- DataManager.getInstance().getTotalSecFinaleAfOtherPlayer(this);
 	}
 	
 	public void startTurn() {
@@ -100,7 +101,6 @@ public class Turn {
 			return lastTurn.getCurrentQuestion();
 		else
 			return null;
-
 	}
 	
 	public void setSkippedQuestion(Question question) {
@@ -197,7 +197,7 @@ public class Turn {
 		secondsEarnd += value;
 	}
 	
-	public void executeTimer(int value) {
+	private void executeTimer(int value) {
 		secondsEarnd -= value;
 		moment++;
 		parent.getGame().updateView();
@@ -208,6 +208,29 @@ public class Turn {
 		if(timer != null)
 			timer.cancel();
 		timer = new MyTimer().schedule(() -> executeTimer(1), 1000);
+	}
+	
+	public void startQuestionTimer(int startValue) {
+		questionTime = startValue;
+		moment = 0;
+		if(timer != null)
+			timer.cancel();
+		timer = new MyTimer().schedule(() -> executeQuestionTimer(), 1000);
+	}
+	
+	public int getQuestionTime() {
+		return questionTime;
+	}
+	
+	private void executeQuestionTimer() {
+		questionTime--;
+		moment++;
+		if(questionTime < 0) {
+			getRound().onPass();
+			timer.cancel();
+		}
+		
+		parent.updateView();
 	}
 	
 	public void stopTimer() {
