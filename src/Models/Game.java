@@ -59,6 +59,10 @@ public class Game extends Observable {
 	public static boolean isCurrentUser(String playerName) {
 		return playerName.equals(DataManager.getInstance().getCurrentUser().getName());
 	}
+
+	public void stopGame(){
+		DataManager.getInstance().updateGameState(GameState.Finished, id);
+	}
 	
 	public Player getLowestScorePlayer() {
 		int player1score,

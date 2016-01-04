@@ -2,6 +2,7 @@ package Models;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.TimerTask;
 
 import Managers.DataManager;
 
@@ -13,6 +14,9 @@ public class Final extends Round {
 				secondsEarned = 0;
 	private Boolean responseIsRight;
 	private ArrayList<Answer> AnswersHandled;
+	
+	TimerTask checkIfGameEnds;
+	
 	
 	public Boolean getResponseIsRight() {
 		return responseIsRight;
@@ -43,6 +47,9 @@ public class Final extends Round {
 		currentTurn = initCurrentTurn(this);
 		DataManager.getInstance().pushTurn(currentTurn);
 		currentTurn.startTimer();
+		
+		checkIfGameEnds = new MyTimer().schedule(() -> isCompleted(), 1000);
+		
 		updateView();
 	}
 	
@@ -121,23 +128,25 @@ public class Final extends Round {
 		// TODO Auto-generated method stub
 		currentTurn.setTurnState(TurnState.Pass);
 		DataManager.getInstance().updateTurn(currentTurn);
+		if (isCompleted()) 
+			game.getController().endTurn();
 		if (currentTurn.getSkippedQuestion() == null)
 			getGame().getController().endTurn();
 		else 
 			initNewTurn();
 		
 	}
+	
 
 	@Override
 	public boolean isCompleted() {
 		// TODO Auto-generated method stub
+		if (currentTurn.getTotalActualTime() == 0){
+			getGame().getController().endTurn();
+			getGame().stopGame();
+		}
 		
-		boolean isCompleted = false;
-		
-		
-		
-		
-		return false;
+		return true;
 	}
 
 }
