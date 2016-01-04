@@ -142,8 +142,9 @@ public class Final extends Round {
 	public boolean isCompleted() {
 		// TODO Auto-generated method stub
 		if (currentTurn.getTotalActualTime() == 0){
-			getGame().getController().endTurn();
-			getGame().stopGame();
+			getGame().getController().loadNextRound(getRoundType());
+//			getGame().getController().endTurn();
+//			getGame().stopGame();
 		}
 		
 		return false;

@@ -114,7 +114,7 @@ public class Game extends Observable {
 				}
 			}
 			else if (lastTurnWasCurrentUser
-					&& turnBeforeLastTurnWasPassed || (turnBeforeLastTurnIsTSN && turnBeforeLastTurnWasWrong)
+					&& (turnBeforeLastTurnWasPassed || (turnBeforeLastTurnIsTSN && turnBeforeLastTurnWasWrong))
 					&& lastTurn.getQuestionId() == turnBeforeLastTurn.getQuestionId()
 					&& turnBeforeLastTurnWasNotForCurrentUser) { // now we know that the current player has answered a skipped question
 				return true;
