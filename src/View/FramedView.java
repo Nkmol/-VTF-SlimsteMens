@@ -31,11 +31,11 @@ public class FramedView extends JPanel implements Observer{
 	private FramedAnswerView[][] framedAnswerViews;
 	private int index;
 	private int currentQuestionId = 0;
-	private Boolean loaded;
+	//private Boolean loaded;
 	
 	public FramedView(Framed currentRound) {
 		createRoundFourPanel();
-		loaded = false;
+		//loaded = false;
 		index = 0;
 	}
 	
@@ -121,11 +121,17 @@ public class FramedView extends JPanel implements Observer{
 		}
 	}
 	
-	private void checkAnswer(ArrayList<PlayerAnswer> submittedAnswers) {
-		for (PlayerAnswer submittedAnswer : submittedAnswers) {
+	private void checkAnswer(ArrayList<Answer> submittedAnswers) {
+		for (Answer submittedAnswer : submittedAnswers) {
 			for (FramedAnswerView[] framedAnswerViewCollection : framedAnswerViews) {
 				for (FramedAnswerView framedAnswerView : framedAnswerViewCollection) {
+					/*
 					if (isPlayerAnswerCorrect(submittedAnswer, framedAnswerView.getAnswer())) {
+						framedAnswerView.revealAnswer();
+					}
+					*/
+					
+					if (submittedAnswer.getAnswer().equals(framedAnswerView.getAnswer())) {
 						framedAnswerView.revealAnswer();
 					}
 				}
@@ -133,6 +139,7 @@ public class FramedView extends JPanel implements Observer{
 		}
 	}
 	
+	/*
 	private boolean isPlayerAnswerCorrect(PlayerAnswer playerAnswer, Answer answer) {
 		if (StringUtility.CalculateMatchPercentage(playerAnswer.getAnswer(), answer.getAnswer()) >=  80)
 			return true;
@@ -158,6 +165,7 @@ public class FramedView extends JPanel implements Observer{
 		
 		return playerAnswers;
 	}
+	*/	
 	
 	@Override
 	public void update(Observable o, Object arg) {
@@ -186,10 +194,12 @@ public class FramedView extends JPanel implements Observer{
 		}
 		
 		if(currentQuestion != null) {
-			ArrayList<PlayerAnswer> playerAnswers = DataManager.getInstance().getPlayerAnswers(framed.getGame().getId(), RoundType.Framed, framed.getCurrentTurn().getTurnId());
-			checkAnswer(playerAnswers);
+			//ArrayList<PlayerAnswer> playerAnswers = DataManager.getInstance().getPlayerAnswers(framed.getGame().getId(), RoundType.Framed, framed.getCurrentTurn().getTurnId());
+			ArrayList<Answer> playerAnswers = framed.getSubmittedAnswers();
+			checkAnswer(playerAnswers); // TODO niet checken op goede antwoord?
 		}
 		
+		/*
 		if(!loaded) {
 			ArrayList<PlayerAnswer> submittedAnswers = calculatePlayerAnswersForTurn(framed);
 			
@@ -199,6 +209,7 @@ public class FramedView extends JPanel implements Observer{
 			
 			loaded = true;
 		}
+		*/
 		
 	}
 }
