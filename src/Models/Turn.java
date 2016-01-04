@@ -85,9 +85,13 @@ public class Turn {
 	}
 	
 	public int getTotalActualTime() {
-		return Game.BeginAmountTime - 
-				DataManager.getInstance().getTotalSecondsEarnedInAGame(parent.getGame().getId(), player.getName()) + getSecondsEarned() 
-				- DataManager.getInstance().getTotalSecFinaleAfOtherPlayer(this);
+		if (parent instanceof OpenDoor) {
+			System.out.println("");
+		}
+		int secondsEarnedInTheGame = DataManager.getInstance().getTotalSecondsEarnedInAGame(parent.getGame().getId(), player.getName()) + getSecondsEarned();
+		int finalAf = DataManager.getInstance().getTotalSecFinaleAfOtherPlayer(this);
+		System.err.println("Actual time = " + (secondsEarnedInTheGame - finalAf)); 
+		return secondsEarnedInTheGame - finalAf;
 	}
 	
 	public int getPlayerTime() {
@@ -239,8 +243,9 @@ public class Turn {
 	private void executeQuestionTimer() {
 		questionTime--;
 		moment++;
-		if(questionTime <= 0) {
+		if(questionTime == 0) {
 			getRound().onPass();
+			questionTime = 25;
 			timer.cancel();
 		}
 		
