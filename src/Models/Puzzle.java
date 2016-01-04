@@ -131,9 +131,42 @@ public class Puzzle extends Round {
 				DataManager.getInstance().pushPlayerAnswer(pa);
 	}
 	
+	public boolean thereAreBusyTurns(ArrayList<TurnInfo> turnInfos) {
+		ArrayList<TurnInfo> busyTurnInfos = new ArrayList<>();
+		for (TurnInfo turnInfo : turnInfos) {
+			if (turnInfo.getTurnState() == TurnState.Busy)
+				busyTurnInfos.add(turnInfo);
+		}
+		return busyTurnInfos.size() > 0;
+	}
+	
 	@Override
 	public boolean isCompleted() {
-		return Game.isCurrentUser(lastTurn.getPlayer().getName()) || !Game.isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() != TurnState.Pass;
+		//		return Game.isCurrentUser(lastTurn.getPlayer().getName()) || !Game.isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() != TurnState.Pass;
+		boolean isCompleted = false;
+
+		ArrayList<TurnInfo> turnInfos = DataManager.getInstance().getTurnInfosForRound(this);		
+
+		if (turnInfos != null && turnInfos.size() >= 2) {
+			if (turnInfos.size() >= 4 && !thereAreBusyTurns(turnInfos))
+				isCompleted = true;
+			if (turnInfos.size() == 3) {
+				TurnState firstTurnState = turnInfos.get(0).getTurnState();
+				TurnState thirdTurnState = turnInfos.get(2).getTurnState();
+				isCompleted =  ((firstTurnState == TurnState.Pass && thirdTurnState == TurnState.Correct) || 
+						(firstTurnState == TurnState.Correct && thirdTurnState == TurnState.Pass));
+			}
+			if (turnInfos.size() == 2) {
+				if (turnInfos.get(0).getTurnState() == TurnState.Correct && turnInfos.get(1).getTurnState() == TurnState.Correct) 
+					isCompleted =  true;
+			}
+		}
+		/*		
+		if (isCompleted)
+			game.getController().loadNextRound(roundType);*/
+
+		return isCompleted;
+
 	}
 
 }
