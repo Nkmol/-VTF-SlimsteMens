@@ -83,6 +83,7 @@ public class GameController {
 	}
 	
 	public void loadNextRound(RoundType currentRoundType) {
+		endTurn();
 		RoundType nextRoundType = RoundType.nextRoundType(currentRoundType);
 		model.setRound(Round.createRound(nextRoundType, model));
 		loadLastRound();
@@ -98,7 +99,6 @@ public class GameController {
 
 		if (round != null) {
 			if (round.isCompleted()) {
-				//endTurn(); //Should not happen when it actually is players turn
 				loadNextRound(round.getRoundType());
 			}
 		}
