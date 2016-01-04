@@ -92,9 +92,8 @@ public class GameController {
 		
 		Round round = DataManager.getInstance().getLastRoundForGame(model);
 
-		
 		// TODO Remove this as it's for testing purposes
-		//round = new Final(model);
+		round = new Final(model);
 
 		if (round != null) {
 			if (round.isCompleted()) {

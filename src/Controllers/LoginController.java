@@ -33,12 +33,6 @@ public class LoginController {
 			// Show main frame
 			parent.ShowMainPanel();
 
-			//TODO: Use ScreenManager?
-			
-			// Test value for the category
-			//parent.SetViewCategoryPanel(new AccountController(parent).getView());
-			
-			// Right Screen 
 		}
 	}
 	

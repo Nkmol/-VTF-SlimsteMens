@@ -146,7 +146,7 @@ public class Final extends Round {
 			getGame().stopGame();
 		}
 		
-		return true;
+		return false;
 	}
 
 }
