@@ -116,6 +116,19 @@ public class ThreeSixNine extends Round {
 
 	@Override
 	public boolean isCompleted() {
-		return DataManager.getInstance().getAmountUniqueSharedQuestionsForRound(this, DataManager.getInstance().getCurrentUser()) >= AMOUNT_QUESTIONS;
+		//TODO 369 25sec for a turn, TIMER doesn't start
+
+		if(DataManager.getInstance().getAmountUniqueSharedQuestionsForRound(this, DataManager.getInstance().getCurrentUser()) >= AMOUNT_QUESTIONS) {
+			Player[] players = {getGame().getPlayer1(), getGame().getPlayer2()};
+			
+			for(Player p : players) {
+				Turn t = DataManager.getInstance().getLastTurnForPlayerRound(this, p);
+				
+				t.addSecondsEarnd(POINTS_BONUS);
+				DataManager.getInstance().updateTurn(t);
+			}
+			return true;
+		}
+		return false;
 	}
 }
