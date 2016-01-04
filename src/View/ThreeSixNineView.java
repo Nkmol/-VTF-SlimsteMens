@@ -66,6 +66,6 @@ public class ThreeSixNineView extends JPanel implements Observer {
 		}
 		
 		lblQuestionTime.setText(""+currentTurn.getQuestionTime());
-		System.out.println(currentTurn.getQuestionTime());
+//		System.out.println(currentTurn.getQuestionTime());
 	}
 }
