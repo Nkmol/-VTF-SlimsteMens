@@ -38,8 +38,12 @@ public class PlayerView extends JPanel {
 		// Main Layout
 		BorderLayout layout = new BorderLayout();
 		setLayout(layout);
+		
+		JPanel container = new JPanel();
+		container.setLayout(new BorderLayout());
+		add(container, BorderLayout.CENTER);
 
-		setPreferredSize(new Dimension(400,70));
+		container.setPreferredSize(new Dimension(400,70));
 		
 		// Left and Right Layout
 		JPanel leftView = new JPanel();
@@ -48,8 +52,8 @@ public class PlayerView extends JPanel {
 		JPanel rightView = new JPanel();
 		rightView.setLayout(new BorderLayout());
 		
-		add(leftView, BorderLayout.CENTER);
-		add(rightView, BorderLayout.EAST);
+		container.add(leftView, BorderLayout.CENTER);
+		container.add(rightView, BorderLayout.EAST);
 		
 		// Left Layout
 		JPanel leftLeftView = new JPanel();
@@ -89,7 +93,7 @@ public class PlayerView extends JPanel {
 		rightRightView.add(buttonView, BorderLayout.CENTER);		
 
 		// 135, 171, 255
-		setBackground(new Color(135,171,255));
+		//setBackground(new Color(135,171,255));
 	}
 	
 	
@@ -101,7 +105,7 @@ public class PlayerView extends JPanel {
 		nameTitleView.setBackground(new Color(47,109,255));
 		
 		JLabel playerNameTitleLabel = new JLabel();
-		playerNameTitleLabel.setText("Name");
+		playerNameTitleLabel.setText("Naam");
 		playerNameTitleLabel.setFont(new Font("Serif", Font.ITALIC, 15));
 		nameTitleView.add(playerNameTitleLabel);
 		
@@ -127,7 +131,7 @@ public class PlayerView extends JPanel {
 		totalGamesTitleView.setBackground(new Color(47,109,255));
 		
 		JLabel totalGamesTitleLabel = new JLabel();
-		totalGamesTitleLabel.setText("Total games");
+		totalGamesTitleLabel.setText("Aantal games");
 		totalGamesTitleLabel.setFont(new Font("Serif", Font.ITALIC, 15));
 		totalGamesTitleView.add(totalGamesTitleLabel);
 		
@@ -153,7 +157,7 @@ public class PlayerView extends JPanel {
 		winsTitleView.setBackground(new Color(47,109,255));
 		
 		JLabel winsTitleLabel = new JLabel();
-		winsTitleLabel.setText("Wins");
+		winsTitleLabel.setText("wins");
 		winsTitleLabel.setFont(new Font("Serif", Font.ITALIC, 15));
 		winsTitleView.add(winsTitleLabel);
 		
@@ -179,7 +183,7 @@ public class PlayerView extends JPanel {
 		losesTitleView.setBackground(new Color(47,109,255));
 		
 		JLabel losesTitleLabel = new JLabel();
-		losesTitleLabel.setText("Loses");
+		losesTitleLabel.setText("loses");
 		losesTitleLabel.setFont(new Font("Serif", Font.ITALIC, 15));
 		losesTitleView.add(losesTitleLabel);
 		
@@ -205,7 +209,7 @@ public class PlayerView extends JPanel {
 		timeLeftTitleView.setBackground(new Color(47,109,255));
 		
 		JLabel timeLeftTitleLabel = new JLabel();
-		timeLeftTitleLabel.setText("Time left");
+		timeLeftTitleLabel.setText("Tijd over");
 		timeLeftTitleLabel.setFont(new Font("Serif", Font.ITALIC, 15));
 		timeLeftTitleView.add(timeLeftTitleLabel);
 		
@@ -272,6 +276,12 @@ public class PlayerView extends JPanel {
 		timeLeftLabel.setText(String.valueOf(playerUpdate.getRank().getAverageSecondsLeft()));		
 		challengeButton.setEnabled(!playerUpdate.isChallenged());
 		
+		if(playerUpdate.getInviter()) {
+			setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.red, 1), "Uitgedaagd door", 0, 0, new Font("Serif", Font.ITALIC, 15)));
+		}
+		else {
+			setBorder(null);
+		}
 	}
 
 }

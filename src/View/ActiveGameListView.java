@@ -55,7 +55,7 @@ public class ActiveGameListView extends JPanel implements Observer {
 		topTitle.setPreferredSize(new Dimension(150, 40));
 		topTitle.setBackground(new Color(47,109,255));
 		JLabel topTitleLabel = new JLabel();
-		topTitleLabel.setText("Your turn");
+		topTitleLabel.setText("Jouw beurt");
 		topTitle.add(topTitleLabel);
 		
 		topContainer.add(topTitle, BorderLayout.NORTH);
@@ -68,7 +68,7 @@ public class ActiveGameListView extends JPanel implements Observer {
 		bottomTitle.setPreferredSize(new Dimension(150, 40));
 		bottomTitle.setBackground(new Color(47,109,255));
 		JLabel bottomTitleLabel = new JLabel();
-		bottomTitleLabel.setText("Opponents turn");
+		bottomTitleLabel.setText("Tegenstander zijn beurt");
 		bottomTitle.add(bottomTitleLabel);
 		
 		bottomContainer.add(bottomTitle, BorderLayout.NORTH);

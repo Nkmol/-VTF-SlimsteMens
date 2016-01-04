@@ -41,9 +41,81 @@ public class ActivePlayers extends Observable{
 				}
 			}
 		}		
+		players = sortByRank(players);
 		
 		activePlayers = players;
 		notifyObs();
+	}
+	
+	private ArrayList<ChallengedPlayer> sortByRank(ArrayList<ChallengedPlayer> players) {
+		
+	    int i, j;
+	    ChallengedPlayer tijdelijk;
+	    for (j = 0; j < players.size(); j++) {
+	        for (i = 1; i < players.size() - j; i++) {
+	            if (isHigherScore(players.get(i),players.get(i-1))) {
+	                tijdelijk = players.get(i);
+	                players.set(i, players.get(i-1));
+	                players.set(i-1, tijdelijk);
+	            }
+	        }
+	    }
+	    return players;
+	}
+	
+	private Boolean isHigherScore(ChallengedPlayer player, ChallengedPlayer player2) {	
+		Long player1TotalGames = (long)player.getRank().getAmountPlayedGames();
+		Long player1Wins = (long)player.getRank().getAmountGamesWon();
+		Long player1Loses = (long)player.getRank().getAmountGamesLost();
+		
+		Long player2TotalGames = (long)player2.getRank().getAmountPlayedGames();
+		Long player2Wins = (long)player2.getRank().getAmountGamesWon();
+		Long player2Loses = (long)player2.getRank().getAmountGamesLost();
+		
+		if (player1TotalGames == 0) {
+			if(player2TotalGames == 0) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		else if (player2TotalGames == 0) {
+			return true;
+		}
+		else {
+		Long winPercent1 = player1Wins / player1TotalGames;
+		Long winPercent2 = player2Wins / player2TotalGames;
+		
+		if(winPercent1 > winPercent2) {
+			return true;
+		}
+		else if(winPercent1 == winPercent2) {
+			if(player1Wins > player2Wins) {
+				return true;
+			}
+			else if(player1Wins == player2Wins) {
+				if(player1Loses < player2Loses) {
+					return true;
+				}
+				else if(player1Loses == player2Loses) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+		
+		}
+		
+		
 	}
 	
 	private void notifyObs() {
