@@ -10,12 +10,12 @@ import Models.*;
 
 public class DataManager {
 
-/*	private static final String dbUrl = "jdbc:mysql://localhost/slimsteMens";
+	private static final String dbUrl = "jdbc:mysql://localhost/slimsteMens";
 	private static final String username = "root";
-	private static final String password = "root";*/
-	private static final String dbUrl = "jdbc:mysql://databases.aii.avans.nl:3306/spmol_db2";
-	private static final String username = "spmol";
-	private static final String password = "Ab12345";
+	private static final String password = "root";
+//	private static final String dbUrl = "jdbc:mysql://databases.aii.avans.nl:3306/spmol_db2";
+//	private static final String username = "spmol";
+//	private static final String password = "Ab12345";
 	
 	private static DataManager instance = null;
 //	private Connection connection;
@@ -646,6 +646,36 @@ public class DataManager {
 		return turns;
 	}
 	
+	public ArrayList<Turn> getTurnsForQuestion(Round round, Question question) {
+		ArrayList<Turn> turns = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT * FROM beurt WHERE spel_id = ? AND rondenaam = ? AND vraag_id = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, round.getGame().getId());
+			preparedStatement.setString(2, round.getRoundType().getValue());
+			preparedStatement.setInt(3, question.getId());
+			data = preparedStatement.executeQuery();
+			turns = new ArrayList<>();
+			while (data.next())
+				turns.add(new Turn(data, round, false));
+		} catch (SQLException e) {
+			System.err.println("Error fetching turns for game id: " + round.getGame().getId());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		return turns;
+	}
+	
 	public Turn getLastTurnForGame(Round round) {
 		Turn turn = null;
 		Connection connection = getConnection();
@@ -691,6 +721,101 @@ public class DataManager {
 					+ " WHERE r.spel_id = ? ORDER BY b.beurt_id DESC LIMIT 1";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, gameId);
+			data = preparedStatement.executeQuery();
+			if (data.next())
+				turn = new Turn(data, round, false);
+		} catch (SQLException e) {
+			System.err.println("Error fetching last turn for game id: " + gameId);
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		return turn;
+	}
+	
+	public int getAmountCorrectAnswersForQuestion(int gameId, Question question) {
+		int amount = 0;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT Count(Antwoord) as 'count' FROM spelerAntwoord"
+					+ " WHERE beurt_id IN (Select Beurt_id FROM beurt WHERE vraag_id = ? and spel_id = ?)";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, gameId);
+			preparedStatement.setInt(2, question.getId());
+			
+			data = preparedStatement.executeQuery();
+			if (data.next())
+				amount = data.getInt("count");
+		} catch (SQLException e) {
+			System.err.println("Error amount of answers for question for game id: " + gameId);
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		return amount;
+	}
+	
+	public int getAmountAskedQuestionsForRound(Round round) {
+		int amount = 0;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT Count(vraag_id) as 'count' FROM beurt"
+					+ " WHERE spel_id = ? AND rondenaam = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, round.getGame().getId());
+			preparedStatement.setString(2, round.getRoundType().getValue());
+			
+			data = preparedStatement.executeQuery();
+			if (data.next())
+				amount = data.getInt("count");
+		} catch (SQLException e) {
+			System.err.println("Error amount of questions for round for game id: " + round.getGame().getId());
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		return amount;
+	}
+	
+	public Turn getXLastTurnForGame(int gameId, Round round, int index) {
+		Turn turn = null;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT b.* FROM ronde AS r"
+					+ " INNER JOIN rondenaam AS rn ON"
+					+ " (SELECT COUNT(spel_id) FROM ronde WHERE spel_id = r.spel_id AND r.rondenaam = rn.type) = rn.volgnr"
+					+ " INNER JOIN beurt AS b ON b.spel_id = r.spel_id AND r.rondenaam = b.rondenaam"
+					+ " WHERE r.spel_id = ? ORDER BY b.beurt_id DESC LIMIT ?,1";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, gameId);
+			preparedStatement.setInt(2, index);
 			data = preparedStatement.executeQuery();
 			if (data.next())
 				turn = new Turn(data, round, false);
@@ -903,8 +1028,8 @@ public class DataManager {
 		return turnBefore;
 	}
 	
-	//TODO do i ever need to push all shared questions?
-	public boolean pushSharedQuestions(Turn turn) throws SQLException {
+
+	public boolean pushSharedQuestions(Turn turn) {
 		boolean pushed = false;
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;
@@ -919,7 +1044,8 @@ public class DataManager {
 					preparedStatement.setInt(3, sharedQuestion.getTurn().getRound().getCurrentTurn().getTurnId());
 					preparedStatement.setInt(4, sharedQuestion.getIndexNumber());
 					preparedStatement.setInt(5, sharedQuestion.getId());
-					//preparedStatement.setString(6, sharedQuestion.getAnswer());
+					preparedStatement.setNull(6, Types.CHAR);
+					
 					if (preparedStatement.executeUpdate() > 0) {
 						pushed = true;
 						connection.commit();
@@ -927,7 +1053,7 @@ public class DataManager {
 				}
 			}
 		}catch (SQLException e) {
-			// TODO: handle exception
+			System.err.println(e.getMessage());
 		} finally {
 			try {
 				if (preparedStatement != null) 
@@ -1141,7 +1267,7 @@ public class DataManager {
 	}
 	
 	//TODO does this need to be an Array?
-	public ArrayList<SharedQuestion> getSharedQuestions(Round round, int turnId) {
+	public ArrayList<SharedQuestion> getSharedQuestions(Turn turn) {
 		ArrayList<SharedQuestion> sharedQuestions = null;
 		Connection connection = getConnection();
 		PreparedStatement preparedStatement = null;
@@ -1150,13 +1276,13 @@ public class DataManager {
 			
 			String sql = "SELECT * FROM deelvraag WHERE spel_id = ? AND rondenaam = ? AND beurt_id = ?";
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, round.getGame().getId());
-			preparedStatement.setString(2, round.getRoundType().getValue());
-			preparedStatement.setInt(3, turnId);
+			preparedStatement.setInt(1, turn.getRound().getGame().getId());
+			preparedStatement.setString(2, turn.getRound().getRoundType().getValue());
+			preparedStatement.setInt(3, turn.getTurnId());
 			data = preparedStatement.executeQuery();
 			sharedQuestions = new ArrayList<>();
 			while (data.next())
-				sharedQuestions.add(new SharedQuestion(data, round.getCurrentTurn()));
+				sharedQuestions.add(new SharedQuestion(data, turn));
 		} catch (SQLException e) {
 			System.err.println("Error fetching shared questions");
 			System.err.println(e.getMessage());
@@ -1420,6 +1546,37 @@ public class DataManager {
 			} catch(SQLException ex) {} 
 		}
 		return totalSecEarned;
+	}
+	
+	public int getTotalSecFinaleAf(Turn turn) {
+		int totalSecFinalAf = 0;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			String sql = "SELECT SUM(sec_finale_af) totalAf FROM beurt WHERE spel_id = ? AND rondenaam = ? AND Speler = ?";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, turn.getRound().getGame().getId());
+			preparedStatement.setString(2, turn.getRound().getRoundType().getValue());
+			preparedStatement.setString(3, turn.getPlayer().getName());
+			data = preparedStatement.executeQuery();
+			if (data.next())
+				totalSecFinalAf = data.getInt("totalAf");
+		} catch(SQLException e) {
+			System.err.println("Error fetching total seconds final af in a game with id: " + turn.getRound().getGame().getId() + " and player name: " + turn.getPlayer().getName());
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		
+		return totalSecFinalAf;
 	}
 	
 	public int numberOfTimesQuestionAskedTo(String playerName, int questionId) {

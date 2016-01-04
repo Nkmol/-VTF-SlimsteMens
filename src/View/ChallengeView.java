@@ -87,7 +87,7 @@ public class ChallengeView extends JPanel {
 	    Image img = null;
 	    
 		try {
-			img = ImageIO.read(new File("Assets/ChallengeMessage.png"));
+			img = ImageIO.read(getClass().getResource("/ChallengeMessage.png"));
 		} catch (IOException ex) {
 		}
 		 

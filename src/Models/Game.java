@@ -5,18 +5,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Observable;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import com.mysql.fabric.xmlrpc.base.Data;
-
 import Controllers.GameController;
 import Managers.DataManager;
 import Utilities.StringUtility;
 
 public class Game extends Observable {
 	
-	private static final int MinimumAnswerPercentage = 80,
+	public static final int MinimumAnswerPercentage = 80,
 							 BeginAmountTime = 100;
 	
 	private int id;
@@ -64,6 +59,23 @@ public class Game extends Observable {
 	public static boolean isCurrentUser(String playerName) {
 		return playerName.equals(DataManager.getInstance().getCurrentUser().getName());
 	}
+
+	public void stopGame(){
+		DataManager.getInstance().updateGameState(GameState.Finished, id);
+	}
+	
+	public Player getLowestScorePlayer() {
+		int player1score,
+			player2score;
+		
+		player1score = DataManager.getInstance().getTotalSecondsEarnedInAGame(id, player1.getName());
+		player2score = DataManager.getInstance().getTotalSecondsEarnedInAGame(id, player2.getName());
+		
+		if(player1score > player2score)
+			return player2;
+		else 
+			return player1;
+	}
 	
 	public static boolean isCurrentPlayerTurn(int gameId) {
 		TurnInfo lastTurn = DataManager.getInstance().getLastInfoTurnForGame(gameId);
@@ -79,7 +91,6 @@ public class Game extends Observable {
 		}
 		else {
 			GameInfo gameInfo = DataManager.getInstance().getGameInfoForGame(gameId);
-			
 			if(isCurrentUser(gameInfo.getPlayer1().getName()))
 				return true;
 		}
@@ -90,10 +101,22 @@ public class Game extends Observable {
 	public static boolean playerAnsweredASkippedQuestion(TurnInfo lastTurn) {
 		TurnInfo turnBeforeLastTurn = DataManager.getInstance().getTurInfonBeforeATurnInfo(lastTurn);
 		if (turnBeforeLastTurn != null) {
-			if (isCurrentUser(lastTurn.getPlayer().getName()) 
-					&& turnBeforeLastTurn.getTurnState() == TurnState.Pass
+			boolean lastTurnWasCurrentUser = isCurrentUser(lastTurn.getPlayer().getName());
+			boolean turnBeforeLastTurnWasPassed = turnBeforeLastTurn.getTurnState() == TurnState.Pass;
+			boolean turnBeforeLastTurnIsTSN = turnBeforeLastTurn.getRoundType() == RoundType.ThreeSixNine;
+			boolean turnBeforeLastTurnWasWrong = turnBeforeLastTurn.getTurnState() == TurnState.Wrong;
+			boolean turnBeforeLastTurnWasNotForCurrentUser = !isCurrentUser(turnBeforeLastTurn.getPlayer().getName());
+			if (lastTurn.getQuestionId() == 0 && turnBeforeLastTurn.getQuestionId() == 0) {
+				if (lastTurnWasCurrentUser 
+						&& (turnBeforeLastTurnWasPassed || (turnBeforeLastTurnIsTSN && turnBeforeLastTurnWasWrong))
+						&& turnBeforeLastTurnWasNotForCurrentUser) { // now we know that the current player has answered a skipped question
+					return true;
+				}
+			}
+			else if (lastTurnWasCurrentUser
+					&& (turnBeforeLastTurnWasPassed || (turnBeforeLastTurnIsTSN && turnBeforeLastTurnWasWrong))
 					&& lastTurn.getQuestionId() == turnBeforeLastTurn.getQuestionId()
-					&& !isCurrentUser(turnBeforeLastTurn.getPlayer().getName())) { // now we know that the current player has answered a skipped question
+					&& turnBeforeLastTurnWasNotForCurrentUser) { // now we know that the current player has answered a skipped question
 				return true;
 			}
 		}

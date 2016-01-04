@@ -7,104 +7,258 @@ import Managers.DataManager;
 
 public class Framed extends Round {
 
-	private final static int AMOUNT_QUESTIONS = 9,
+	private final static int AMOUNT_QUESTIONS = 1,
 							 BONUS_ITERATION = 3,
 							 POINTS_QUESTION = 20,
 							 AMOUNT_ANSWERS = 10;
-	private int amountCorrectAnswers = 0;
 	private int secondsEarned = 0;
 	private ArrayList<PlayerAnswer> playerAnswers;
+	private ArrayList<Answer> answersHandled;
+	
+	private Boolean stay;
 	
 	public Framed(Game game) {
 		super(game, RoundType.Framed);	
-		if (game.getGameState() != GameState.Finished)
-			init();
+		init();
 	}
 	
 	public Framed(ResultSet data, Game game) {
 		super(data,game);
-		if (game.getGameState() != GameState.Finished)
-			init();
+		init();
 	}
 	
 	public void init() {
 		//questions = DataManager.getInstance().getQuestions(this);
-		handleTurns();
+			//handleTurns();
+			//checkStay();
+		if(getCurrentTurn().getCurrentQuestion() != null) {
+			if(getLastTurn() != null) {
+				getCurrentTurn().setCurrentQuestion(getLastTurn().getCurrentQuestion());
+			}
+		}
 		updateView();
-		if (game.getGameState() != GameState.Finished)
-			DataManager.getInstance().pushTurn(currentTurn);
+		DataManager.getInstance().pushTurn(currentTurn);
+		initPlayerAnswers();
 	}
 	
 	public void initNewTurn() {
-		amountCorrectAnswers = 0;
 		currentTurn = initCurrentTurn(this);
 		DataManager.getInstance().pushTurn(currentTurn);
 		updateView();
 	}
 	
-	public void handleTurns() {
-		Question currentQuestion = (getLastTurn() != null) ? getLastTurn().getCurrentQuestion() : currentTurn.getCurrentQuestion();
+	public void checkStay() {
+		Turn secondLastTurn = DataManager.getInstance().getXLastTurnForGame(this.getGame().getId(), this, 1);
 		
-		if(getLastTurn() != null) {
-			this.getCurrentTurn().setCurrentQuestion(currentQuestion);
-		}
-	}
-	
-	public void pushSharedQuestion() {
-		if (lastTurn == null) {
-			SharedQuestion sharedQuestion = new SharedQuestion(currentTurn.getCurrentQuestion(), 1);
+		/*
+		if(getLastTurn().getTurnState() == TurnState.Busy) {
+			if(secondLastTurn != null && !currentTurn.getCurrentQuestion().getText().equals(secondLastTurn.getCurrentQuestion().getText())) {
+				stay = false;
+			}
+			else {
+				if(secondLastTurn != null && !secondLastTurn.getPlayer().getName().equals(currentTurn.getPlayer().getName())) {
+					if(secondLastTurn.getTurnState() == TurnState.Correct){
+						stay = false;
+					}
+					else if(secondLastTurn.getTurnState() == TurnState.Pass){
+						stay = true;
+					}
+					else if(secondLastTurn.getTurnState() == TurnState.Wrong){
+						stay = true;
+					}
+					else if(secondLastTurn.getTurnState() == TurnState.Timeout){
+						stay = true;
+					}
+				}
+				else {
+					stay = false;
+				}
+			}
 		}
 		else {
-			SharedQuestion sharedQuestion = new SharedQuestion(currentTurn.getCurrentQuestion(), lastTurn.getSharedQuestion().getIndexNumber() + 1);
+			if(getLastTurn() != null && !currentTurn.getCurrentQuestion().getText().equals(getLastTurn().getCurrentQuestion().getText())) {
+				stay = false;
+			}
+			else {
+				if(getLastTurn() != null && !getLastTurn().getPlayer().getName().equals(currentTurn.getPlayer().getName())) {
+					if(getLastTurn().getTurnState() == TurnState.Correct){
+						stay = false;
+					}
+					else if(getLastTurn().getTurnState() == TurnState.Pass){
+						stay = true;
+					}
+					else if(getLastTurn().getTurnState() == TurnState.Wrong){
+						stay = true;
+					}
+					else if(getLastTurn().getTurnState() == TurnState.Timeout){
+						stay = true;
+					}
+				}
+				else {
+					stay = false;
+				}
+			}
+		}
+		
+		*/
+	}
+	
+	public void handleTurns() {
+		/*
+		Turn secondLastTurn = DataManager.getInstance().getXLastTurnForGame(this.getGame().getId(), this, 1);
+		
+		Question currentQuestion = null;
+		
+		if(getLastTurn() != null && getLastTurn().getTurnState() == TurnState.Busy) {
+			// last turn busy
+			currentQuestion = getLastTurn().getCurrentQuestion();
+		}
+		else if(getLastTurn() != null && secondLastTurn != null && !getLastTurn().getCurrentQuestion().getText().equals(secondLastTurn.getCurrentQuestion().getText())) {
+			// same question
+			currentQuestion = getLastTurn().getCurrentQuestion();
+		}
+		else if(getLastTurn() != null && getLastTurn().getPlayer().getName().equals(currentTurn.getPlayer().getName())) {
+			if(getLastTurn().getTurnState() == TurnState.Correct) {
+				// same question
+				currentQuestion = getLastTurn().getCurrentQuestion();
+			}
+			else if(secondLastTurn.getTurnState() == TurnState.Pass){
+				// new question
+				currentQuestion = getCurrentTurn().getCurrentQuestion();
+			}
+			else if(secondLastTurn.getTurnState() == TurnState.Wrong){
+				// new question
+				currentQuestion = getCurrentTurn().getCurrentQuestion();
+			}
+			else if(secondLastTurn.getTurnState() == TurnState.Timeout){
+				// new question
+				currentQuestion = getCurrentTurn().getCurrentQuestion();
+			}
+		}
+		else if(secondLastTurn != null && secondLastTurn.getPlayer().getName().equals(currentTurn.getPlayer().getName())) {
+			if(secondLastTurn.getTurnState() == TurnState.Correct) {
+				// same question
+				currentQuestion = getLastTurn().getCurrentQuestion();
+			}
+			else if(secondLastTurn.getTurnState() == TurnState.Pass){
+				// new question
+				currentQuestion = getCurrentTurn().getCurrentQuestion();
+			}
+			else if(secondLastTurn.getTurnState() == TurnState.Wrong){
+				// new question
+				currentQuestion = getCurrentTurn().getCurrentQuestion();
+			}
+			else if(secondLastTurn.getTurnState() == TurnState.Timeout){
+				// new question
+				currentQuestion = getCurrentTurn().getCurrentQuestion();
+			}
+		}
+		else {
+			currentQuestion = getCurrentTurn().getCurrentQuestion();
+		}
+		
+		
+		if(currentQuestion != null) {
+			getCurrentTurn().setCurrentQuestion(currentQuestion);
+		}
+		*/
+	}
+	
+	public void checkRoundDone() {
+		
+	}
+	
+	public void initPlayerAnswers() {
+		if(playerAnswers == null) {
+			playerAnswers = new ArrayList<PlayerAnswer>();
+		}
+		
+		if(answersHandled == null) {
+			answersHandled = new ArrayList<Answer>();
 		}
 	}
+
+	private boolean answerIsValid(String answerString) {
+		return !Question.isPlayerAnswerCorrect(answerString, answersHandled);
+	}
+	
+	public void pushAnswers(ArrayList<PlayerAnswer> playerAnswers) {
+		if (playerAnswers != null && playerAnswers.size() > 0) {
+			//Push player's answers
+			for (PlayerAnswer playerAnswer : playerAnswers) {
+				DataManager.getInstance().pushPlayerAnswer(playerAnswer);
+			}
+			
+			this.playerAnswers = null;
+		}
+	}
+
 
 	@Override
 	public void onSubmit(String answer) {
 		// TODO Auto-generated method stub
 		System.out.println("your answer is " + answer);
-		if (currentTurn.getCurrentQuestion().isPlayerAnswerCorrect(answer)) 
+		
+		/*
+		if (currentTurn.getCurrentQuestion().isPlayerAnswerCorrect(answer))  //TODO IDK zeker of nodig
 			Turn.pushTurn(currentTurn, TurnState.Correct, answer);
 		else 
 			Turn.pushTurn(currentTurn, TurnState.Wrong, answer);
-		
-
-		if (playerAnswers == null)
-			playerAnswers = new ArrayList<>();
+			*/
 		
 		int answerId = playerAnswers.size() + 1;
-		PlayerAnswer playerAnswer = new PlayerAnswer(currentTurn, answerId, answer, 10); //TODO: change the moment
-		DataManager.getInstance().pushPlayerAnswer(playerAnswer);
+		PlayerAnswer playerAnswer = new PlayerAnswer(currentTurn, answerId, answer, currentTurn.getMoment());
+		
 		playerAnswers.add(playerAnswer);
-			
+		
 		Question currentQuestion = currentTurn.getCurrentQuestion();
 		
 		System.out.println("Question id: " + currentQuestion.getId());
 		
+		//TODO maybe feedback of je het goed had of niet?
 		if (currentQuestion != null) {
-			if (currentQuestion.isPlayerAnswerCorrect(answer)) {
-				amountCorrectAnswers++; 
-				secondsEarned+=POINTS_QUESTION;
-				currentTurn.setTurnState(TurnState.Correct);
-				currentTurn.setSecondsEarned(secondsEarned);
-				DataManager.getInstance().updateTurn(currentTurn);
-				getGame().getController().endTurn();
+			Answer answerCorrect = getCurrentTurn().getCurrentQuestion().isAnswerCorrect(answer);
+			if (answerCorrect != null && answerIsValid(answer)) {
+				answersHandled.add(answerCorrect);
+				currentTurn.addSecondsEarnd(POINTS_QUESTION);
 				
+				if(answersHandled.size() == AMOUNT_ANSWERS) {
+					pushAnswers(playerAnswers);
+					currentTurn.setTurnState(TurnState.Correct);
+					DataManager.getInstance().updateTurn(currentTurn);
+					if (isCompleted()) {
+						getGame().getController().endTurn();
+						getGame().getController().loadNextRound(this.roundType);
+					}
+					else {
+						getGame().getController().endTurn();
+					}
+				}
+				else {
+					updateView();
+				}
 			}
 			else {
 				currentTurn.setTurnState(TurnState.Wrong);
-				currentTurn.setSecondsEarned(secondsEarned);
+				//currentTurn.addSecondsEarnd(secondsEarned);
 				DataManager.getInstance().updateTurn(currentTurn);
-				amountCorrectAnswers = 0;
-				getGame().getController().endTurn();
+				pushAnswers(playerAnswers);
+				if (isCompleted()) {
+					getGame().getController().loadNextRound(this.roundType);
+				}
+				else {
+					getGame().getController().endTurn();
+				}
+				
 			}
 		}		
 			
-		updateView();
 
+
+		/*
 		if (amountCorrectAnswers == AMOUNT_ANSWERS) {
 			currentTurn.setTurnState(TurnState.Correct);
-			currentTurn.setSecondsEarned(secondsEarned);
+			currentTurn.addSecondsEarnd(POINTS_QUESTION);
 			DataManager.getInstance().updateTurn(currentTurn);
 			amountCorrectAnswers = 0;
 			if (currentTurn.getSkippedQuestion() == null)
@@ -112,27 +266,64 @@ public class Framed extends Round {
 			else 
 				initNewTurn();
 		}
+		*/
+		
+		/*
+		if (isCompleted()) {
+			getGame().getController().loadLastRound();
+		}
+		else {
+			getGame().getController().endTurn();
+		}
+		
+		*/
 	
 	}
 
 	@Override
 	public void onPass() {
-		//TODO: further implementation
 		currentTurn.setTurnState(TurnState.Pass);
 		DataManager.getInstance().updateTurn(currentTurn);
-		if (currentTurn.getSkippedQuestion() == null)
+		pushAnswers(playerAnswers);
+		if (isCompleted()) {
+			getGame().getController().loadNextRound(this.roundType);
+		}
+		else {
 			getGame().getController().endTurn();
-		else 
-			initNewTurn();
+		}
 	}
 	
-	public ArrayList<PlayerAnswer> getSubmittedAnswers() {
-		return playerAnswers;
+	public ArrayList<Answer> getSubmittedAnswers() {
+		return answersHandled;
 	}
 
 	@Override
 	public boolean isCompleted() {
 		// TODO Auto-generated method stub
+		Turn lastTurn = DataManager.getInstance().getLastTurnForGame(this);
+		Turn secondLastTurn = DataManager.getInstance().getXLastTurnForGame(getGame().getId(), this, 1); // TODO lelijk
+		int amount = DataManager.getInstance().getAmountAskedQuestionsForRound(this);
+		
+			if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Wrong && secondLastTurn.getTurnState() == TurnState.Wrong &&
+					secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
+				return true;
+			}
+			else if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Correct && secondLastTurn.getTurnState() == TurnState.Wrong &&
+					secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
+				return true;
+			}
+			else if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Correct && secondLastTurn.getTurnState() == TurnState.Pass &&
+					secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
+				return true;
+			}
+			else if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Pass && secondLastTurn.getTurnState() == TurnState.Pass &&
+					secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
+				return true;
+			}	
+		
+		
 		return false;
 	}
+
+
 }

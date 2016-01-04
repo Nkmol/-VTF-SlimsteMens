@@ -13,6 +13,9 @@ import Models.Answer;
 import Models.Question;
 
 public class PuzzleAnswerView extends JPanel{
+	private String defaultPointsText,
+				   defaultAnswerText;
+	
 	private JPanel pointsPanel;
 	private JPanel answerPanel;
 	
@@ -27,6 +30,8 @@ public class PuzzleAnswerView extends JPanel{
 	private Color color;
 	
 	public PuzzleAnswerView(String pointsText, String answerText) {
+		defaultAnswerText = answerText;
+		defaultPointsText = pointsText;
 		
 		pointsPanel = new JPanel();
 		pointsPanel.setBackground(new Color(135,171,255));
@@ -82,5 +87,10 @@ public class PuzzleAnswerView extends JPanel{
 	public void revealAnswer() {
 		pointsLabel.setText(correctPoints);
 		answerLabel.setText(correctAnswer.getText());
+	}
+	
+	public void hideAnswer() {
+		pointsLabel.setText(defaultPointsText);
+		answerLabel.setText(defaultAnswerText);
 	}
 }

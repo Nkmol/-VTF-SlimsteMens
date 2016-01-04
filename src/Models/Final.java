@@ -2,16 +2,21 @@ package Models;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.TimerTask;
 
 import Managers.DataManager;
 
 public class Final extends Round {
 
-	private final static int POINTS_QUESTION = 20;
-	private static final int amountOfAnswers = 5;
+	private final static int POINTS_QUESTION = 30,
+							AMOUNT_OF_ANSWERS = 5;
 	private int amountCorrectAnswers = 0,
 				secondsEarned = 0;
 	private Boolean responseIsRight;
+	private ArrayList<Answer> AnswersHandled;
+	
+	TimerTask checkIfGameEnds;
+	
 	
 	public Boolean getResponseIsRight() {
 		return responseIsRight;
@@ -38,17 +43,31 @@ public class Final extends Round {
 			initNewTurn();
 	}
 	
-/*	public void init() {
-		DataManager.getInstance().pushTurn(currentTurn);
-		updateView();
-	}*/
-	
 	public void initNewTurn() {
-		amountCorrectAnswers = 0;
+		//amountCorrectAnswers = 0;
+		AnswersHandled = new ArrayList<>();
 		currentTurn = initCurrentTurn(this);
 		DataManager.getInstance().pushTurn(currentTurn);
 		currentTurn.startTimer();
+		
+		checkIfGameEnds = new MyTimer().schedule(() -> isCompleted(), 1000);
+		
 		updateView();
+	}
+	
+	public void pushAnswers(ArrayList<PlayerAnswer> playerAnswers) {
+		if (playerAnswers != null && playerAnswers.size() > 0) {
+			//Push player's answers
+			for (PlayerAnswer playerAnswer : playerAnswers) {
+				DataManager.getInstance().pushPlayerAnswer(playerAnswer);
+			}
+			
+			this.playerAnswers = null;
+		}
+	}
+	
+	private boolean answerIsValid(String answerString) {
+		return !Question.isPlayerAnswerCorrect(answerString, AnswersHandled);
 	}
 
 	@Override
@@ -62,7 +81,7 @@ public class Final extends Round {
 		
 		int answerId = playerAnswers.size() + 1;
 		PlayerAnswer playerAnswer = new PlayerAnswer(currentTurn, answerId, answer, currentTurn.getMoment()); 
-		DataManager.getInstance().pushPlayerAnswer(playerAnswer);
+		//DataManager.getInstance().pushPlayerAnswer(playerAnswer);
 		playerAnswers.add(playerAnswer);
 		
 		Question currentQuestion = (currentTurn.getSkippedQuestion() != null) ? currentTurn.getSkippedQuestion() : currentTurn.getCurrentQuestion();
@@ -70,10 +89,15 @@ public class Final extends Round {
 		System.out.println("Question id: " + currentQuestion.getId());
 		
 		if (currentQuestion != null) {
-			if (currentQuestion.isPlayerAnswerCorrect(answer)) {
-				amountCorrectAnswers++; 
+			Answer answerCorrect = currentQuestion.isAnswerCorrect(answer);
+			if (answerCorrect != null && answerIsValid(answer)) {
+				AnswersHandled.add(answerCorrect);
+				//amountCorrectAnswers++; 
+				
 				secondsEarned+=POINTS_QUESTION;
-				currentTurn.addSecondsEarnd(POINTS_QUESTION);
+				currentTurn.setSecondsFinalLost(secondsEarned);
+				
+				
 				setResponseIsRight(true);
 			}else
 				setResponseIsRight(false);
@@ -81,11 +105,13 @@ public class Final extends Round {
 		
 		updateView();
 		
-		if (amountCorrectAnswers == amountOfAnswers) {
+		if (AnswersHandled.size() == AMOUNT_OF_ANSWERS) {
 			currentTurn.setTurnState(TurnState.Correct);
-			currentTurn.setSecondsEarned(secondsEarned);
 			DataManager.getInstance().updateTurn(currentTurn);
-			amountCorrectAnswers = 0;
+			AnswersHandled = new ArrayList<>();
+			if (isCompleted())
+				game.getController().endTurn();
+			pushAnswers(playerAnswers);
 			if (currentTurn.getSkippedQuestion() == null)
 				getGame().getController().endTurn();
 			else 
@@ -93,6 +119,7 @@ public class Final extends Round {
 		}
 	
 	}
+	
 	
 	public ArrayList<PlayerAnswer> getSubmittedAnswers() {
 		return playerAnswers;
@@ -103,17 +130,25 @@ public class Final extends Round {
 		// TODO Auto-generated method stub
 		currentTurn.setTurnState(TurnState.Pass);
 		DataManager.getInstance().updateTurn(currentTurn);
+		if (isCompleted()) 
+			game.getController().endTurn();
 		if (currentTurn.getSkippedQuestion() == null)
 			getGame().getController().endTurn();
 		else 
 			initNewTurn();
 		
 	}
+	
 
 	@Override
 	public boolean isCompleted() {
 		// TODO Auto-generated method stub
-		return false;
+		if (currentTurn.getTotalActualTime() == 0){
+			getGame().getController().endTurn();
+			getGame().stopGame();
+		}
+		
+		return true;
 	}
 
 }

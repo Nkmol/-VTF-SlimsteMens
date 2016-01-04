@@ -3,13 +3,12 @@ package Models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import Managers.DataManager;
 import Utilities.StringUtility;
 
 public class Question {
 	
-	private static final int MinimumAnswerPercentage = 80;
+	public static final int MinimumAnswerPercentage = 80;
 	
 	private int id;
 	protected Turn turn;
@@ -56,7 +55,7 @@ public class Question {
 	
 	public boolean isPlayerAnswerCorrect(PlayerAnswer playerAnswer) {
 		
-		for(Answer answer : answers){
+		for(Answer answer : answers) {
 			
 			if (StringUtility.CalculateMatchPercentage(playerAnswer.getAnswer(), answer.getAnswer()) >=  MinimumAnswerPercentage)
 				return true;
@@ -70,6 +69,8 @@ public class Question {
 	}
 	
 	public boolean isPlayerAnswerCorrect(String answerString) {
+		answerString = answerString.toLowerCase();
+		
 		for(Answer answer : answers){
 			
 			if (StringUtility.CalculateMatchPercentage(answerString, answer.getAnswer()) >=  MinimumAnswerPercentage)
@@ -88,6 +89,40 @@ public class Question {
 			return true;
 		else 
 			return false;
+	}
+	
+	public boolean hasAnswer(String answer) {
+		for(Answer a : answers) 
+			if(a.getAnswer().equals(answer)) {
+				return true;
+			}
+		return false;
+	}
+
+	public static boolean isPlayerAnswerCorrect(String answerString, ArrayList<Answer> answers) {
+		for(Answer answer : answers){
+			
+			if (StringUtility.CalculateMatchPercentage(answerString, answer.getAnswer()) >=  MinimumAnswerPercentage)
+				return true;
+			
+			for (String alternative : answer.getAlternatives())
+				if (StringUtility.CalculateMatchPercentage(answerString, alternative) >=  MinimumAnswerPercentage)
+					return true;
+		}
+		
+		return false;
+	}
+	
+	public Answer isAnswerCorrect(String answerString) {
+		for(Answer answer : answers){
+			if (StringUtility.CalculateMatchPercentage(answerString, answer.getAnswer()) >=  MinimumAnswerPercentage)
+				return answer;
+
+			for (String alternative : answer.getAlternatives())
+				if (StringUtility.CalculateMatchPercentage(answerString, alternative) >=  MinimumAnswerPercentage)
+					return answer;
+		}
+		return null;
 	}
 	
 	public int getId() {

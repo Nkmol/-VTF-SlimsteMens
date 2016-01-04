@@ -8,29 +8,28 @@ import Managers.DataManager;
 public class OpenDoor extends Round {
 
 	private ArrayList<PlayerAnswer> playerAnswers;
-	private int amountCorrectAnswers = 0;
+	private ArrayList<Answer> answersHandled;
 	private static final int AMOUNT_OF_ANSWERS = 4;
 	private int secondsEarned = 0;
 	private static final int SECONDS_PER_CORRECT_ANSWER = 40;
 	
 	public OpenDoor(Game game) {
 		super(game, RoundType.OpenDoor);
-		if (game.getGameState() != GameState.Finished) {
-			initNewTurn();
-		}
+		initNewTurn(false);
 	}
 	
 	public OpenDoor(ResultSet data, Game game) {
 		super(data, game);
-		if (game.getGameState() != GameState.Finished) {
-			initNewTurn();
-		}
+		initNewTurn(false);
 	}
 	
-	public void initNewTurn() {
-		amountCorrectAnswers = 0;
-		currentTurn = initCurrentTurn(this);
-		DataManager.getInstance().pushTurn(currentTurn);
+	public void initNewTurn(boolean initCurrentTurn) {
+		answersHandled = new ArrayList<>();
+		
+		if(initCurrentTurn)
+			currentTurn = initCurrentTurn(this);
+		if(!continueCurrentTurn)
+			DataManager.getInstance().pushTurn(currentTurn);
 		currentTurn.startTimer();
 		updateView();
 		
@@ -45,6 +44,10 @@ public class OpenDoor extends Round {
 			
 			this.playerAnswers = null;
 		}
+	}
+	
+	private boolean answerIsValid(String answerString) {
+		return !Question.isPlayerAnswerCorrect(answerString, answersHandled);
 	}
 
 	@Override
@@ -63,8 +66,9 @@ public class OpenDoor extends Round {
 		System.out.println("Question id: " + currentQuestion.getId());
 		
 		if (currentQuestion != null) {
-			if (currentQuestion.isPlayerAnswerCorrect(answer)) {
-				amountCorrectAnswers++; 
+			Answer answerCorrect = currentQuestion.isAnswerCorrect(answer);
+			if (answerCorrect != null && answerIsValid(answer)) { // The answer is correct
+				answersHandled.add(answerCorrect);
 				secondsEarned+=SECONDS_PER_CORRECT_ANSWER; // TODO: maybe remove this
 				currentTurn.addSecondsEarnd(SECONDS_PER_CORRECT_ANSWER);
 			}
@@ -72,34 +76,40 @@ public class OpenDoor extends Round {
 			
 		updateView();
 		
-		if (amountCorrectAnswers == AMOUNT_OF_ANSWERS) {
+		if (answersHandled.size() == AMOUNT_OF_ANSWERS) {
 			currentTurn.setTurnState(TurnState.Correct);
 			currentTurn.setSecondsEarned(secondsEarned);
 			DataManager.getInstance().updateTurn(currentTurn);
-			amountCorrectAnswers = 0;
+			answersHandled = new ArrayList<>();
+//			amountCorrectAnswers = 0;
 			if (isCompleted())
 				game.getController().loadNextRound(roundType);
-			pushAnswers(playerAnswers);
-			if (currentTurn.getSkippedQuestion() == null)
-				getGame().getController().endTurn();
-			else 
-				initNewTurn();
+			else {
+				pushAnswers(playerAnswers);
+				if (currentTurn.getSkippedQuestion() == null)
+					getGame().getController().endTurn();
+				else 
+					initNewTurn(true);
+			}
+			
 		}
 	
 	}
 
 	@Override
 	public void onPass() {
-		//TODO: further implementation
 		currentTurn.setTurnState(TurnState.Pass);
 		DataManager.getInstance().updateTurn(currentTurn);
 		pushAnswers(playerAnswers);
 		if (isCompleted()) 
 			game.getController().loadNextRound(roundType);
-		if (currentTurn.getSkippedQuestion() == null)
-			getGame().getController().endTurn();
-		else 
-			initNewTurn();
+		else {
+			if (currentTurn.getSkippedQuestion() == null)
+				getGame().getController().endTurn();
+			else 
+				initNewTurn(true);
+		}
+		
 	}
 	
 	public ArrayList<PlayerAnswer> getSubmittedAnswers() {
@@ -117,7 +127,7 @@ public class OpenDoor extends Round {
 
 	@Override
 	public boolean isCompleted() {
-		
+
 		boolean isCompleted = false;
 		
 		ArrayList<TurnInfo> turnInfos = DataManager.getInstance().getTurnInfosForRound(this);		
@@ -136,10 +146,11 @@ public class OpenDoor extends Round {
 					isCompleted =  true;
 			}
 		}
-		
+/*		
 		if (isCompleted)
-			game.getController().loadNextRound(roundType);
+			game.getController().loadNextRound(roundType);*/
 		
 		return isCompleted;
 	}
+
 }

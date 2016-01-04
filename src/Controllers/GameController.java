@@ -83,6 +83,7 @@ public class GameController {
 	}
 	
 	public void loadNextRound(RoundType currentRoundType) {
+		endTurn();
 		RoundType nextRoundType = RoundType.nextRoundType(currentRoundType);
 		model.setRound(Round.createRound(nextRoundType, model));
 		loadLastRound();
@@ -91,16 +92,19 @@ public class GameController {
 	public void loadLastRound() {
 		
 		Round round = DataManager.getInstance().getLastRoundForGame(model);
-		if (round != null) {
-			if (round.isCompleted())
-				loadNextRound(round.getRoundType());
-		}
+
 		
+		// TODO Remove this as it's for testing purposes
+		//round = new Final(model);
+
+		if (round != null) {
+			if (round.isCompleted()) {
+				loadNextRound(round.getRoundType());
+			}
+		}
+
 		if(round == null) {	
-			round = new ThreeSixNine(model);
-			
-//			round = new Final(model);
-//			round = new OpenDoor(model); // Add 369 manually to the database in table ronde
+			round = new ThreeSixNine(model); // Add 369 manually to the database in table ronde
 		}
 
 		RoundController roundController = getRoundController(round, model);

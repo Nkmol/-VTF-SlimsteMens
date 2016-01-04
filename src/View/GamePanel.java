@@ -108,15 +108,14 @@ public class GamePanel extends JPanel implements Observer{
 
 		
 			if(Game.isCurrentUser(player1.getName())) {
-				String strPlayer1 = player1.getName() + " : " + (DataManager.getInstance().getTotalSecondsEarnedInAGame(model.getId(), player1.getName()) + model.getCurrentRound().getCurrentTurn().getSecondsEarned());
+				String strPlayer1 = player1.getName() + " : " + (model.getCurrentRound().getCurrentTurn().getTotalActualTime());
 				lblPlayer1.setText(strPlayer1); 
 			}
 			else if(Game.isCurrentUser(player2.getName())) {
-				String strPlayer2 = player2.getName() + " : " + (DataManager.getInstance().getTotalSecondsEarnedInAGame(model.getId(), player2.getName()) + model.getCurrentRound().getCurrentTurn().getSecondsEarned());
+				String strPlayer2 = player2.getName() + " : " + (model.getCurrentRound().getCurrentTurn().getTotalActualTime());
 				lblPlayer2.setText(strPlayer2);
 			}
 		}
-		
 		if(!initOpponentTurn)
 			setOponnonentTime(player1, player2, model.getId());
 	}
