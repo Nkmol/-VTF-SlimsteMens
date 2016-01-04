@@ -38,8 +38,12 @@ public class PlayerView extends JPanel {
 		// Main Layout
 		BorderLayout layout = new BorderLayout();
 		setLayout(layout);
+		
+		JPanel container = new JPanel();
+		container.setLayout(new BorderLayout());
+		add(container, BorderLayout.CENTER);
 
-		setPreferredSize(new Dimension(400,70));
+		container.setPreferredSize(new Dimension(400,70));
 		
 		// Left and Right Layout
 		JPanel leftView = new JPanel();
@@ -48,8 +52,8 @@ public class PlayerView extends JPanel {
 		JPanel rightView = new JPanel();
 		rightView.setLayout(new BorderLayout());
 		
-		add(leftView, BorderLayout.CENTER);
-		add(rightView, BorderLayout.EAST);
+		container.add(leftView, BorderLayout.CENTER);
+		container.add(rightView, BorderLayout.EAST);
 		
 		// Left Layout
 		JPanel leftLeftView = new JPanel();
@@ -89,7 +93,7 @@ public class PlayerView extends JPanel {
 		rightRightView.add(buttonView, BorderLayout.CENTER);		
 
 		// 135, 171, 255
-		setBackground(new Color(135,171,255));
+		//setBackground(new Color(135,171,255));
 	}
 	
 	
@@ -273,10 +277,10 @@ public class PlayerView extends JPanel {
 		challengeButton.setEnabled(!playerUpdate.isChallenged());
 		
 		if(playerUpdate.getInviter()) {
-			setBorder(BorderFactory.createLineBorder(Color.red, 3));
+			setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.red, 1), "Uitgedaagd door", 0, 0, new Font("Serif", Font.ITALIC, 15)));
 		}
 		else {
-			BorderFactory.createLineBorder(Color.red, 3);
+			setBorder(null);
 		}
 	}
 
