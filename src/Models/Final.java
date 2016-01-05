@@ -33,12 +33,14 @@ public class Final extends Round {
 	
 	public Final(Game game) {
 		super(game, RoundType.Final);
-		initNewTurn();
+		if (game.getGameState() != GameState.Finished)
+			initNewTurn();
 	}
 	
 	public Final(ResultSet data, Game game) {
 		super(data, game);
-		initNewTurn();
+		if (game.getGameState() != GameState.Finished)
+			initNewTurn();
 	}
 	
 	public void initNewTurn() {

@@ -18,7 +18,9 @@ import Models.Round;
 public class GamePanel extends JPanel implements Observer{
 	
 	private JPanel middle;
-	private JLabel lblPlayer1, lblPlayer2, lblRoundType;
+	protected JLabel lblPlayer1;
+	protected JLabel lblPlayer2;
+	private JLabel lblRoundType;
 	public JButton btnSubmit, btnPass;
 	public JTextField txtInput;
 	private boolean initOpponentTurn;
@@ -74,6 +76,7 @@ public class GamePanel extends JPanel implements Observer{
 	}
 	
 	public void setRound(JPanel round) {
+		middle.removeAll();
 		middle.add(round, BorderLayout.CENTER);
 	}
 

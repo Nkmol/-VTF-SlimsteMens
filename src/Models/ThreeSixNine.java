@@ -19,13 +19,17 @@ public class ThreeSixNine extends Round {
 	
 	public ThreeSixNine(Game game) {
 		super(game, RoundType.ThreeSixNine);
-		initNewTurn();
+		if (game.getGameState() != GameState.Finished) {
+			initNewTurn();
+		}
 		updateView();
 	}
 	
 	public ThreeSixNine(ResultSet data, Game game) {
 		super(data, game);
-		initNewTurn();
+		if (game.getGameState() != GameState.Finished) {
+			initNewTurn();
+		}
 		updateView();
 	}
 	

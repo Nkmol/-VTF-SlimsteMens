@@ -15,12 +15,14 @@ public class OpenDoor extends Round {
 	
 	public OpenDoor(Game game) {
 		super(game, RoundType.OpenDoor);
-		initNewTurn(false);
+		if (game.getGameState() != GameState.Finished)
+			initNewTurn(false);
 	}
 	
 	public OpenDoor(ResultSet data, Game game) {
 		super(data, game);
-		initNewTurn(false);
+		if (game.getGameState() != GameState.Finished)
+			initNewTurn(false);
 	}
 	
 	public void initNewTurn(boolean initCurrentTurn) {

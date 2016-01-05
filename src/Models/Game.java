@@ -18,8 +18,8 @@ public class Game extends Observable {
 	private Player player1;
 	private Player player2; 
 	private GameState gameState;
-	private ArrayList<Round> rounds;
-	private Round currentRound;
+	protected ArrayList<Round> rounds;
+	protected Round currentRound;
 	private ArrayList<ChatMessage> chatMessages;
 	private GameController controller;
 	

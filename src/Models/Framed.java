@@ -13,18 +13,20 @@ public class Framed extends Round {
 							 AMOUNT_ANSWERS = 10;
 	private int secondsEarned = 0;
 	private ArrayList<PlayerAnswer> playerAnswers;
-	private ArrayList<Answer> answersHandled;
+	protected ArrayList<Answer> answersHandled;
 	
 	private Boolean stay;
 	
 	public Framed(Game game) {
-		super(game, RoundType.Framed);	
-		init();
+		super(game, RoundType.Framed);
+        if (game.getGameState() != GameState.Finished)
+        	init();
 	}
 	
 	public Framed(ResultSet data, Game game) {
 		super(data,game);
-		init();
+        if (game.getGameState() != GameState.Finished)
+        	init();
 	}
 	
 	public void init() {

@@ -14,16 +14,18 @@ public class Puzzle extends Round {
 	
 	private int amountCorrectAnswers = 0;
 	private int secondsEarned = 0;
-	private ArrayList<Answer> answersHandled;
+	protected ArrayList<Answer> answersHandled;
 	
 	public Puzzle(Game game) {
 		super(game, RoundType.Puzzle);	
-		initNewTurn();
+		if (game.getGameState() != GameState.Finished)
+			initNewTurn();
 	}
 	
 	public Puzzle(ResultSet data, Game game) {
 		super(data,game);
-		initNewTurn();
+		if (game.getGameState() != GameState.Finished)
+			initNewTurn();
 	}
 	
 	public void initNewTurn() {
