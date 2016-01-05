@@ -12,7 +12,7 @@ public class ThreeSixNine extends Round {
 	private final static int AMOUNT_QUESTIONS = 9,
 							 BONUS_ITERATION = 3,
 							 POINTS_BONUS  = 10,
-							 POINTS_QUESTION = 5,
+							 POINTS_QUESTION = 0,
 							 SECONDS_TURN = 25,
 							 END_POINTS = 60;
 	private int amountCorrectQuestions = 0;
@@ -121,6 +121,7 @@ public class ThreeSixNine extends Round {
 		if(currentTurn.getSkippedQuestion() == null && turnState != TurnState.Correct) 
 			getGame().getController().endTurn();
 		else {
+//			currentTurn.stopTimer();
 			currentTurn.stopTimer();
 			currentTurn = initCurrentTurn(this);
 			initNewTurn();
