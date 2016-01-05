@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import Managers.DataManager;
 import Models.ActiveGames;
 import Models.ActivePlayers;
+import Models.Final;
 import Models.Player;
 import Models.Round;
 import Models.RoundType;
@@ -33,7 +34,7 @@ public class ActiveGameController {
 		parent.setGame(gameController.getView());
 		if (gameController.getModel().getCurrentRound() instanceof ThreeSixNine) 
 			((ThreeSixNine)gameController.getModel().getCurrentRound()).getCurrentTurn().startQuestionTimer(25);
-		else 
+		else if(!(gameController.getModel().getCurrentRound() instanceof Final)) 
 			gameController.getModel().getCurrentRound().getCurrentTurn().startTimer();
 		
 	}

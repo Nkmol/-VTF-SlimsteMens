@@ -86,18 +86,23 @@ public class ThreeSixNine extends Round {
 		TurnState turnState = null;
 		
 		if (currentQuestion.isPlayerAnswerCorrect(answer)) {
-			if(currentTurn.getTurnState() == TurnState.Bonus)
-				currentTurn.addSecondsEarnd(POINTS_BONUS);
-			else
-				currentTurn.addSecondsEarnd(POINTS_QUESTION);
+			if(currentTurn.getTurnState() == TurnState.Bonus) {
+				currentTurn.addSecondsEarnd(POINTS_BONUS);; // TODO: maybe remove this
+				currentTurn.addToActualTime(POINTS_BONUS);
+			}
+			else {
+				currentTurn.addSecondsEarnd(POINTS_QUESTION);; // TODO: maybe remove this
+				currentTurn.addToActualTime(POINTS_QUESTION);
+			}
 			turnState = TurnState.Correct;
 		}
 		else 
 			turnState = TurnState.Wrong;
 
 		Turn.pushTurn(currentTurn, turnState, answer);
+		
 		if(!isCompleted())
-			returnScreenCheck(TurnState.Pass);
+			returnScreenCheck(turnState);
 		else
 			game.getController().loadNextRound(roundType);
 	}
@@ -116,6 +121,7 @@ public class ThreeSixNine extends Round {
 		if(currentTurn.getSkippedQuestion() == null && turnState != TurnState.Correct) 
 			getGame().getController().endTurn();
 		else {
+			currentTurn.stopTimer();
 			currentTurn = initCurrentTurn(this);
 			initNewTurn();
 			updateView();

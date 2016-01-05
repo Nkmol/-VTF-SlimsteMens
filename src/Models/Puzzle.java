@@ -117,6 +117,7 @@ public class Puzzle extends Round {
 		
 		if(questionCorrect != null) {
 			currentTurn.addSecondsEarnd(CORRECT_POINTS);
+			currentTurn.addToActualTime(CORRECT_POINTS);
 			currentTurn.addPlayerAnswer(answer);
 		}
 		//TODO ELSE - wrong answer (?)

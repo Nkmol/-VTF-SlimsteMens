@@ -50,6 +50,8 @@ public class Final extends Round {
 		DataManager.getInstance().pushTurn(currentTurn);
 //		currentTurn.startTimer();
 		
+		if(checkIfGameEnds != null)
+			checkIfGameEnds.cancel();
 		checkIfGameEnds = new MyTimer().schedule(() -> isCompleted(), 1000);
 		
 		updateView();
@@ -133,7 +135,7 @@ public class Final extends Round {
 	@Override
 	public void onPass() {
 		// TODO Auto-generated method stub
-		currentTurn.stopTimer(); //TODO: test this
+		//currentTurn.stopTimer(); //TODO: test this
 		currentTurn.setTurnState(TurnState.Pass);
 		DataManager.getInstance().updateTurn(currentTurn);
 		if (isCompleted()) {
@@ -144,7 +146,7 @@ public class Final extends Round {
 				getGame().getController().endTurn();
 			else {
 				initNewTurn();
-				currentTurn.startTimer();
+				//currentTurn.startTimer();
 			}
 		}
 	}

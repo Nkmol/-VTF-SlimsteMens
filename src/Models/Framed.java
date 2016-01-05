@@ -92,7 +92,7 @@ public class Framed extends Round {
 			if (answerCorrect != null && answerIsValid(answer)) {
 				answersHandled.add(answerCorrect);
 				currentTurn.addSecondsEarnd(POINTS_QUESTION);
-				
+				currentTurn.addToActualTime(POINTS_QUESTION);
 				if(answersHandled.size() == AMOUNT_ANSWERS) {
 					pushAnswers(playerAnswers);
 					currentTurn.setTurnState(TurnState.Correct);

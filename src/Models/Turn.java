@@ -95,6 +95,10 @@ public class Turn {
 		return totalActualTime;
 	}
 	
+	public void addToActualTime(int value) {
+		totalActualTime += value;
+	}
+	
 	public void startTurn() {
 		playerAnswers = new ArrayList<PlayerAnswer>();
 		sharedQuestions = new ArrayList<SharedQuestion>();
@@ -233,6 +237,7 @@ public class Turn {
 		if(timer != null)
 			timer.cancel();
 		timer = new MyTimer().schedule(() -> executeQuestionTimer(), 1000);
+		
 	}
 	
 	public int getQuestionTime() {
@@ -250,6 +255,8 @@ public class Turn {
 		}
 		
 		parent.updateView();
+		
+		System.out.println(questionTime);
 	}
 	
 	public void stopTimer() {

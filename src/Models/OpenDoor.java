@@ -91,7 +91,7 @@ public class OpenDoor extends Round {
 			if (answerCorrect != null && answerIsValid(answer)) { // The answer is correct
 				answersHandled.add(answerCorrect);
 				secondsEarned+=SECONDS_PER_CORRECT_ANSWER; // TODO: maybe remove this
-				currentTurn.addSecondsEarnd(SECONDS_PER_CORRECT_ANSWER);
+				currentTurn.addToActualTime(SECONDS_PER_CORRECT_ANSWER);
 			}
 		}		
 			
