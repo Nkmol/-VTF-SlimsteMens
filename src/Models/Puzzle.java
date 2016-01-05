@@ -133,6 +133,7 @@ public class Puzzle extends Round {
 	}
 	
 	public void endTurn() {
+		currentTurn.stopTimer();
 		if(lastTurn != null && lastTurn.getTurnState() == TurnState.Pass && !Game.isCurrentUser(lastTurn.getPlayer().getName())) {
 			currentTurn = initCurrentTurn(this);
 			initNewTurn();
@@ -189,9 +190,9 @@ public class Puzzle extends Round {
 					isCompleted =  true;
 			}
 		}
-		/*		
+				
 		if (isCompleted)
-			game.getController().loadNextRound(roundType);*/
+			currentTurn.stopTimer();
 
 		return isCompleted;
 

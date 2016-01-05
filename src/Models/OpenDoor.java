@@ -117,6 +117,7 @@ public class OpenDoor extends Round {
 
 	@Override
 	public void onPass() {
+		currentTurn.stopTimer();
 		currentTurn.setTurnState(TurnState.Pass);
 		DataManager.getInstance().updateTurn(currentTurn);
 		pushAnswers(playerAnswers);

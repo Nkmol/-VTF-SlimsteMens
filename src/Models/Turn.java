@@ -206,7 +206,7 @@ public class Turn {
 	}
 	
 	private void executeTimer(int value) {
-		System.err.println("Executing timer");
+		System.err.println("Executing timer ");
 		secondsEarnd -= value;
 		moment++;
 		totalActualTime-=1;
@@ -217,6 +217,7 @@ public class Turn {
 			timer.cancel();
 		}
 		
+		System.out.println(this + " " + totalActualTime + " " + timer  + " " + this.parent);
 	}
 	
 	public void startTimer() {

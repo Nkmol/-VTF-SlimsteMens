@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 
 import Managers.DataManager;
 import Models.Final;
+import Models.Framed;
 import Models.Game;
 import Models.OpenDoor;
 import Models.PlayerAnswer;
@@ -114,6 +115,9 @@ public class GameController {
 			round = new ThreeSixNine(model); // Add 369 manually to the database in table ronde
 		}
 
+		if(round.getRoundType() == RoundType.Framed) {
+			((Framed)round).startTime();
+		}
 		RoundController roundController = getRoundController(round, model);
 	
 		model.setRound(roundController.getModel());
