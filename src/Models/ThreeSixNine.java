@@ -131,6 +131,7 @@ public class ThreeSixNine extends Round {
 				t.addSecondsEarnd(END_POINTS);
 				DataManager.getInstance().updateTurn(t);
 			}
+			currentTurn.stopTimer();
 			return true;
 		}
 		return false;

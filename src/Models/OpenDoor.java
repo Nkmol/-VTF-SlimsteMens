@@ -165,9 +165,9 @@ public class OpenDoor extends Round {
 					isCompleted =  true;
 			}
 		}
-/*		
+		
 		if (isCompleted)
-			game.getController().loadNextRound(roundType);*/
+			currentTurn.stopTimer();
 		
 		return isCompleted;
 	}
