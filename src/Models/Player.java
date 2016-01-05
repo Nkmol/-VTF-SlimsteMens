@@ -13,12 +13,14 @@ import java.util.regex.Pattern;
 import Managers.DataManager;
 
 public class Player extends Observable{
+	private static String regexPattern = "^(?=(.*[a-zA-Z]){3})[0-9a-zA-Z]";
 	
 	private String name;
 	private String password;
 	private Role role;
 	public String errorMsg = "", succesMsg = "";
 	public static final String path = "playerName.txt";
+	Pattern p = Pattern.compile(regexPattern);
 	
 	public Player(String name, Role role) {
 		this.name = name;
@@ -70,13 +72,12 @@ public class Player extends Observable{
 		notifyObservers(this);
 		return state;
 	}
-	
-	private String regexPattern = "^[a-zA-Z]{3,}[0-9]";
+
 	public void register(String name, String password) {
 		succesMsg = "";
 		if(name.equals("") || password.equals(""))
 			errorMsg = "Vul alle velden in.";
-		else if(name.matches(regexPattern) && password.matches(regexPattern)) {
+		else if(!(p.matcher(name).find() && p.matcher(password).find())) {
 			errorMsg = "Uw accountgegevens moeten minimaal uit 3 letters bestaan en mag geen vreemde tekens bevatten.";
 		}
 		else 
@@ -93,7 +94,12 @@ public class Player extends Observable{
 	
 	public void changePassword(String oldPass, String newPass, String newPassRe) {
 		succesMsg = "";
-		if(oldPass.equals(password)){
+		if(oldPass.isEmpty() && newPass.isEmpty() && newPassRe.isEmpty())
+			errorMsg = "Vul alle velden in!";
+		else if(!p.matcher(newPass).find()) {
+			errorMsg = "Uw accountgegevens moeten minimaal uit 3 letters bestaan en mag geen \n vreemde tekens bevatten.";
+		}
+		else if(!oldPass.equals(password)){
 			errorMsg = "Je oude wachtwoord klopt niet";
 		}
 		else if(!newPass.equals(newPassRe))

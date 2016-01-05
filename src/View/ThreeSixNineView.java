@@ -25,6 +25,7 @@ import net.miginfocom.swing.MigLayout;
 public class ThreeSixNineView extends JPanel implements Observer {
 
 	JTextArea questionTextArea;
+	JLabel lblQuestionTime;
 	
 	public ThreeSixNineView(ThreeSixNine currentRound) {
 		createRoundOnePanel();
@@ -33,10 +34,12 @@ public class ThreeSixNineView extends JPanel implements Observer {
 	private void createRoundOnePanel() {
 		setLayout(new BorderLayout());
 		questionTextArea = new JTextArea();
+		lblQuestionTime = new JLabel();
 		textAreaProperties(questionTextArea);
 		JPanel container = new JPanel();
 		container.setLayout(new BorderLayout());
 		container.add(questionTextArea, BorderLayout.CENTER);
+		container.add(lblQuestionTime, BorderLayout.NORTH);
 		add(container, BorderLayout.NORTH);
 	}
 	
@@ -62,5 +65,7 @@ public class ThreeSixNineView extends JPanel implements Observer {
 			questionTextArea.setText(currentTurn.getCurrentQuestion().getText());
 		}
 		
+		lblQuestionTime.setText(""+currentTurn.getQuestionTime());
+//		System.out.println(currentTurn.getQuestionTime());
 	}
 }

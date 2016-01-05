@@ -28,146 +28,22 @@ public class Framed extends Round {
 	}
 	
 	public void init() {
-		//questions = DataManager.getInstance().getQuestions(this);
-			//handleTurns();
-			//checkStay();
+		//currentTurn.startTimer();
 		if(getCurrentTurn().getCurrentQuestion() != null) {
 			if(getLastTurn() != null) {
 				getCurrentTurn().setCurrentQuestion(getLastTurn().getCurrentQuestion());
 			}
 		}
-		updateView();
-		DataManager.getInstance().pushTurn(currentTurn);
+		//updateView();
+		if(!continueCurrentTurn)
+			DataManager.getInstance().pushTurn(currentTurn);
 		initPlayerAnswers();
 	}
 	
-	public void initNewTurn() {
-		currentTurn = initCurrentTurn(this);
-		DataManager.getInstance().pushTurn(currentTurn);
-		updateView();
+	public void startTime() {
+		currentTurn.startTimer();
 	}
-	
-	public void checkStay() {
-		Turn secondLastTurn = DataManager.getInstance().getXLastTurnForGame(this.getGame().getId(), this, 1);
-		
-		/*
-		if(getLastTurn().getTurnState() == TurnState.Busy) {
-			if(secondLastTurn != null && !currentTurn.getCurrentQuestion().getText().equals(secondLastTurn.getCurrentQuestion().getText())) {
-				stay = false;
-			}
-			else {
-				if(secondLastTurn != null && !secondLastTurn.getPlayer().getName().equals(currentTurn.getPlayer().getName())) {
-					if(secondLastTurn.getTurnState() == TurnState.Correct){
-						stay = false;
-					}
-					else if(secondLastTurn.getTurnState() == TurnState.Pass){
-						stay = true;
-					}
-					else if(secondLastTurn.getTurnState() == TurnState.Wrong){
-						stay = true;
-					}
-					else if(secondLastTurn.getTurnState() == TurnState.Timeout){
-						stay = true;
-					}
-				}
-				else {
-					stay = false;
-				}
-			}
-		}
-		else {
-			if(getLastTurn() != null && !currentTurn.getCurrentQuestion().getText().equals(getLastTurn().getCurrentQuestion().getText())) {
-				stay = false;
-			}
-			else {
-				if(getLastTurn() != null && !getLastTurn().getPlayer().getName().equals(currentTurn.getPlayer().getName())) {
-					if(getLastTurn().getTurnState() == TurnState.Correct){
-						stay = false;
-					}
-					else if(getLastTurn().getTurnState() == TurnState.Pass){
-						stay = true;
-					}
-					else if(getLastTurn().getTurnState() == TurnState.Wrong){
-						stay = true;
-					}
-					else if(getLastTurn().getTurnState() == TurnState.Timeout){
-						stay = true;
-					}
-				}
-				else {
-					stay = false;
-				}
-			}
-		}
-		
-		*/
-	}
-	
-	public void handleTurns() {
-		/*
-		Turn secondLastTurn = DataManager.getInstance().getXLastTurnForGame(this.getGame().getId(), this, 1);
-		
-		Question currentQuestion = null;
-		
-		if(getLastTurn() != null && getLastTurn().getTurnState() == TurnState.Busy) {
-			// last turn busy
-			currentQuestion = getLastTurn().getCurrentQuestion();
-		}
-		else if(getLastTurn() != null && secondLastTurn != null && !getLastTurn().getCurrentQuestion().getText().equals(secondLastTurn.getCurrentQuestion().getText())) {
-			// same question
-			currentQuestion = getLastTurn().getCurrentQuestion();
-		}
-		else if(getLastTurn() != null && getLastTurn().getPlayer().getName().equals(currentTurn.getPlayer().getName())) {
-			if(getLastTurn().getTurnState() == TurnState.Correct) {
-				// same question
-				currentQuestion = getLastTurn().getCurrentQuestion();
-			}
-			else if(secondLastTurn.getTurnState() == TurnState.Pass){
-				// new question
-				currentQuestion = getCurrentTurn().getCurrentQuestion();
-			}
-			else if(secondLastTurn.getTurnState() == TurnState.Wrong){
-				// new question
-				currentQuestion = getCurrentTurn().getCurrentQuestion();
-			}
-			else if(secondLastTurn.getTurnState() == TurnState.Timeout){
-				// new question
-				currentQuestion = getCurrentTurn().getCurrentQuestion();
-			}
-		}
-		else if(secondLastTurn != null && secondLastTurn.getPlayer().getName().equals(currentTurn.getPlayer().getName())) {
-			if(secondLastTurn.getTurnState() == TurnState.Correct) {
-				// same question
-				currentQuestion = getLastTurn().getCurrentQuestion();
-			}
-			else if(secondLastTurn.getTurnState() == TurnState.Pass){
-				// new question
-				currentQuestion = getCurrentTurn().getCurrentQuestion();
-			}
-			else if(secondLastTurn.getTurnState() == TurnState.Wrong){
-				// new question
-				currentQuestion = getCurrentTurn().getCurrentQuestion();
-			}
-			else if(secondLastTurn.getTurnState() == TurnState.Timeout){
-				// new question
-				currentQuestion = getCurrentTurn().getCurrentQuestion();
-			}
-		}
-		else {
-			currentQuestion = getCurrentTurn().getCurrentQuestion();
-		}
-		
-		
-		if(currentQuestion != null) {
-			getCurrentTurn().setCurrentQuestion(currentQuestion);
-		}
-		*/
-	}
-	
-	public void checkRoundDone() {
-		
-	}
-	
+
 	public void initPlayerAnswers() {
 		if(playerAnswers == null) {
 			playerAnswers = new ArrayList<PlayerAnswer>();
@@ -198,13 +74,6 @@ public class Framed extends Round {
 	public void onSubmit(String answer) {
 		// TODO Auto-generated method stub
 		System.out.println("your answer is " + answer);
-		
-		/*
-		if (currentTurn.getCurrentQuestion().isPlayerAnswerCorrect(answer))  //TODO IDK zeker of nodig
-			Turn.pushTurn(currentTurn, TurnState.Correct, answer);
-		else 
-			Turn.pushTurn(currentTurn, TurnState.Wrong, answer);
-			*/
 		
 		int answerId = playerAnswers.size() + 1;
 		PlayerAnswer playerAnswer = new PlayerAnswer(currentTurn, answerId, answer, currentTurn.getMoment());
@@ -252,36 +121,11 @@ public class Framed extends Round {
 				
 			}
 		}		
-			
-
-
-		/*
-		if (amountCorrectAnswers == AMOUNT_ANSWERS) {
-			currentTurn.setTurnState(TurnState.Correct);
-			currentTurn.addSecondsEarnd(POINTS_QUESTION);
-			DataManager.getInstance().updateTurn(currentTurn);
-			amountCorrectAnswers = 0;
-			if (currentTurn.getSkippedQuestion() == null)
-				getGame().getController().endTurn();
-			else 
-				initNewTurn();
-		}
-		*/
-		
-		/*
-		if (isCompleted()) {
-			getGame().getController().loadLastRound();
-		}
-		else {
-			getGame().getController().endTurn();
-		}
-		
-		*/
-	
 	}
 
 	@Override
 	public void onPass() {
+		currentTurn.stopTimer();
 		currentTurn.setTurnState(TurnState.Pass);
 		DataManager.getInstance().updateTurn(currentTurn);
 		pushAnswers(playerAnswers);
@@ -304,41 +148,54 @@ public class Framed extends Round {
 		Turn secondLastTurn = DataManager.getInstance().getXLastTurnForGame(getGame().getId(), this, 1); // TODO lelijk
 		int amount = DataManager.getInstance().getAmountAskedQuestionsForRound(this);
 		
-			if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Wrong && secondLastTurn.getTurnState() == TurnState.Wrong &&
-					secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
-				return true;
-			}
-			else if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Correct && secondLastTurn.getTurnState() == TurnState.Wrong &&
-					secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
-				return true;
-			}
-			else if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Correct && secondLastTurn.getTurnState() == TurnState.Correct &&
-					secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
-				return true;
-			}
-			else if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Correct && secondLastTurn.getTurnState() == TurnState.Pass &&
-					secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
-				return true;
-			}
-			else if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Pass && secondLastTurn.getTurnState() == TurnState.Correct &&
-					secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
-				return true;
-			}
-			else if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Pass && secondLastTurn.getTurnState() == TurnState.Pass &&
-					secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
-				return true;
-			}	
-			else if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Wrong && secondLastTurn.getTurnState() == TurnState.Pass &&
-					secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
-				return true;
-			}	
-			else if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Pass && secondLastTurn.getTurnState() == TurnState.Wrong &&
-					secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
-				return true;
-			}	
+		boolean roundCompleted = false;
 		
+		if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Wrong && secondLastTurn.getTurnState() == TurnState.Wrong &&
+				secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
+			roundCompleted = true;
+		}
+		else if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Correct && secondLastTurn.getTurnState() == TurnState.Wrong &&
+				secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
+			roundCompleted = true;
+		}
+		else if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Correct && secondLastTurn.getTurnState() == TurnState.Correct &&
+				secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
+			roundCompleted = true;
+		}
+		else if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Correct && secondLastTurn.getTurnState() == TurnState.Pass &&
+				secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
+			roundCompleted = true;
+		}
+		else if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Pass && secondLastTurn.getTurnState() == TurnState.Correct &&
+				secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
+			roundCompleted = true;
+		}
+		else if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Pass && secondLastTurn.getTurnState() == TurnState.Pass &&
+				secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
+			roundCompleted = true;
+		}	
+		else if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Wrong && secondLastTurn.getTurnState() == TurnState.Pass &&
+				secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
+			roundCompleted = true;
+		}	
+		else if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Pass && secondLastTurn.getTurnState() == TurnState.Wrong &&
+				secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
+			roundCompleted = true;
+		}	
+		
+		System.out.println("iscompleted " + getCurrentTurn() + " " + this);
+		if (roundCompleted)
+			currentTurn.stopTimer();
 		
 		return false;
+	}
+
+	@Override
+	public void playerTimeIsOver() {
+		// TODO Auto-generated method stub
+		System.out.println("timeover");
+		getGame().getController().endTurn();
+		getGame().stopGame();
 	}
 
 

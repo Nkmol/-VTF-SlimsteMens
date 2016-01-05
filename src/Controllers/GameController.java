@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 
 import Managers.DataManager;
 import Models.Final;
+import Models.Framed;
 import Models.Game;
 import Models.OpenDoor;
 import Models.PlayerAnswer;
@@ -47,6 +48,7 @@ public class GameController {
 	}
 	
 	public void endTurn() {
+		model.getCurrentRound().getCurrentTurn().stopTimer();
 		parent.ShowMainPanel();
 	}
 	
@@ -84,10 +86,10 @@ public class GameController {
 	
 	public void loadNextRound(RoundType currentRoundType) {
 		endTurn();
-		
 		if (currentRoundType != RoundType.Final) {
 			RoundType nextRoundType = RoundType.nextRoundType(currentRoundType);
 			model.setRound(Round.createRound(nextRoundType, model));
+			model.getCurrentRound().getCurrentTurn().stopTimer();
 			loadLastRound();
 		} else {
 			// Stop the game 
@@ -100,10 +102,8 @@ public class GameController {
 		
 		Round round = DataManager.getInstance().getLastRoundForGame(model);
 
-		// TODO Remove this as it's for testing purposes
-		round = new Final(model);
-
 		if (round != null) {
+//			round.getCurrentTurn().stopTimer();
 			if (round.isCompleted()) {
 				loadNextRound(round.getRoundType());
 			}
@@ -113,11 +113,15 @@ public class GameController {
 			round = new ThreeSixNine(model); // Add 369 manually to the database in table ronde
 		}
 
+		if(round.getRoundType() == RoundType.Framed) {
+			((Framed)round).startTime();
+		}
 		RoundController roundController = getRoundController(round, model);
 	
 		model.setRound(roundController.getModel());
 		view.setRound(roundController.getView());
 		
+		model.updateView();
 		roundController.getModel().updateView();
 	}
 }

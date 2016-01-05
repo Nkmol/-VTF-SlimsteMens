@@ -117,6 +117,7 @@ public class OpenDoor extends Round {
 
 	@Override
 	public void onPass() {
+		currentTurn.stopTimer();
 		currentTurn.setTurnState(TurnState.Pass);
 		DataManager.getInstance().updateTurn(currentTurn);
 		pushAnswers(playerAnswers);
@@ -165,11 +166,18 @@ public class OpenDoor extends Round {
 					isCompleted =  true;
 			}
 		}
-/*		
+		
 		if (isCompleted)
-			game.getController().loadNextRound(roundType);*/
+			currentTurn.stopTimer();
 		
 		return isCompleted;
+	}
+
+	@Override
+	public void playerTimeIsOver() {
+		getGame().getController().endTurn();
+		getGame().stopGame();
+		
 	}
 
 }

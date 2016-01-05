@@ -11,8 +11,10 @@ public class ThreeSixNine extends Round {
 
 	private final static int AMOUNT_QUESTIONS = 9,
 							 BONUS_ITERATION = 3,
-							 POINTS_BONUS  = 60,
-							 POINTS_QUESTION = 20;
+							 POINTS_BONUS  = 10,
+							 POINTS_QUESTION = 5,
+							 SECONDS_TURN = 25,
+							 END_POINTS = 60;
 	private int amountCorrectQuestions = 0;
 	
 	public ThreeSixNine(Game game) {
@@ -28,7 +30,8 @@ public class ThreeSixNine extends Round {
 	}
 	
 	public void initNewTurn() {
-		currentTurn.startTimer();
+		//currentTurn.startTimer();
+		currentTurn.startQuestionTimer(SECONDS_TURN);
 		amountCorrectQuestions = DataManager.getInstance().getCorrectAmountUniqueSharedQuestionsForRound(this, DataManager.getInstance().getCurrentUser());
 		System.out.println(amountCorrectQuestions);
 		if(amountCorrectQuestions > 0 && amountCorrectQuestions % BONUS_ITERATION == 0)
@@ -97,6 +100,7 @@ public class ThreeSixNine extends Round {
 
 	@Override
 	public void onPass() {
+		currentTurn.stopTimer();
 		Turn.pushTurn(getCurrentTurn(), TurnState.Pass, null);
 		if(!isCompleted())
 			returnScreenCheck(TurnState.Pass);
@@ -116,6 +120,26 @@ public class ThreeSixNine extends Round {
 
 	@Override
 	public boolean isCompleted() {
-		return DataManager.getInstance().getAmountUniqueSharedQuestionsForRound(this, DataManager.getInstance().getCurrentUser()) >= AMOUNT_QUESTIONS;
+		//TODO 369 25sec for a turn, TIMER doesn't start
+
+		if(DataManager.getInstance().getAmountUniqueSharedQuestionsForRound(this, DataManager.getInstance().getCurrentUser()) >= AMOUNT_QUESTIONS) {
+			Player[] players = {getGame().getPlayer1(), getGame().getPlayer2()};
+			
+			for(Player p : players) {
+				Turn t = DataManager.getInstance().getLastTurnForPlayerRound(this, p);
+				
+				t.addSecondsEarnd(END_POINTS);
+				DataManager.getInstance().updateTurn(t);
+			}
+			currentTurn.stopTimer();
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void playerTimeIsOver() {
+		// TODO Auto-generated method stub
+		
 	}
 }

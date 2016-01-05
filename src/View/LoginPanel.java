@@ -9,10 +9,10 @@ import javax.swing.border.EmptyBorder;
 import Models.Player;
 
 public class LoginPanel extends JPanel implements Observer {
-	private final static String USERNAME 	 = "Username: ",
-						 	    PASSWORD 	 = "Password: ",
+	private final static String USERNAME 	 = "Gebruikersnaam: ",
+						 	    PASSWORD 	 = "Wachtwoord: ",
 						 	    BTN_LOGIN    = "Login",
-						 	    BTN_REGISTR  = "Registrate",
+						 	    BTN_REGISTR  = "Registratie",
 						 	    HEADER		 = "- Login -";
 	
 	public JTextField 	txtUsername,

@@ -15,7 +15,8 @@ public class Turn {
 	private TurnState turnState;
 	private Player player;
 	private TimerTask timer;
-	private int secondsEarnd;
+	private int secondsEarnd,
+				questionTime;
 	private int moment;
 	private Integer secondsFinalLost;
 	private ArrayList<SharedQuestion> sharedQuestions;
@@ -24,6 +25,7 @@ public class Turn {
 	private Question skippedQuestion;
 	private SharedQuestion sharedQuestion;
 	private SharedQuestion sharedSkippedQuestion;
+	private int totalActualTime;
 	private Round parent;
 	
 	public Turn(Player player, Round parentRound) {
@@ -43,6 +45,7 @@ public class Turn {
 		//1- get last turn
 		//2- fetch question from turn
 		skippedQuestion = initSkippedQuestion();
+		totalActualTime = getTotalActualTime();
 	}
 
 	public Turn(ResultSet data, Round parentRound, boolean setCurrentTurn) { //TODO setCurrentTurn quick fix for when turn not yet assigned to round, was used for Question init. Can be removed?
@@ -50,6 +53,7 @@ public class Turn {
 			parentRound.setCurrrentTurn(this);
 		parent = parentRound;
 		readResultSet(data);
+		totalActualTime = getTotalActualTime();
 	}
 	
 	private void readResultSet(ResultSet data) {
@@ -81,9 +85,14 @@ public class Turn {
 	}
 	
 	public int getTotalActualTime() {
-		return Game.BeginAmountTime - 
-				DataManager.getInstance().getTotalSecondsEarnedInAGame(parent.getGame().getId(), player.getName()) + getSecondsEarned() 
-				- DataManager.getInstance().getTotalSecFinaleAfOtherPlayer(this);
+		int secondsEarnedInTheGame = DataManager.getInstance().getTotalSecondsEarnedInAGame(parent.getGame().getId(), player.getName()) + getSecondsEarned();
+		int finalAf = DataManager.getInstance().getTotalSecFinaleAfOtherPlayer(this);
+		System.err.println("Actual time = " + (secondsEarnedInTheGame - finalAf)); 
+		return secondsEarnedInTheGame - finalAf;
+	}
+	
+	public int getPlayerTime() {
+		return totalActualTime;
 	}
 	
 	public void startTurn() {
@@ -100,7 +109,6 @@ public class Turn {
 			return lastTurn.getCurrentQuestion();
 		else
 			return null;
-
 	}
 	
 	public void setSkippedQuestion(Question question) {
@@ -197,10 +205,19 @@ public class Turn {
 		secondsEarnd += value;
 	}
 	
-	public void executeTimer(int value) {
+	private void executeTimer(int value) {
+		System.err.println("Executing timer ");
 		secondsEarnd -= value;
 		moment++;
+		totalActualTime-=1;
 		parent.getGame().updateView();
+		
+		if (totalActualTime <= 0) {
+			parent.playerTimeIsOver();
+			timer.cancel();
+		}
+		
+		System.out.println(this + " " + totalActualTime + " " + timer  + " " + this.parent);
 	}
 	
 	public void startTimer() {
@@ -208,6 +225,31 @@ public class Turn {
 		if(timer != null)
 			timer.cancel();
 		timer = new MyTimer().schedule(() -> executeTimer(1), 1000);
+	}
+	
+	public void startQuestionTimer(int startValue) {
+		questionTime = startValue;
+		moment = 0;
+		if(timer != null)
+			timer.cancel();
+		timer = new MyTimer().schedule(() -> executeQuestionTimer(), 1000);
+	}
+	
+	public int getQuestionTime() {
+		return questionTime;
+	}
+	
+	private void executeQuestionTimer() {
+		System.err.println("Executing timer");
+		questionTime--;
+		moment++;
+		if(questionTime == 0) {
+			getRound().onPass();
+			questionTime = 25;
+			timer.cancel();
+		}
+		
+		parent.updateView();
 	}
 	
 	public void stopTimer() {

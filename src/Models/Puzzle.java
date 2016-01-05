@@ -10,7 +10,7 @@ public class Puzzle extends Round {
 
 
 	public final static int AMOUNT_QUESTIONS = 3,
-							CORRECT_POINTS = 60;
+							CORRECT_POINTS = 30;
 	
 	private int amountCorrectAnswers = 0;
 	private int secondsEarned = 0;
@@ -27,6 +27,8 @@ public class Puzzle extends Round {
 	}
 	
 	public void initNewTurn() {
+		currentTurn.startTimer();
+		answersHandled = new ArrayList<Answer>();
 		currentTurn.setSharedQuestions(generateSharedQuestions());
 		showAnswersForSkippedQuestion();
 		updateView();
@@ -57,17 +59,19 @@ public class Puzzle extends Round {
 	}
 	
 	public void showAnswersForSkippedQuestion() {
-		ArrayList<PlayerAnswer> playerAnswers = lastTurn.getPlayerAnswers();
-		
-		for (PlayerAnswer playerAnswer : playerAnswers) {
-			for(SharedQuestion sharedQuestion : currentTurn.getSharedQuestions()) {
-				Answer answerCorrect = sharedQuestion.isAnswerCorrect(playerAnswer.getAnswer());
-				if (answerCorrect != null && answerIsValid(playerAnswer.getAnswer())) { // The answer is correct
-					answersHandled.add(answerCorrect);
-					break;
+		if(lastTurn != null) {
+			ArrayList<PlayerAnswer> playerAnswers = lastTurn.getPlayerAnswers();
+			
+			for (PlayerAnswer playerAnswer : playerAnswers) {
+				for(SharedQuestion sharedQuestion : currentTurn.getSharedQuestions()) {
+					Answer answerCorrect = sharedQuestion.isAnswerCorrect(playerAnswer.getAnswer());
+					if (answerCorrect != null && answerIsValid(playerAnswer.getAnswer())) { // The answer is correct
+						answersHandled.add(answerCorrect);
+						break;
+					}
 				}
-			}
-		}	
+			}	
+		}
 	}
 	
 	private boolean answerIsValid(String answerString) {
@@ -129,6 +133,7 @@ public class Puzzle extends Round {
 	}
 	
 	public void endTurn() {
+		currentTurn.stopTimer();
 		if(lastTurn != null && lastTurn.getTurnState() == TurnState.Pass && !Game.isCurrentUser(lastTurn.getPlayer().getName())) {
 			currentTurn = initCurrentTurn(this);
 			initNewTurn();
@@ -185,12 +190,19 @@ public class Puzzle extends Round {
 					isCompleted =  true;
 			}
 		}
-		/*		
+				
 		if (isCompleted)
-			game.getController().loadNextRound(roundType);*/
+			currentTurn.stopTimer();
 
 		return isCompleted;
 
+	}
+
+	@Override
+	public void playerTimeIsOver() {
+		// TODO Auto-generated method stub
+		getGame().getController().endTurn();
+		getGame().stopGame();
 	}
 
 }
