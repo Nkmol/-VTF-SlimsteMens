@@ -7,18 +7,23 @@ public class ReplayThreeSixNine extends ThreeSixNine {
 
 	private int turnIndex;
 	private ReplayController parent;
+	
 	public ReplayThreeSixNine(Game game, ReplayController parent) {
+		this(game, parent, false);
+	}
+	
+	public ReplayThreeSixNine(Game game, ReplayController parent, boolean LastTurn) {
 		super(game);
 		this.parent = parent;
-		turnIndex = 0;
 		turns = DataManager.getInstance().getTurns(this);
+		turnIndex = (LastTurn) ? turns.size()-1 : 0;
 		currentTurn = turns.get(turnIndex);
 		updateView();
 	}
 	
 	@Override
 	public void onSubmit(String answer) {
-		NextTurn();
+		PreviousTurn();
 		updateView();
 	}
 	
@@ -28,6 +33,17 @@ public class ReplayThreeSixNine extends ThreeSixNine {
 		updateView();
 	}
 	
+	private void PreviousTurn() {
+		if (turnIndex > 0) {
+			currentTurn = turns.get(--turnIndex);
+			// for 'fake' bonus rounds
+			if (currentTurn.getCurrentQuestion() == null)
+				PreviousTurn();
+		} else {
+			parent.PrevRound();
+		}
+	}
+	
 	private void NextTurn() {
 		if (turnIndex < turns.size()-1) {
 			currentTurn = turns.get(++turnIndex);
@@ -35,7 +51,7 @@ public class ReplayThreeSixNine extends ThreeSixNine {
 			if (currentTurn.getCurrentQuestion() == null)
 				NextTurn();
 		} else {
-			parent.RoundEnd();
+			parent.NextRound();
 		}
 	}
 }

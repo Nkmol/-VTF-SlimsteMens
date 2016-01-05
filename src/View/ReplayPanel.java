@@ -3,6 +3,8 @@ package View;
 import java.awt.Color;
 import java.util.Observable;
 
+import javax.swing.JPanel;
+
 import Controllers.ReplayController;
 import Models.Replay;
 import Models.TurnState;
@@ -23,21 +25,18 @@ public class ReplayPanel extends GamePanel {
 		Replay replay = (Replay)arg1;
 		System.out.println(replay.getCurrentRound().getCurrentTurn().getTurnState().getValue());
 		if (replay.getCurrentRound().getCurrentTurn().getTurnState() == TurnState.Pass) {
-			btnPass.setEnabled(true);
-			btnSubmit.setEnabled(false);
 			txtInput.setBackground(Color.RED);
 			txtInput.setText("PAS");
 		} else if (replay.getCurrentRound().getCurrentTurn().getTurnState() == TurnState.Timeout) {
-			btnPass.setEnabled(true);
-			btnSubmit.setEnabled(false);
 			txtInput.setBackground(Color.RED);
 			txtInput.setText("Time-out");
 		} else {
-			btnPass.setEnabled(false);
-			btnSubmit.setEnabled(true);
 			txtInput.setBackground(null);
 			txtInput.setText(replay.getCurrentAnswer());
 		}
+		
+		btnPass.setText(">");
+		btnSubmit.setText("<");
 		
 		lblPlayer1.setText(""+replay.GetSecondsEarnedPlayer1());
 		lblPlayer2.setText(""+replay.GetSecondsEarnedPlayer2());

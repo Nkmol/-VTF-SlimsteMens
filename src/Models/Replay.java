@@ -1,10 +1,12 @@
 package Models;
 
 import Controllers.FinalController;
+import Controllers.FramedController;
 import Controllers.OpenDoorController;
 import Controllers.PuzzleController;
 import Controllers.ReplayController;
 import Controllers.RoundController;
+import Controllers.ThreeSixNineController;
 import Managers.DataManager;
 
 public class Replay extends Game {
@@ -13,16 +15,32 @@ public class Replay extends Game {
 	private int currentRoundIndex;
 	public Replay(int gameId, Player player1, Player player2, GameState gameState, ReplayController parent) {
 		super(gameId, player1, player2, gameState);
-		rounds = DataManager.getInstance().getRounds(this);
 		currentRoundIndex = 0;
 		this.parent = parent;
 		AnswerNumber = 0;
 	}
 	
+	public RoundController getPreviousRound() {
+		switch (currentRound.roundType) {
+			case OpenDoor:
+				currentRound = new ReplayThreeSixNine(this, parent, true);
+				return new ThreeSixNineController(this, currentRound);
+			case Puzzle:
+				currentRound = new ReplayOpenDoor(this, parent, true);
+				return new OpenDoorController(this, currentRound);
+			case Framed:
+				currentRound = new ReplayPuzzle(this, parent, true);
+				return new PuzzleController(this, currentRound);
+			case Final:
+				currentRound = new ReplayFramed(this, parent, true);
+				return new FramedController(this, currentRound);
+			default:
+				return null;
+		}
+	}
+	
 	public RoundController getNextRound() {
-		Round prevRound = currentRound;
-		currentRound = rounds.get(++currentRoundIndex);
-		switch (prevRound.roundType) {
+		switch (currentRound.roundType) {
 			case ThreeSixNine:
 				currentRound = new ReplayOpenDoor(this, parent);
 				return new OpenDoorController(this, currentRound);
@@ -30,8 +48,8 @@ public class Replay extends Game {
 				currentRound = new ReplayPuzzle(this, parent);
 				return new PuzzleController(this, currentRound);
 			case Puzzle:
-				currentRound = new ReplayPuzzle(this, parent);
-				return new PuzzleController(this, currentRound);
+				currentRound = new ReplayFramed(this, parent);
+				return new FramedController(this, currentRound);
 			case Framed:
 				currentRound = new ReplayFinal(this, parent);
 				return new FinalController(this, currentRound);

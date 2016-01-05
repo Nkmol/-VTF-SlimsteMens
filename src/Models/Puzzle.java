@@ -14,7 +14,7 @@ public class Puzzle extends Round {
 	
 	private int amountCorrectAnswers = 0;
 	private int secondsEarned = 0;
-	private ArrayList<Answer> answersHandled;
+	protected ArrayList<Answer> answersHandled;
 	
 	public Puzzle(Game game) {
 		super(game, RoundType.Puzzle);	

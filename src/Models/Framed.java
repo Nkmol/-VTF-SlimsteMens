@@ -13,7 +13,7 @@ public class Framed extends Round {
 							 AMOUNT_ANSWERS = 10;
 	private int secondsEarned = 0;
 	private ArrayList<PlayerAnswer> playerAnswers;
-	private ArrayList<Answer> answersHandled;
+	protected ArrayList<Answer> answersHandled;
 	
 	private Boolean stay;
 	
@@ -337,7 +337,7 @@ public class Framed extends Round {
 			else if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Pass && secondLastTurn.getTurnState() == TurnState.Wrong &&
 					secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
 				return true;
-			}	
+			}
 		
 		
 		return false;

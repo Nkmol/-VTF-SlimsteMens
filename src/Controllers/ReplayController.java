@@ -40,8 +40,21 @@ public class ReplayController {
 		model.updateView();
 	}
 	
-	public void RoundEnd() {
+	public void NextRound() {
 		currentRoundController = model.getNextRound();
+		if (currentRoundController == null) {
+			EndReplay();
+		} else {
+			view.btnSubmit.addActionListener((e) -> model.getCurrentRound().onSubmit(model.getCurrentAnswer()));
+			view.btnPass.addActionListener((e) -> model.getCurrentRound().onPass());
+			view.setRound(currentRoundController.getView());
+			view.revalidate();
+			view.repaint();
+		}
+	}
+	
+	public void PrevRound() {
+		currentRoundController = model.getPreviousRound();
 		if (currentRoundController == null) {
 			EndReplay();
 		} else {

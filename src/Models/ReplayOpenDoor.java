@@ -8,18 +8,21 @@ public class ReplayOpenDoor extends OpenDoor {
 	int turnIndex;
 	private ReplayController parent;
 	public ReplayOpenDoor(Game game, ReplayController parent) {
-		super(game);
-		this.parent = parent;
-		turnIndex = 0;
-		turns = DataManager.getInstance().getTurns(this);
-		currentTurn = turns.get(turnIndex);
-		continueCurrentTurn = true;
-		updateView();
+		this(game, parent, false);
 	}
 	
+	public ReplayOpenDoor(Game game, ReplayController parent, boolean LastTurn) {
+		super(game);
+		this.parent = parent;
+		turns = DataManager.getInstance().getTurns(this);
+		turnIndex = (LastTurn) ? turns.size()-1 : 0;
+		currentTurn = turns.get(turnIndex);
+		updateView();
+	}
+
 	@Override
 	public void onSubmit(String answer) {
-		NextTurn();
+		PreviousTurn();
 		updateView();
 	}
 	
@@ -29,11 +32,26 @@ public class ReplayOpenDoor extends OpenDoor {
 		updateView();
 	}
 	
+	private void PreviousTurn() {
+		if (turnIndex > 0) {
+			currentTurn = turns.get(--turnIndex);
+			// for 'fake' bonus rounds
+			if (currentTurn.getCurrentQuestion() == null)
+				PreviousTurn();
+		} else {
+			parent.PrevRound();
+		}
+	}
+	
 	private void NextTurn() {
-		if (turnIndex < turns.size()-1)
+		if (turnIndex < turns.size()-1) {
 			currentTurn = turns.get(++turnIndex);
-		else
-			parent.RoundEnd();
+			// for 'fake' bonus rounds
+			if (currentTurn.getCurrentQuestion() == null)
+				NextTurn();
+		} else {
+			parent.NextRound();
+		}
 	}
 	
 }
