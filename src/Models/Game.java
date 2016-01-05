@@ -89,10 +89,10 @@ public class Game extends Observable {
 		if(lastTurn != null) {
 			if(playerAnsweredASkippedQuestion(lastTurn)) 
 				return true;
-			else if (lastTurn.getRoundType() == RoundType.ThreeSixNine) {
-				if (lastTurn.getTurnState() == TurnState.Correct && isCurrentUser(lastTurn.getPlayer().getName()))
-					return true;
-			}
+			if (lastTurn.getRoundType() == RoundType.ThreeSixNine && lastTurn.getTurnState() == TurnState.Correct && isCurrentUser(lastTurn.getPlayer().getName()))
+				return true;
+			else if (lastTurn.getRoundType() == RoundType.ThreeSixNine && lastTurn.getTurnState() == TurnState.Correct && !isCurrentUser(lastTurn.getPlayer().getName()))
+				return false;
 			else if(isCurrentUser(lastTurn.getPlayer().getName()) && (lastTurn.getTurnState() == TurnState.Busy || lastTurn.getTurnState() == TurnState.Bonus))
 				return true;
 			else if(beforeLastTurn != null && lastTurn.getsharedQuestionId() != beforeLastTurn.getsharedQuestionId() && !isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() != TurnState.Busy && lastTurn.getTurnState() != TurnState.Bonus)
