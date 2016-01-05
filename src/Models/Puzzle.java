@@ -29,6 +29,8 @@ public class Puzzle extends Round {
 	}
 	
 	public void initNewTurn() {
+		currentTurn.startTimer();
+		answersHandled = new ArrayList<Answer>();
 		currentTurn.setSharedQuestions(generateSharedQuestions());
 		showAnswersForSkippedQuestion();
 		updateView();
@@ -59,17 +61,19 @@ public class Puzzle extends Round {
 	}
 	
 	public void showAnswersForSkippedQuestion() {
-		ArrayList<PlayerAnswer> playerAnswers = lastTurn.getPlayerAnswers();
-		
-		for (PlayerAnswer playerAnswer : playerAnswers) {
-			for(SharedQuestion sharedQuestion : currentTurn.getSharedQuestions()) {
-				Answer answerCorrect = sharedQuestion.isAnswerCorrect(playerAnswer.getAnswer());
-				if (answerCorrect != null && answerIsValid(playerAnswer.getAnswer())) { // The answer is correct
-					answersHandled.add(answerCorrect);
-					break;
+		if(lastTurn != null) {
+			ArrayList<PlayerAnswer> playerAnswers = lastTurn.getPlayerAnswers();
+			
+			for (PlayerAnswer playerAnswer : playerAnswers) {
+				for(SharedQuestion sharedQuestion : currentTurn.getSharedQuestions()) {
+					Answer answerCorrect = sharedQuestion.isAnswerCorrect(playerAnswer.getAnswer());
+					if (answerCorrect != null && answerIsValid(playerAnswer.getAnswer())) { // The answer is correct
+						answersHandled.add(answerCorrect);
+						break;
+					}
 				}
-			}
-		}	
+			}	
+		}
 	}
 	
 	private boolean answerIsValid(String answerString) {

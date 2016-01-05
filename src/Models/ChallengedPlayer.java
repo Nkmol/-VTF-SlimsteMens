@@ -6,10 +6,11 @@ public class ChallengedPlayer {
 	private Player challengedPlayer;
 	private Boolean challenged;
 	private CompetitionRankItem rank;
+	private Boolean inviter;
 	
 	public ChallengedPlayer(Player challenger, Player challengedPlayer) {
 		this.challengedPlayer = challengedPlayer;
-		
+		inviter = false;
 		checkChallenged(challenger);
 		checkRank();
 	}
@@ -23,6 +24,7 @@ public class ChallengedPlayer {
 		}
 		else if (DataManager.getInstance().gameExistsBetween(challengedPlayer.getName(), challenger.getName(), GameState.Invited)) {
 			challenged = true;	
+			inviter = true;
 		}
 		else {
 			challenged = false;
@@ -47,6 +49,10 @@ public class ChallengedPlayer {
 	
 	public CompetitionRankItem getRank() {
 		return rank;
+	}
+	
+	public Boolean getInviter() {
+		return inviter;
 	}
 	
 }

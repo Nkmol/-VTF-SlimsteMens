@@ -44,42 +44,42 @@ public class MenuBar extends JMenuBar {
 	public MenuBar() {
 		this.setLayout(new MigLayout("fill, insets 0", "[fill]")); // TODO maybe think of a better solution
 		
-		menuExit = new JButton("Exit");
+		menuExit = new JButton("Sluiten");
 		menuExit.setFont(new Font("Serif", Font.ITALIC, 15));
 		//menuExit.setBorder(BorderFactory.createEmptyBorder());
 		menuExit.setContentAreaFilled(false);
 		menuExit.setMnemonic(KeyEvent.VK_F);
 		add(menuExit);
 
-		menuAccount = new JButton("My account");
+		menuAccount = new JButton("Mijn account");
 		menuAccount.setFont(new Font("Serif", Font.ITALIC, 15));
 		//menuAccount.setBorder(BorderFactory.createEmptyBorder());
 		menuAccount.setContentAreaFilled(false);
 		menuAccount.setMnemonic(KeyEvent.VK_A);
 		add(menuAccount);
 		
-		menuPlayers = new JButton("Players");
+		menuPlayers = new JButton("Spelers");
 		menuPlayers.setFont(new Font("Serif", Font.ITALIC, 15));
 		//menuPlayers.setBorder(BorderFactory.createEmptyBorder());
 		menuPlayers.setContentAreaFilled(false);
 		menuPlayers.setMnemonic(KeyEvent.VK_H);
 		add(menuPlayers);
 		
-		menuReplays = new JButton("Replays");
+		menuReplays = new JButton("replays");
 		menuReplays.setFont(new Font("Serif", Font.ITALIC, 15));
 		//menuHighscrs.setBorder(BorderFactory.createEmptyBorder());
 		menuReplays.setContentAreaFilled(false);
 		menuAccount.setMnemonic(KeyEvent.VK_H);
 		add(menuReplays);
 		
-		menuChallenges = new JButton("Challenges");
+		menuChallenges = new JButton("Uitdagingen");
 		menuChallenges.setFont(new Font("Serif", Font.ITALIC, 15));
 		//menuChallenges.setBorder(BorderFactory.createEmptyBorder());
 		menuChallenges.setContentAreaFilled(false);
 		menuChallenges.setMnemonic(KeyEvent.VK_H);
 		add(menuChallenges);
 		
-		menuLogout = new JButton("Logout");
+		menuLogout = new JButton("Log uit");
 		menuLogout.setFont(new Font("Serif", Font.ITALIC, 15));
 		//menuChallenges.setBorder(BorderFactory.createEmptyBorder());
 		menuLogout.setContentAreaFilled(false);

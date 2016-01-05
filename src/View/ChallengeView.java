@@ -35,7 +35,7 @@ public class ChallengeView extends JPanel {
 		setPreferredSize(new Dimension(400,100));
 		
 		JLabel messageLabel = new JLabel();
-		messageLabel.setText("You have been challenged by " + name + "!");
+		messageLabel.setText("Je bent uitgedaagd door " + name + "!");
 		messageLabel.setForeground(Color.white);
 		messageLabel.setFont(new Font("Serif", Font.ITALIC, 18));
 		
@@ -49,7 +49,7 @@ public class ChallengeView extends JPanel {
 		add(messageLabel, gridBagConstraintsMessage);
 		
 		JButton acceptButton = new JButton();
-		acceptButton.setText("Accept");
+		acceptButton.setText("Accepteer");
 		acceptButton.setBackground(Color.GREEN);
 		acceptButton.setBounds(300, 50, 100, 50);
 		
@@ -64,7 +64,7 @@ public class ChallengeView extends JPanel {
 		add(acceptButton, gridBagConstraintsAccept);
 		
 		declineButton = new JButton();
-		declineButton.setText("Decline");
+		declineButton.setText("Weiger");
 		declineButton.setBackground(Color.RED);
 		acceptButton.setBounds(300, 150, 100, 50);
 		

@@ -48,7 +48,7 @@ public class ActiveGameView extends JPanel {
 
 		add(playerNameLabel, gridBagConstraintsLabel);
 
-		goButton.setText("Go");
+		goButton.setText("Ga");
 		goButton.addActionListener((e) -> handleButtonClick());
 		
 		chatButton.setText("Chat");

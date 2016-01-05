@@ -12,6 +12,7 @@ public class TurnInfo {
 	private int questionId;
 	private TurnState turnState;
 	private Player player;
+	private int sharedQuestionId;
 	
 	public TurnInfo(ResultSet data) {
 		try {
@@ -21,10 +22,15 @@ public class TurnInfo {
 			questionId = data.getInt("vraag_id");
 			player = DataManager.getInstance().getPlayer(data.getString("speler"));
 			turnState = TurnState.fromString(data.getString("beurtstatus"));
+			sharedQuestionId = DataManager.getInstance().getSharedQuestionId(this);
 		} catch (SQLException e) {
 			System.err.println("Error initializing TurnInfo");
 			System.err.println(e.getMessage());
 		}
+	}
+	
+	public int getsharedQuestionId() {
+		return sharedQuestionId;
 	}
 	
 	public int getGameId() {

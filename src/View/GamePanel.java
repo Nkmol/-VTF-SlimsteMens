@@ -62,8 +62,8 @@ public class GamePanel extends JPanel implements Observer{
 		
 		bottom.add(bottomleft,  BorderLayout.CENTER);
 		
-		btnSubmit = new JButton("Submit");
-		btnPass = new JButton("Pass");
+		btnSubmit = new JButton("Bevestig");
+		btnPass = new JButton("Sla over");
 		
 		JPanel bottomright = new JPanel();
 		bottomright.setLayout(new BorderLayout());

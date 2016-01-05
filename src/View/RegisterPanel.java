@@ -9,9 +9,9 @@ import javax.swing.border.EmptyBorder;
 import Models.Player;
 
 public class RegisterPanel extends JPanel implements Observer {
-	private final static String USERNAME 	 = "Username: ",
-						 	    PASSWORD 	 = "Password: ",
-						 	    BTN_REGISTR  = "Registrate",
+	private final static String USERNAME 	 = "Gebruikersnaam: ",
+						 	    PASSWORD 	 = "Wachtwoord: ",
+						 	    BTN_REGISTR  = "Registratie",
 						 	    BTN_LOGIN	 = "Login",
 						 	    HEADER		 = "- Registreer -";
 	

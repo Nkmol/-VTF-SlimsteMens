@@ -48,7 +48,7 @@ public class Final extends Round {
 		AnswersHandled = new ArrayList<>();
 		currentTurn = initCurrentTurn(this);
 		DataManager.getInstance().pushTurn(currentTurn);
-		currentTurn.startTimer();
+//		currentTurn.startTimer();
 		
 		checkIfGameEnds = new MyTimer().schedule(() -> isCompleted(), 1000);
 		
@@ -143,11 +143,15 @@ public class Final extends Round {
 	@Override
 	public boolean isCompleted() {
 		// TODO Auto-generated method stub
-		if (currentTurn.getTotalActualTime() == 0){
+		if (currentTurn.getPlayerTime() == 0) {
 			getGame().getController().loadNextRound(getRoundType());
-//			getGame().getController().endTurn();
-//			getGame().stopGame();
+//			currentTurn.stopTimer();
 		}
+//		if (currentTurn.getTotalActualTime() == 0){
+//			
+////			getGame().getController().endTurn();
+////			getGame().stopGame();
+//		}
 		
 		return true;
 	}
