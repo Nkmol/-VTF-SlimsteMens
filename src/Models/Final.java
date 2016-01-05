@@ -107,13 +107,18 @@ public class Final extends Round {
 			currentTurn.setTurnState(TurnState.Correct);
 			DataManager.getInstance().updateTurn(currentTurn);
 			AnswersHandled = new ArrayList<>();
-			if (isCompleted())
+			if (isCompleted()) {
 				game.getController().endTurn();
-			pushAnswers(playerAnswers);
-			if (currentTurn.getSkippedQuestion() == null)
-				getGame().getController().endTurn();
-			else 
-				initNewTurn();
+				getGame().getController().loadNextRound(getRoundType());
+			} else {
+				pushAnswers(playerAnswers);
+				if (currentTurn.getSkippedQuestion() == null)
+					getGame().getController().endTurn();
+				else 
+					initNewTurn();
+			}
+				
+			
 		}
 	
 	}
@@ -126,32 +131,41 @@ public class Final extends Round {
 	@Override
 	public void onPass() {
 		// TODO Auto-generated method stub
+		currentTurn.stopTimer(); //TODO: test this
 		currentTurn.setTurnState(TurnState.Pass);
 		DataManager.getInstance().updateTurn(currentTurn);
-		if (isCompleted()) 
+		if (isCompleted()) {
 			game.getController().endTurn();
-		if (currentTurn.getSkippedQuestion() == null)
-			getGame().getController().endTurn();
-		else 
-			initNewTurn();
-		
+			getGame().getController().loadNextRound(getRoundType());
+		} else {
+			if (currentTurn.getSkippedQuestion() == null)
+				getGame().getController().endTurn();
+			else {
+				initNewTurn();
+				currentTurn.startTimer();
+			}
+		}
 	}
 	
 
 	@Override
 	public boolean isCompleted() {
-		// TODO Auto-generated method stub
-		if (currentTurn.getPlayerTime() == 0) {
-			getGame().getController().loadNextRound(getRoundType());
-//			currentTurn.stopTimer();
-		}
-//		if (currentTurn.getTotalActualTime() == 0){
-//			
-////			getGame().getController().endTurn();
-////			getGame().stopGame();
-//		}
 		
-		return true;
+		return (currentTurn.getPlayerTime() == 0);
+		// TODO Auto-generated method stub
+//		if (currentTurn.getPlayerTime() == 0) {
+//			System.out.println("Player time is = " + currentTurn.getPlayerTime());
+//			
+//			return true;
+////			currentTurn.stopTimer();
+//		}
+////		if (currentTurn.getTotalActualTime() == 0){
+////			
+//////			getGame().getController().endTurn();
+//////			getGame().stopGame();
+////		}
+//		
+//		return false;
 	}
 
 	@Override

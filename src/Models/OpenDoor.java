@@ -30,7 +30,7 @@ public class OpenDoor extends Round {
 			currentTurn = initCurrentTurn(this);
 		if(!continueCurrentTurn)
 			DataManager.getInstance().pushTurn(currentTurn);
-		currentTurn.startTimer();
+//		currentTurn.startTimer();
 		if (currentTurn.getSkippedQuestion() != null) {
 			showAnswersForSkippedQuestion(currentTurn.getSkippedQuestion());
 		}
@@ -96,6 +96,7 @@ public class OpenDoor extends Round {
 		updateView();
 		
 		if (answersHandled.size() == AMOUNT_OF_ANSWERS) {
+			currentTurn.stopTimer();
 			currentTurn.setTurnState(TurnState.Correct);
 			currentTurn.setSecondsEarned(secondsEarned);
 			DataManager.getInstance().updateTurn(currentTurn);
@@ -107,8 +108,10 @@ public class OpenDoor extends Round {
 				pushAnswers(playerAnswers);
 				if (currentTurn.getSkippedQuestion() == null)
 					getGame().getController().endTurn();
-				else 
+				else { 
 					initNewTurn(true);
+					currentTurn.startTimer();
+				}
 			}
 			
 		}
@@ -126,8 +129,10 @@ public class OpenDoor extends Round {
 		else {
 			if (currentTurn.getSkippedQuestion() == null)
 				getGame().getController().endTurn();
-			else 
+			else {
 				initNewTurn(true);
+				currentTurn.startTimer();
+			}
 		}
 		
 	}

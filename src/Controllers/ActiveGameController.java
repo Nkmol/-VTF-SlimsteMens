@@ -8,6 +8,7 @@ import Models.ActivePlayers;
 import Models.Player;
 import Models.Round;
 import Models.RoundType;
+import Models.ThreeSixNine;
 import View.ActiveGameListView;
 import View.PlayerListView;
 
@@ -29,8 +30,12 @@ public class ActiveGameController {
 
 	public void startGame(int gameId) {
 		GameController gameController = new GameController(gameId, parent);
-
 		parent.setGame(gameController.getView());
+		if (gameController.getModel().getCurrentRound() instanceof ThreeSixNine) 
+			((ThreeSixNine)gameController.getModel().getCurrentRound()).getCurrentTurn().startQuestionTimer(25);
+		else 
+			gameController.getModel().getCurrentRound().getCurrentTurn().startTimer();
+		
 	}
 
 	public void handleButtonClick(int gameId) {

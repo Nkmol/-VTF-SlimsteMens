@@ -89,7 +89,7 @@ public class GameController {
 		if (currentRoundType != RoundType.Final) {
 			RoundType nextRoundType = RoundType.nextRoundType(currentRoundType);
 			model.setRound(Round.createRound(nextRoundType, model));
-			model.getCurrentRound().getCurrentTurn().stopTimer();
+//			model.getCurrentRound().getCurrentTurn().stopTimer();
 			loadLastRound();
 		} else {
 			// Stop the game 
@@ -115,9 +115,9 @@ public class GameController {
 			round = new ThreeSixNine(model); // Add 369 manually to the database in table ronde
 		}
 
-		if(round.getRoundType() == RoundType.Framed) {
-			((Framed)round).startTime();
-		}
+//		if(round.getRoundType() == RoundType.Framed) {
+//			((Framed)round).startTime();
+//		}
 		RoundController roundController = getRoundController(round, model);
 	
 		model.setRound(roundController.getModel());

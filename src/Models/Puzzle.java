@@ -27,7 +27,7 @@ public class Puzzle extends Round {
 	}
 	
 	public void initNewTurn() {
-		currentTurn.startTimer();
+//		currentTurn.startTimer();
 		answersHandled = new ArrayList<Answer>();
 		currentTurn.setSharedQuestions(generateSharedQuestions());
 		showAnswersForSkippedQuestion();
@@ -137,6 +137,7 @@ public class Puzzle extends Round {
 		if(lastTurn != null && lastTurn.getTurnState() == TurnState.Pass && !Game.isCurrentUser(lastTurn.getPlayer().getName())) {
 			currentTurn = initCurrentTurn(this);
 			initNewTurn();
+			currentTurn.startTimer();
 		}
 		else
 			getGame().getController().endTurn();

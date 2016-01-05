@@ -40,9 +40,9 @@ public class Framed extends Round {
 		initPlayerAnswers();
 	}
 	
-	public void startTime() {
-		currentTurn.startTimer();
-	}
+//	public void startTime() {
+//		currentTurn.startTimer();
+//	}
 
 	public void initPlayerAnswers() {
 		if(playerAnswers == null) {
@@ -101,6 +101,7 @@ public class Framed extends Round {
 					}
 					else {
 						getGame().getController().endTurn();
+						currentTurn.stopTimer();
 					}
 				}
 				else {
@@ -108,6 +109,7 @@ public class Framed extends Round {
 				}
 			}
 			else {
+				currentTurn.stopTimer();
 				currentTurn.setTurnState(TurnState.Wrong);
 				//currentTurn.addSecondsEarnd(secondsEarned);
 				DataManager.getInstance().updateTurn(currentTurn);
@@ -146,9 +148,10 @@ public class Framed extends Round {
 		// TODO Auto-generated method stub
 		Turn lastTurn = DataManager.getInstance().getLastTurnForGame(this);
 		Turn secondLastTurn = DataManager.getInstance().getXLastTurnForGame(getGame().getId(), this, 1); // TODO lelijk
-		int amount = DataManager.getInstance().getAmountAskedQuestionsForRound(this);
+//		int amount = DataManager.getInstance().getAmountAskedQuestionsForRound(this);
 		
 		boolean roundCompleted = false;
+		
 		
 		if(secondLastTurn != null && lastTurn.getTurnState() == TurnState.Wrong && secondLastTurn.getTurnState() == TurnState.Wrong &&
 				secondLastTurn.getCurrentQuestion().getText().equals(lastTurn.getCurrentQuestion().getText())) {
@@ -187,7 +190,7 @@ public class Framed extends Round {
 		if (roundCompleted)
 			currentTurn.stopTimer();
 		
-		return false;
+		return roundCompleted;
 	}
 
 	@Override
