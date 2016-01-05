@@ -239,6 +239,7 @@ public class Turn {
 	}
 	
 	private void executeQuestionTimer() {
+		System.err.println("Executing timer");
 		questionTime--;
 		moment++;
 		if(questionTime == 0) {

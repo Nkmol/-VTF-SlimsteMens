@@ -1298,6 +1298,42 @@ public class DataManager {
 		return sharedQuestion;
 	}
 	
+	public int getSharedQuestionId(TurnInfo turn) {
+		int id = 0;
+		Connection connection = getConnection();
+		PreparedStatement preparedStatement = null;
+		ResultSet data = null;
+		try {
+			
+			String sql = "SELECT vraag_id FROM deelvraag WHERE spel_id = ? AND rondenaam = ? AND beurt_id = ? order by volgnummer desc limit 1";
+			//sql += "AND beurt_id NOT IN (SELECT beurt_id FROM beurt WHERE spel_id = ? AND rondenaam = ? AND beurt_id = ? AND speler = ?)";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, turn.getGameId());
+			preparedStatement.setString(2, turn.getRoundType().getValue());
+			preparedStatement.setInt(3, turn.getTurnId());
+/*			preparedStatement.setInt(4, turn.getRound().getGame().getId());
+			preparedStatement.setString(5, turn.getRound().getRoundType().getValue());
+			preparedStatement.setInt(6, turn.getTurnId());
+			preparedStatement.setString(7, turn.getPlayer().getName());*/
+			data = preparedStatement.executeQuery();
+			if (data.next())
+				id = data.getInt("vraag_id");
+		} catch (SQLException e) {
+			System.err.println("Error fetching shared questions");
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (data != null)
+					data.close();
+				if (preparedStatement != null) 
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch(SQLException ex) {} 
+		}
+		return id;
+	}
+	
 	//TODO does this need to be an Array?
 	public ArrayList<SharedQuestion> getSharedQuestions(Turn turn) {
 		ArrayList<SharedQuestion> sharedQuestions = null;

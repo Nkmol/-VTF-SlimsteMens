@@ -79,9 +79,17 @@ public class Game extends Observable {
 	
 	public static boolean isCurrentPlayerTurn(int gameId) {
 		TurnInfo lastTurn = DataManager.getInstance().getLastInfoTurnForGame(gameId);
+		TurnInfo beforeLastTurn = null;
+		if(lastTurn != null)
+			 beforeLastTurn = DataManager.getInstance().getTurInfonBeforeATurnInfo(lastTurn);
+		
 		if(lastTurn != null) {
 			if(playerAnsweredASkippedQuestion(lastTurn)) 
 				return true;
+			else if(beforeLastTurn != null) {
+					if(lastTurn.getsharedQuestionId() != beforeLastTurn.getsharedQuestionId() && !isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() != TurnState.Busy && lastTurn.getTurnState() != TurnState.Bonus)
+							return true;
+				}
 			else if(!isCurrentUser(lastTurn.getPlayer().getName()) && lastTurn.getTurnState() != TurnState.Busy && lastTurn.getTurnState() != TurnState.Bonus)
 				return true;
 			else if(isCurrentUser(lastTurn.getPlayer().getName()) && (lastTurn.getTurnState() == TurnState.Busy || lastTurn.getTurnState() == TurnState.Bonus))
