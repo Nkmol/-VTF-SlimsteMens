@@ -27,6 +27,7 @@ public class Puzzle extends Round {
 	}
 	
 	public void initNewTurn() {
+		currentTurn.startTimer();
 		answersHandled = new ArrayList<Answer>();
 		currentTurn.setSharedQuestions(generateSharedQuestions());
 		showAnswersForSkippedQuestion();

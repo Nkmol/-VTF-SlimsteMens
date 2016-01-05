@@ -47,6 +47,7 @@ public class GameController {
 	}
 	
 	public void endTurn() {
+		model.getCurrentRound().getCurrentTurn().stopTimer();
 		parent.ShowMainPanel();
 	}
 	
@@ -88,6 +89,7 @@ public class GameController {
 		if (currentRoundType != RoundType.Final) {
 			RoundType nextRoundType = RoundType.nextRoundType(currentRoundType);
 			model.setRound(Round.createRound(nextRoundType, model));
+			model.getCurrentRound().getCurrentTurn().stopTimer();
 			loadLastRound();
 		} else {
 			// Stop the game 
@@ -103,6 +105,7 @@ public class GameController {
 		//round = new Final(model);
 
 		if (round != null) {
+			round.getCurrentTurn().stopTimer();
 			if (round.isCompleted()) {
 				loadNextRound(round.getRoundType());
 			}

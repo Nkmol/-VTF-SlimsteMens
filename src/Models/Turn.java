@@ -206,6 +206,7 @@ public class Turn {
 	}
 	
 	private void executeTimer(int value) {
+		System.err.println("Executing timer");
 		secondsEarnd -= value;
 		moment++;
 		totalActualTime-=1;
