@@ -10,15 +10,15 @@ import Models.*;
 
 public class DataManager {
 
-//	private static final String dbUrl = "jdbc:mysql://localhost/slimsteMens";
-//	private static final String username = "root";
-//	private static final String password = "root";
+	private static final String dbUrl = "jdbc:mysql://localhost/slimsteMens";
+	private static final String username = "root";
+	private static final String password = "root";
 //	private static final String dbUrl = "jdbc:mysql://databases.aii.avans.nl:3306/1_vsoprj2_slimstemens";
 //	private static final String username = "1_vsoprj2_f";
 //	private static final String password = "agiledeveloper";
-	private static final String dbUrl = "jdbc:mysql://databases.aii.avans.nl:3306/spmol_db2";
-	private static final String username = "spmol";
-	private static final String password = "Ab12345";
+//	private static final String dbUrl = "jdbc:mysql://databases.aii.avans.nl:3306/spmol_db2";
+//	private static final String username = "spmol";
+//	private static final String password = "Ab12345";
 	
 	private static DataManager instance = null;
 //	private Connection connection;
